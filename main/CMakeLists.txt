@@ -1,1 +1,1 @@
-file(GLOB main_folders ./*)
+add_subdirectory(shmup)
