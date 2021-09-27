@@ -12,9 +12,20 @@ using EntityMask = std::uint32_t;
 class EntityManager
 {
 public:
-    EntityManager() = default;
+    EntityManager();
     EntityManager(std::size_t reservedSize);
+
+    Entity CreateEntity();
+    void DestroyEntity(Entity entity);
+
+    void AddComponent(Entity entity, EntityMask mask);
+    void RemoveComponent(Entity entity, EntityMask mask);
+    bool HasComponent(Entity entity, EntityMask mask) const;
+    bool EntityExists(Entity entity) const;
+    static constexpr Entity INVALID_ENTITY = std::numeric_limits<Entity>::max();
+    static constexpr EntityMask INVALID_ENTITY_MASK = 0u;
 private:
+    static constexpr std::size_t INIT_ENTITY_NMB = 64u;
     std::vector<EntityMask> entityMasks_;
 };
 
