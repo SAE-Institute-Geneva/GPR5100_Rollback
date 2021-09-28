@@ -1,5 +1,8 @@
 #pragma once
 
+#include <SFML/System/Time.hpp>
+#include <SFML/Window/Event.hpp>
+
 namespace core
 {
 
@@ -10,6 +13,12 @@ public:
     virtual void Init() = 0;
     virtual void Update(sf::Time dt) = 0;
     virtual void Destroy() = 0;
+};
+
+class OnEventInterface
+{
+public:
+    virtual void OnEvent(const sf::Event& event);
 };
 
 }

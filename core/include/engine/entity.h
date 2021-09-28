@@ -22,6 +22,9 @@ public:
     void RemoveComponent(Entity entity, EntityMask mask);
     bool HasComponent(Entity entity, EntityMask mask) const;
     bool EntityExists(Entity entity) const;
+
+    [[nodiscard]] std::size_t GetEntitiesSize() const;
+
     static constexpr Entity INVALID_ENTITY = std::numeric_limits<Entity>::max();
     static constexpr EntityMask INVALID_ENTITY_MASK = 0u;
 private:

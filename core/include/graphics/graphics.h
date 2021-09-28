@@ -10,7 +10,7 @@ namespace core
 class DrawInterface
 {
 public:
-    virtual void Draw(sf::RenderWindow& window) = 0;
+    virtual void Draw(sf::RenderTarget& window) = 0;
 };
 
 class DrawImGuiInterface

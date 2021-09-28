@@ -14,7 +14,7 @@ namespace game
         virtual void ReceivePacket(std::unique_ptr<Packet> packet);
 
         //Server game manager
-        game::GameManager gameManager_;
+        GameManager gameManager_;
         PlayerNumber lastPlayerNumber_ = 0;
         std::array<ClientId, maxPlayerNmb> clientMap_{};
 

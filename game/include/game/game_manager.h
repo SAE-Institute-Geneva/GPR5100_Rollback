@@ -1,9 +1,13 @@
 #pragma once
-#include <SFML/Graphics/RenderStates.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/View.hpp>
 #include <SFML/System/Time.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 #include "game_globals.h"
+#include "rollback_manager.h"
 #include "engine/entity.h"
 #include "graphics/graphics.h"
 #include "graphics/sprite.h"
@@ -36,7 +40,8 @@ class GameManager : public core::SystemInterface
 		 * \brief Called by the server to validate a frame
 		 */
 		void Validate(Frame newValidateFrame);
-		static constexpr float PixelPerUnit = 100.0f;
+        void SetComponents(const GameManager& gameManager);
+        static constexpr float PixelPerUnit = 100.0f;
 		static constexpr float FixedPeriod = 0.02f; //50fps
 		PlayerNumber CheckWinner() const;
 		virtual void WinGame(PlayerNumber winner);
@@ -65,9 +70,9 @@ class GameManager : public core::SystemInterface
 		void Destroy() override;
 		void SetWindowSize(sf::Vector2u windowsSize);
 		[[nodiscard]] sf::Vector2u GetWindowSize() const { return windowSize_; }
-		void Render() override;
+		void Draw(sf::RenderTarget& window) override;
 		void SetClientPlayer(PlayerNumber clientPlayer) { clientPlayer_ = clientPlayer; }
-		[[nodiscard]] const Camera2D& GetCamera() const { return camera_; }
+		[[nodiscard]] const sf::View& GetCamera() const { return camera_; }
 		void SpawnPlayer(PlayerNumber playerNumber, core::Vec2f position, core::degree_t rotation) override;
         core::Entity SpawnBullet(PlayerNumber playerNumber, core::Vec2f position, core::Vec2f velocity) override;
 		void FixedUpdate();
@@ -80,7 +85,7 @@ class GameManager : public core::SystemInterface
 	protected:
 		PacketSenderInterface& packetSenderInterface_;
 		sf::Vector2u windowSize_;
-		Camera2D camera_;
+		sf::View camera_;
 		PlayerNumber clientPlayer_ = INVALID_PLAYER;
 		core::SpriteManager spriteManager_;
 		float fixedTimer_ = 0.0f;
@@ -90,5 +95,7 @@ class GameManager : public core::SystemInterface
 		sf::Texture shipTexture_;
 		sf::Texture bulletTexture_;
 		sf::Font font_;
+
+		sf::Text textRenderer_;
 	};
 }

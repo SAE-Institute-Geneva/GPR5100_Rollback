@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include <engine/entity.h>
+
 namespace core
 {
     using Component = std::uint32_t;
@@ -12,7 +14,10 @@ namespace core
         SCALE = 1u << 2u,
         ROTATION = 1u << 3u,
         TRANSFORM = POSITION | SCALE | ROTATION,
-        OTHER_TYPE = 1u << 4u
+        SPRITE = 1u << 4u,
+        BODY2D = 1u << 5u,
+        BOX_COLLIDER2D = 1u << 6u,
+        OTHER_TYPE = 1u << 7u
     };
 
 template<typename T, Component C>
@@ -25,12 +30,21 @@ public:
     }
     virtual ~ComponentManager() = default;
 
+    ComponentManager(const ComponentManager& a) = delete;
+    ComponentManager& operator=(ComponentManager&) = delete;
+    ComponentManager(ComponentManager&&) = delete;
+    ComponentManager& operator=(ComponentManager&&) = delete;
+
     void AddComponent(Entity entity);
     void RemoveComponent(Entity entity);
 
-    const T& GetComponent(Entity entity) const;
-    T& GetComponent(Entity entity);
+    [[nodiscard]] const T& GetComponent(Entity entity) const;
+    [[nodiscard]] T& GetComponent(Entity entity);
 
+    void SetComponent(Entity entity, const T& value);
+
+    [[nodiscard]] const std::vector<T>& GetComponents() const;
+    void SetComponents(const std::vector<T>& components);
 protected:
     EntityManager& entityManager_;
     std::vector<T> components_;
@@ -63,5 +77,23 @@ template <typename T, Component C>
 T& ComponentManager<T, C>::GetComponent(Entity entity)
 {
     return components_[entity];
+}
+
+template <typename T, Component C>
+void ComponentManager<T, C>::SetComponent(Entity entity, const T& value)
+{
+    components_[entity] = value;
+}
+
+template <typename T, Component C>
+const std::vector<T>& ComponentManager<T, C>::GetComponents() const
+{
+    return components_;
+}
+
+template <typename T, Component C>
+void ComponentManager<T, C>::SetComponents(const std::vector<T>& components)
+{
+    components_ = components;
 }
 } // namespace core

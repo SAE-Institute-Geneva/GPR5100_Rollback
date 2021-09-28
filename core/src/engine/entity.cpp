@@ -60,6 +60,11 @@ bool EntityManager::EntityExists(Entity entity) const
     return entityMasks_[entity] != INVALID_ENTITY_MASK;
 }
 
+std::size_t EntityManager::GetEntitiesSize() const
+{
+    return entityMasks_.size();
+}
+
 bool EntityManager::HasComponent(Entity entity, EntityMask mask) const
 {
     return (entityMasks_[entity] & mask) == mask;

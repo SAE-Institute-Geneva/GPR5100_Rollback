@@ -61,7 +61,9 @@ namespace game
         DESTROYED = static_cast<core::EntityMask>(core::ComponentType::OTHER_TYPE) << 4u,
     };
 
-    namespace PlayerInput
+    using PlayerInput = std::uint8_t;
+
+    namespace PlayerInputEnum
     {
         enum PlayerInput : std::uint8_t
         {
