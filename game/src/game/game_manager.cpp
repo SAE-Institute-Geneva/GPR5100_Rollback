@@ -211,7 +211,7 @@ namespace game
         spriteManager_.Draw(target);
         // Draw texts on screen
 
-        /*
+        
         if (state_ & FINISHED)
         {
             if (winner_ == GetPlayerNumber())
@@ -219,27 +219,27 @@ namespace game
                 const std::string winnerText = fmt::format("You won!");
                 textRenderer_.setFillColor(sf::Color::White);
                 textRenderer_.setString(winnerText);
-                textRenderer_.setPosition(windowSize_.x, windowSize_.y);
+                textRenderer_.setPosition(windowSize_.x / 2.0f, windowSize_.y / 2.0f);
                 textRenderer_.setCharacterSize(32);
-                window.draw(textRenderer_);
+                target.draw(textRenderer_);
             }
             else if (winner_ != INVALID_PLAYER)
             {
                 const std::string winnerText = fmt::format("P{} won!", winner_ + 1);
                 textRenderer_.setFillColor(sf::Color::White);
                 textRenderer_.setString(winnerText);
-                textRenderer_.setPosition(windowSize_.x, windowSize_.y);
+                textRenderer_.setPosition(windowSize_.x / 2.0f, windowSize_.y / 2.0f);
                 textRenderer_.setCharacterSize(32);
-                window.draw(textRenderer_);
+                target.draw(textRenderer_);
             }
             else
             {
                 const std::string errorMessage = fmt::format("Error with other players");
                 textRenderer_.setFillColor(sf::Color::Red);
                 textRenderer_.setString(errorMessage);
-                textRenderer_.setPosition(windowSize_.x, windowSize_.y);
+                textRenderer_.setPosition(windowSize_.x / 2.0f, windowSize_.y / 2.0f);
                 textRenderer_.setCharacterSize(32);
-                window.draw(textRenderer_);
+                target.draw(textRenderer_);
             }
         }
         if (!(state_ & STARTED))
@@ -255,9 +255,9 @@ namespace game
                     const std::string countDownText = fmt::format("Starts in {}", ((startingTime_ - ms) / 1000 + 1));
                     textRenderer_.setFillColor(sf::Color::White);
                     textRenderer_.setString(countDownText);
-                    textRenderer_.setPosition(windowSize_.x, windowSize_.y);
+                    textRenderer_.setPosition(windowSize_.x/2.0f, windowSize_.y / 2.0f);
                     textRenderer_.setCharacterSize(32);
-                    window.draw(textRenderer_);
+                    target.draw(textRenderer_);
                 }
             }
         }
@@ -278,9 +278,9 @@ namespace game
             textRenderer_.setString(health);
             textRenderer_.setPosition(0, 0);
             textRenderer_.setCharacterSize(24);
-            window.draw(textRenderer_);
+            target.draw(textRenderer_);
         }
-        */
+        
     }
 
     void ClientGameManager::SetClientPlayer(PlayerNumber clientPlayer)
@@ -385,7 +385,7 @@ namespace game
 
     void ClientGameManager::StartGame(unsigned long long int startingTime)
     {
-        core::LogDebug("Start game at starting time: " + std::to_string(startingTime));
+        core::LogDebug(fmt::format("Start game at starting time: {}", startingTime));
         startingTime_ = startingTime;
     }
 
