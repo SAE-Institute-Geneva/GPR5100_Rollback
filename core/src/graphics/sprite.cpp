@@ -22,7 +22,7 @@ void SpriteManager::Draw(sf::RenderTarget& window)
             if(entityManager_.HasComponent(entity, static_cast<Component>(ComponentType::POSITION)))
             {
                 const auto position = transformManager_.GetPosition(entity);
-                components_[entity].setPosition(position.x*pixelPerMeter + center_.x, position.y*pixelPerMeter + center_.y);
+                components_[entity].setPosition(position.x*pixelPerMeter + center_.x, windowSize_.y - (position.y*pixelPerMeter + center_.y));
             }
             if (entityManager_.HasComponent(entity, static_cast<Component>(ComponentType::ROTATION)))
             {
@@ -32,5 +32,10 @@ void SpriteManager::Draw(sf::RenderTarget& window)
             window.draw(components_[entity]);
         }
     }
+}
+
+void SpriteManager::SetColor(Entity entity, sf::Color color)
+{
+    components_[entity].setColor(color);
 }
 } // namespace core

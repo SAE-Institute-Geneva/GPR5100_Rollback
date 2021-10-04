@@ -121,9 +121,6 @@ namespace game
 
     void ClientGameManager::Init()
     {
-        //setup camera with render area dimension
-        const sf::FloatRect visibleArea(0, 0, windowSize_.x, windowSize_.y);
-        camera_ = sf::View(visibleArea);
         //load textures
         if (!bulletTexture_.loadFromFile("data/sprites/bullet.png"))
         {
@@ -155,7 +152,7 @@ namespace game
                     static_cast<core::EntityMask>(core::ComponentType::SPRITE)))
                 {
                     const auto& player = rollbackManager_.GetPlayerCharacterManager().GetComponent(entity);
-                    auto sprite = spriteManager_.GetComponent(entity);
+
                     if (player.invincibilityTime > 0.0f)
                     {
                         auto leftV = std::fmod(player.invincibilityTime, invincibilityFlashPeriod);
@@ -166,13 +163,12 @@ namespace game
                         std::fmod(player.invincibilityTime, invincibilityFlashPeriod)
                     > invincibilityFlashPeriod / 2.0f)
                     {
-                        sprite.setColor(sf::Color::Black);
+                        spriteManager_.SetColor(entity, sf::Color::Black);
                     }
                     else
                     {
-                        sprite.setColor(playerColors[player.playerNumber]);
+                        spriteManager_.SetColor(entity, playerColors[player.playerNumber]);
                     }
-                    spriteManager_.SetComponent(entity, sprite);
                 }
 
                 if (entityManager_.HasComponent(entity, static_cast<core::EntityMask>(core::ComponentType::TRANSFORM)))
@@ -205,6 +201,7 @@ namespace game
         windowSize_ = windowsSize;
         const sf::FloatRect visibleArea(0, 0, windowSize_.x, windowSize_.y);
         camera_ = sf::View(visibleArea);
+        spriteManager_.SetWindowSize(sf::Vector2f(windowsSize));
         spriteManager_.SetCenter(sf::Vector2f(windowsSize) / 2.0f);
     }
 

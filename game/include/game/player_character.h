@@ -20,7 +20,6 @@ struct PlayerCharacter
     {
     public:
         explicit PlayerCharacterManager(core::EntityManager& entityManager, PhysicsManager& physicsManager, GameManager& gameManager);
-        PlayerCharacterManager& operator= (const PlayerCharacterManager&);
         void FixedUpdate(sf::Time dt);
 
     private:

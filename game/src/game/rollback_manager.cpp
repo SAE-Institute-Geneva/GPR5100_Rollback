@@ -19,14 +19,11 @@ namespace game
         {
             std::fill(input.begin(), input.end(), 0u);
         }
-        lastValidatePhysicsManager_.RegisterCollisionListener(*this);
+        currentPhysicsManager_.RegisterCollisionListener(*this);
     }
 
     void RollbackManager::SimulateToCurrentFrame()
     {
-#ifdef EASY_PROFILE_USE
-        EASY_BLOCK("Simulate To Current Frame");
-#endif
         const auto currentFrame = gameManager_.GetCurrentFrame();
         const auto lastValidateFrame = gameManager_.GetLastValidateFrame();
         //Destroying all created Entities after the last validated frame
@@ -132,9 +129,6 @@ namespace game
 
     void RollbackManager::ValidateFrame(Frame newValidateFrame)
     {
-#ifdef EASY_PROFILE_USE
-        EASY_BLOCK("Validate Frame");
-#endif
         const auto lastValidateFrame = gameManager_.GetLastValidateFrame();
         //Destroying all created Entities after the last validated frame
         for (const auto& createdEntity : createdEntities_)
@@ -303,6 +297,7 @@ namespace game
                 auto playerCharacter = currentPlayerManager_.GetComponent(playerEntity);
                 if (playerCharacter.invincibilityTime <= 0.0f)
                 {
+                    core::LogDebug(fmt::format("Player {} is hit by bullet", playerCharacter.playerNumber));
                     playerCharacter.health--;
                     playerCharacter.invincibilityTime = playerInvincibilityPeriod;
                 }

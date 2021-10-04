@@ -28,7 +28,7 @@ namespace game
             const bool up = input & PlayerInputEnum::PlayerInput::UP;
             const bool down = input & PlayerInputEnum::PlayerInput::DOWN;
 
-            const auto angularVelocity = ((left ? 1.0f : 0.0f) + (right ? -1.0f : 0.0f)) * playerAngularSpeed;
+            const auto angularVelocity = ((left ? -1.0f : 0.0f) + (right ? 1.0f : 0.0f)) * playerAngularSpeed;
 
             playerBody.angularVelocity = angularVelocity;
 
@@ -71,15 +71,5 @@ namespace game
                 }
             }
         }
-    }
-
-    PlayerCharacterManager& PlayerCharacterManager::operator=(const PlayerCharacterManager& playerCharacterManager)
-    {
-        //TODO are we supposed to copy the game manager or simply change it?
-        //gameManager_ = playerCharacterManager.gameManager_;
-
-        components_ = playerCharacterManager.components_;
-        //We do NOT copy the physics manager
-        return *this;
     }
 }
