@@ -18,7 +18,7 @@ public:
 class OnEventInterface
 {
 public:
-    virtual void OnEvent(const sf::Event& event);
+    virtual void OnEvent(const sf::Event& event) = 0;
 };
 
 }

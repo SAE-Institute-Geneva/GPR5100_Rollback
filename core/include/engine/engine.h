@@ -6,18 +6,29 @@
 
 namespace core
 {
+class OnEventInterface;
 class SystemInterface;
+class DrawInterface;
+class DrawImGuiInterface;
 
 class Engine
 {
 public:
     void Run();
-private:
+
+    void RegisterSystem(SystemInterface*);
+    void RegisterOnEvent(OnEventInterface*);
+    void RegisterDraw(DrawInterface*);
+    void RegisterDrawImGui(DrawImGuiInterface*);
+protected:
     void Init();
-    void Update(sf::Time time);
+    void Update(sf::Time dt);
     void Destroy();
 
     std::vector<SystemInterface*> systems_;
+    std::vector<OnEventInterface*> eventInterfaces_;
+    std::vector<DrawInterface*> drawInterfaces_;
+    std::vector<DrawImGuiInterface*> drawImGuiInterfaces_;
     std::unique_ptr<sf::RenderWindow> window_;
 };
 

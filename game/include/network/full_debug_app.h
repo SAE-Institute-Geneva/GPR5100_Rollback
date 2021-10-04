@@ -5,6 +5,7 @@
 #include "engine/system.h"
 #include "game/game_globals.h"
 #include "graphics/graphics.h"
+#include <SFML/Graphics/RenderTexture.hpp>
 
 namespace game
 {
