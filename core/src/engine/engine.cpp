@@ -8,6 +8,8 @@
 #include <imgui.h>
 #include <imgui-SFML.h>
 
+#include "engine/globals.h"
+
 namespace core
 {
 void Engine::Run()
@@ -44,8 +46,12 @@ void Engine::RegisterDrawImGui(DrawImGuiInterface* drawImGuiInterface)
 
 void Engine::Init()
 {
-    window_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(1230, 720), "Rollback Game");
+    window_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(windowSize.x, windowSize.y), "Rollback Game");
     ImGui::SFML::Init(*window_);
+    for(auto& system : systems_)
+    {
+        system->Init();
+    }
 }
 
 void Engine::Update(sf::Time dt)
@@ -59,6 +65,12 @@ void Engine::Update(sf::Time dt)
         case sf::Event::Closed:
             window_->close();
             break;
+        case sf::Event::Resized:
+        {
+            sf::FloatRect visibleArea(0, 0, e.size.width, e.size.height);
+            window_->setView(sf::View(visibleArea));
+            break;
+        }
         default:
             break;
         }
@@ -89,6 +101,10 @@ void Engine::Update(sf::Time dt)
 
 void Engine::Destroy()
 {
+    for (auto& system : systems_)
+    {
+        system->Destroy();
+    }
     window_ = nullptr;
 }
 } // namespace core

@@ -28,7 +28,6 @@ public:
     static constexpr Entity INVALID_ENTITY = std::numeric_limits<Entity>::max();
     static constexpr EntityMask INVALID_ENTITY_MASK = 0u;
 private:
-    static constexpr std::size_t INIT_ENTITY_NMB = 64u;
     std::vector<EntityMask> entityMasks_;
 };
 

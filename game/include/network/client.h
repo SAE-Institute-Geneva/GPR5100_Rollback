@@ -13,7 +13,7 @@ namespace game
 
         }
         virtual ~Client() = default;
-        void SetWindowSize(sf::Vector2u windowSize)
+        virtual void SetWindowSize(sf::Vector2u windowSize)
         {
             gameManager_.SetWindowSize(windowSize);
         }

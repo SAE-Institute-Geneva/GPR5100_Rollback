@@ -1,50 +1,54 @@
 #include <network/full_debug_app.h>
 
+#include "engine/globals.h"
+
 namespace game
 {
     SimulationDebugApp::SimulationDebugApp() : server_(clients_)
     {
-        for (int i = 0; i < clients_.size(); i++)
+        for (auto& client : clients_)
         {
-            clients_[i] = std::make_unique<SimulationClient>(server_);
+            client = std::make_unique<SimulationClient>(server_);
         }
     }
 
     void SimulationDebugApp::OnEvent(const sf::Event& event)
     {
+        switch(event.type)
+        {
+        case sf::Event::Resized:
+        {
+            windowSize_ = sf::Vector2u(event.size.width, event.size.height);
+            for (auto& framebuffer : clientsFramebuffers_)
+            {
+                framebuffer.create(windowSize_.x/2u, windowSize_.y);
+            }
+
+            for (auto& client : clients_)
+            {
+                client->SetWindowSize(sf::Vector2u(windowSize_.x/2u, windowSize_.y));
+            }
+
+            break;
+        }
+        default: ;
+        }
     }
 
     void SimulationDebugApp::Init()
     {
-        /*
-        Job initJob = Job([this]()
-            {
-                quad_.Init();
-                //client shader init
-                const auto& config = BasicEngine::GetInstance()->GetConfig();
-                clientShader_.LoadFromFile(config.dataRootPath + "shaders/comp_net/client.vert",
-                    config.dataRootPath + "shaders/comp_net/client.frag");
-                windowSize_ = config.windowSize;
-                for (auto& framebuffer : clientsFramebuffer_)
-                {
-                    framebuffer.SetSize(windowSize_ / Vec2u(2, 1));
-                    framebuffer.Create();
-                }
-                for (auto& client : clients_)
-                {
-                    client->SetWindowSize(windowSize_ / Vec2u(2, 1));
-                }
-                for (auto& client : clients_)
-                {
-                    client->Init();
-                }
-                server_.Init();
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            });
-        BasicEngine::GetInstance()->ScheduleJob(&initJob, JobThreadType::RENDER_THREAD);
-        initJob.Join();
-        */
+        windowSize_ = core::windowSize;
+        for(auto& framebuffer: clientsFramebuffers_)
+        {
+            framebuffer.create(windowSize_.x / 2u, windowSize_.y);
+        }
+        for(auto& client : clients_)
+        {
+            client->SetWindowSize(sf::Vector2u(windowSize_.x / 2u, windowSize_.y));
+            client->Init();
+        }
+        server_.Init();
+        
     }
 
     void SimulationDebugApp::Update(sf::Time dt)
@@ -69,13 +73,14 @@ namespace game
         clientInput2 = clientInput2 | (keys[SDL_SCANCODE_SPACE] ? asteroid::PlayerInput::SHOOT : 0u);
 
         clients_[1]->SetPlayerInput(clientInput2);
+
+        RendererLocator::get().Render(this);
+        */
         server_.Update(dt);
         for (auto& client : clients_)
         {
             client->Update(dt);
         }
-        RendererLocator::get().Render(this);
-        */
     }
 
     void SimulationDebugApp::Destroy()
@@ -98,48 +103,19 @@ namespace game
 
     void SimulationDebugApp::Draw(sf::RenderTarget& renderTarget)
     {
-        /*
-        const auto& config = BasicEngine::GetInstance()->GetConfig();
-        if (config.windowSize != windowSize_)
+        for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
         {
-            logDebug(fmt::format(
-                "Resize Simulation Debug App Window framebuffers! with new resolution {}", config.windowSize.ToString()));
-            for (auto& framebuffer : clientsFramebuffer_)
-            {
-                framebuffer.SetSize(config.windowSize / Vec2u(2, 1));
-                framebuffer.Reload();
-            }
-
-            for (auto& client : clients_)
-            {
-                client->SetWindowSize(config.windowSize / Vec2u(2, 1));
-            }
-            windowSize_ = config.windowSize;
+            clientsFramebuffers_[playerNumber].clear(sf::Color::Black);
+            clients_[playerNumber]->Draw(clientsFramebuffers_[playerNumber]);
+            clientsFramebuffers_[playerNumber].display();
         }
-        for (PlayerNumber playerNumber = 0; playerNumber < asteroid::maxPlayerNmb; playerNumber++)
-        {
-            clientsFramebuffer_[playerNumber].Bind();
-            clientsFramebuffer_[playerNumber].Clear(Color::black);
-            clients_[playerNumber]->Render();
-        }
+        screenQuad_ = sf::Sprite();
+        screenQuad_.setTexture(clientsFramebuffers_[0].getTexture());
+        renderTarget.draw(screenQuad_);
 
-        gl::Framebuffer::Unbind();
-        glViewport(0, 0, windowSize_.x, windowSize_.y);
-        clientShader_.Bind();
-        auto transform = Mat4f::Identity;
-        transform = Transform3d::Scale(transform, Vec3f(0.5f, 1.0f, 1.0f));
-        transform = Transform3d::Translate(transform, Vec3f(-0.5f, 0.0f, 0.0f));
-        clientShader_.SetMat4("transform", transform);
-        clientShader_.SetTexture("texture", clientsFramebuffer_[0].GetColorTexture());
-        quad_.Draw();
-
-        transform = Mat4f::Identity;
-        transform = Transform3d::Scale(transform, Vec3f(0.5f, 1.0f, 1.0f));
-        transform = Transform3d::Translate(transform, Vec3f(0.5f, 0.0f, 0.0f));
-        clientShader_.SetMat4("transform", transform);
-        clientShader_.SetTexture("texture", clientsFramebuffer_[1].GetColorTexture());
-        quad_.Draw();
-        */
+        screenQuad_.setTexture(clientsFramebuffers_[1].getTexture());
+        screenQuad_.setPosition(sf::Vector2f(windowSize_.x / 2u, 0));
+        renderTarget.draw(screenQuad_);
 
     }
 }

@@ -36,7 +36,7 @@ namespace game
         core::LogDebug("[GameManager] Spawning new player");
         const auto entity = entityManager_.CreateEntity();
         entityMap_[playerNumber] = entity;
-        
+
         entityManager_.AddComponent(entity, static_cast<core::EntityMask>(ComponentType::PLAYER_CHARACTER));
         transformManager_.AddComponent(entity);
         transformManager_.SetPosition(entity, position);
@@ -121,13 +121,24 @@ namespace game
 
     void ClientGameManager::Init()
     {
-        //TODO setup camera with render area dimension
-
-        //TODO load textures
-
-        //TODO load fonts
-
-
+        //setup camera with render area dimension
+        const sf::FloatRect visibleArea(0, 0, windowSize_.x, windowSize_.y);
+        camera_ = sf::View(visibleArea);
+        //load textures
+        if (!bulletTexture_.loadFromFile("data/sprites/bullet.png"))
+        {
+            core::LogError("Could not load bullet sprite");
+        }
+        if (!shipTexture_.loadFromFile("data/sprites/ship.png"))
+        {
+            core::LogError("Could not load ship sprite");
+        }
+        //load fonts
+        if (!font_.loadFromFile("data/fonts/8-bit-hud.ttf"))
+        {
+            core::LogError("Could not load font");
+        }
+        textRenderer_.setFont(font_);
         GameManager::Init();
     }
 
@@ -140,8 +151,8 @@ namespace game
             for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
             {
                 if (entityManager_.HasComponent(entity,
-                                                core::EntityMask(ComponentType::PLAYER_CHARACTER) |
-                                                core::EntityMask(core::ComponentType::SPRITE)))
+                    static_cast<core::EntityMask>(ComponentType::PLAYER_CHARACTER) |
+                    static_cast<core::EntityMask>(core::ComponentType::SPRITE)))
                 {
                     const auto& player = rollbackManager_.GetPlayerCharacterManager().GetComponent(entity);
                     auto sprite = spriteManager_.GetComponent(entity);
@@ -164,7 +175,7 @@ namespace game
                     spriteManager_.SetComponent(entity, sprite);
                 }
 
-                if (entityManager_.HasComponent(entity, core::EntityMask(core::ComponentType::TRANSFORM)))
+                if (entityManager_.HasComponent(entity, static_cast<core::EntityMask>(core::ComponentType::TRANSFORM)))
                 {
                     transformManager_.SetPosition(entity, rollbackManager_.GetTransformManager().GetPosition(entity));
                     transformManager_.SetScale(entity, rollbackManager_.GetTransformManager().GetScale(entity));
@@ -181,7 +192,7 @@ namespace game
         }
 
 
-        
+
     }
 
     void ClientGameManager::Destroy()
@@ -192,31 +203,46 @@ namespace game
     void ClientGameManager::SetWindowSize(sf::Vector2u windowsSize)
     {
         windowSize_ = windowsSize;
-        camera_.setSize(windowsSize.x, windowsSize.y);
+        const sf::FloatRect visibleArea(0, 0, windowSize_.x, windowSize_.y);
+        camera_ = sf::View(visibleArea);
+        spriteManager_.SetCenter(sf::Vector2f(windowsSize) / 2.0f);
     }
 
-    void ClientGameManager::Draw(sf::RenderTarget& window)
+    void ClientGameManager::Draw(sf::RenderTarget& target)
     {
-        window.setView(camera_);
-        spriteManager_.Draw(window);
-        // TODO Draw texts on screen
+        target.setView(camera_);
+        spriteManager_.Draw(target);
+        // Draw texts on screen
+
         /*
         if (state_ & FINISHED)
         {
             if (winner_ == GetPlayerNumber())
             {
                 const std::string winnerText = fmt::format("You won!");
-                fontManager_.RenderText(fontId_, winnerText, Vec2f::zero, TextAnchor::CENTER_LEFT, 1.0f, Color4(Color::white, 1.0f));
+                textRenderer_.setFillColor(sf::Color::White);
+                textRenderer_.setString(winnerText);
+                textRenderer_.setPosition(windowSize_.x, windowSize_.y);
+                textRenderer_.setCharacterSize(32);
+                window.draw(textRenderer_);
             }
             else if (winner_ != INVALID_PLAYER)
             {
                 const std::string winnerText = fmt::format("P{} won!", winner_ + 1);
-                fontManager_.RenderText(fontId_, winnerText, Vec2f::zero, TextAnchor::CENTER_LEFT, 1.0f, Color4(Color::white, 1.0f));
+                textRenderer_.setFillColor(sf::Color::White);
+                textRenderer_.setString(winnerText);
+                textRenderer_.setPosition(windowSize_.x, windowSize_.y);
+                textRenderer_.setCharacterSize(32);
+                window.draw(textRenderer_);
             }
             else
             {
                 const std::string errorMessage = fmt::format("Error with other players");
-                fontManager_.RenderText(fontId_, errorMessage, Vec2f::zero, TextAnchor::CENTER_LEFT, 1.0f, Color4(Color::white, 1.0f));
+                textRenderer_.setFillColor(sf::Color::Red);
+                textRenderer_.setString(errorMessage);
+                textRenderer_.setPosition(windowSize_.x, windowSize_.y);
+                textRenderer_.setCharacterSize(32);
+                window.draw(textRenderer_);
             }
         }
         if (!(state_ & STARTED))
@@ -230,7 +256,11 @@ namespace game
                 if (ms < startingTime_)
                 {
                     const std::string countDownText = fmt::format("Starts in {}", ((startingTime_ - ms) / 1000 + 1));
-                    fontManager_.RenderText(fontId_, countDownText, Vec2f::zero, TextAnchor::CENTER_LEFT, 1.0f, Color4(Color::white, 1.0f));
+                    textRenderer_.setFillColor(sf::Color::White);
+                    textRenderer_.setString(countDownText);
+                    textRenderer_.setPosition(windowSize_.x, windowSize_.y);
+                    textRenderer_.setCharacterSize(32);
+                    window.draw(textRenderer_);
                 }
             }
         }
@@ -241,20 +271,35 @@ namespace game
             for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
             {
                 const auto playerEntity = GetEntityFromPlayerNumber(playerNumber);
+                if (playerEntity == core::EntityManager::INVALID_ENTITY)
+                {
+                    continue;
+                }
                 health += fmt::format("P{} health: {} ", playerNumber + 1, playerManager.GetComponent(playerEntity).health);
             }
-            fontManager_.RenderText(fontId_, health, Vec2f(0.0f, -40.0f), TextAnchor::TOP_LEFT, 0.75f, Color4(Color::white, 1.0f));
+            textRenderer_.setFillColor(sf::Color::White);
+            textRenderer_.setString(health);
+            textRenderer_.setPosition(0, 0);
+            textRenderer_.setCharacterSize(24);
+            window.draw(textRenderer_);
         }
         */
     }
 
+    void ClientGameManager::SetClientPlayer(PlayerNumber clientPlayer)
+    {
+        clientPlayer_ = clientPlayer;
+    }
+
     void ClientGameManager::SpawnPlayer(PlayerNumber playerNumber, core::Vec2f position, core::degree_t rotation)
     {
-        core::LogDebug("Spawn player: " + std::to_string(playerNumber));
+        core::LogDebug(fmt::format("Spawn player: {}", playerNumber));
+
         GameManager::SpawnPlayer(playerNumber, position, rotation);
         const auto entity = GetEntityFromPlayerNumber(playerNumber);
         spriteManager_.AddComponent(entity);
         spriteManager_.SetTexture(entity, shipTexture_);
+        spriteManager_.SetOrigin(entity, sf::Vector2f(shipTexture_.getSize())/2.0f);
         auto sprite = spriteManager_.GetComponent(entity);
         sprite.setColor(playerColors[playerNumber]);
         spriteManager_.SetComponent(entity, sprite);
@@ -267,6 +312,7 @@ namespace game
 
         spriteManager_.AddComponent(entity);
         spriteManager_.SetTexture(entity, bulletTexture_);
+        spriteManager_.SetOrigin(entity, sf::Vector2f(bulletTexture_.getSize())/2.0f);
         auto sprite = spriteManager_.GetComponent(entity);
         sprite.setColor(playerColors[playerNumber]);
         spriteManager_.SetComponent(entity, sprite);
@@ -276,9 +322,6 @@ namespace game
 
     void ClientGameManager::FixedUpdate()
     {
-#ifdef EASY_PROFILE_USE
-        EASY_BLOCK("Game Manager Fixed Update");
-#endif
         if (!(state_ & STARTED))
         {
             if (startingTime_ != 0)
@@ -308,10 +351,16 @@ namespace game
         }
 
         //We send the player inputs when the game started
-
-        const auto& inputs = rollbackManager_.GetInputs(GetPlayerNumber());
+        const auto playerNumber = GetPlayerNumber();
+        if (playerNumber == INVALID_PLAYER)
+        {
+            //We still did not receive the spawn player packet, but receive the start game packet
+            core::LogWarning(fmt::format("Invalid Player Entity in {}:line {}", __FILE__, __LINE__));
+            return;
+        }
+        const auto& inputs = rollbackManager_.GetInputs(playerNumber);
         auto playerInputPacket = std::make_unique<PlayerInputPacket>();
-        playerInputPacket->playerNumber = GetPlayerNumber();
+        playerInputPacket->playerNumber = playerNumber;
         playerInputPacket->currentFrame = core::ConvertToBinary(currentFrame_);
         for (size_t i = 0; i < playerInputPacket->inputs.size(); i++)
         {

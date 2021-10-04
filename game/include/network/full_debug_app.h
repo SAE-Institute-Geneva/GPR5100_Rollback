@@ -27,7 +27,7 @@ namespace game
         void OnEvent(const sf::Event& event) override;
     private:
         std::array<std::unique_ptr<SimulationClient>, maxPlayerNmb> clients_;
-        std::array<sf::RenderTexture, maxPlayerNmb> clientsFramebuffer_;
+        std::array<sf::RenderTexture, maxPlayerNmb> clientsFramebuffers_;
         SimulationServer server_;
         sf::Sprite screenQuad_;
         sf::Vector2u windowSize_;

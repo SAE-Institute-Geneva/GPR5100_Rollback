@@ -70,9 +70,9 @@ class GameManager : public core::SystemInterface
 		void Destroy() override;
 		void SetWindowSize(sf::Vector2u windowsSize);
 		[[nodiscard]] sf::Vector2u GetWindowSize() const { return windowSize_; }
-		void Draw(sf::RenderTarget& window) override;
-		void SetClientPlayer(PlayerNumber clientPlayer) { clientPlayer_ = clientPlayer; }
-		[[nodiscard]] const sf::View& GetCamera() const { return camera_; }
+		void Draw(sf::RenderTarget& target) override;
+		void SetClientPlayer(PlayerNumber clientPlayer);
+        [[nodiscard]] const sf::View& GetCamera() const { return camera_; }
 		void SpawnPlayer(PlayerNumber playerNumber, core::Vec2f position, core::degree_t rotation) override;
         core::Entity SpawnBullet(PlayerNumber playerNumber, core::Vec2f position, core::Vec2f velocity) override;
 		void FixedUpdate();

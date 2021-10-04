@@ -3,6 +3,7 @@
 #include <imgui.h>
 #include <maths/basic.h>
 #include <utils/conversion.h>
+#include <utils/log.h>
 
 namespace game
 {
@@ -18,7 +19,6 @@ namespace game
 
     void SimulationServer::Update(sf::Time dt)
     {
-
         auto packetIt = receivedPackets_.begin();
         while (packetIt != receivedPackets_.end())
         {
@@ -44,7 +44,6 @@ namespace game
             {
                 for (auto& client : clients_)
                 {
-
                     client->ReceivePacket(packetIt->packet.get());
                 }
                 packetIt->packet = nullptr;
@@ -104,7 +103,7 @@ namespace game
 
     void SimulationServer::SpawnNewPlayer(ClientId clientId, PlayerNumber playerNumber)
     {
-
+        core::LogDebug("[Server] Spawn new player");
         auto spawnPlayer = std::make_unique<SpawnPlayerPacket>();
         spawnPlayer->packetType = PacketType::SPAWN_PLAYER;
         spawnPlayer->clientId = core::ConvertToBinary(clientId);

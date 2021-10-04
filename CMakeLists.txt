@@ -6,6 +6,8 @@ set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+include(cmake/data.cmake)
+
 if (MSVC)
     # warning level 4 and all warnings as errors
     add_compile_options(/W4 /w14640)

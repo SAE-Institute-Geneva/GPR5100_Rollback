@@ -18,12 +18,14 @@ public:
     {
         
     }
-
+    void SetOrigin(Entity entity, sf::Vector2f origin);
     void SetTexture(Entity entity, const sf::Texture& texture);
+    void SetCenter(sf::Vector2f center) { center_ = center; }
     void Draw(sf::RenderTarget& window) override;
 
 protected:
     TransformManager& transformManager_;
+    sf::Vector2f center_{};
     
 };
 

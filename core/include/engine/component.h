@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-
+#include <engine/globals.h>
 #include <engine/entity.h>
 
 namespace core
@@ -26,7 +26,7 @@ class ComponentManager
 public:
     ComponentManager(EntityManager& entityManager) : entityManager_(entityManager)
     {
-        
+        components_.resize(entityInitNmb);
     }
     virtual ~ComponentManager() = default;
 
@@ -53,10 +53,12 @@ protected:
 template <typename T, Component C>
 void ComponentManager<T, C>::AddComponent(Entity entity)
 {
-    const auto currentSize = components_.size();
-    if (entity >= currentSize)
+    auto currentSize = components_.size();
+    while (entity >= currentSize)
     {
-        components_.resize(currentSize + currentSize / 2);
+        auto newSize = currentSize + currentSize / 2;
+        components_.resize(newSize);
+        currentSize = newSize;
     }
     entityManager_.AddComponent(entity, C);
 }

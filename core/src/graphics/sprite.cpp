@@ -1,7 +1,13 @@
 #include <graphics/sprite.h>
+#include <engine/transform.h>
 
 namespace core
 {
+void SpriteManager::SetOrigin(Entity entity, sf::Vector2f origin)
+{
+    components_[entity].setOrigin(origin);
+}
+
 void SpriteManager::SetTexture(Entity entity, const sf::Texture& texture)
 {
     components_[entity].setTexture(texture);
@@ -13,6 +19,16 @@ void SpriteManager::Draw(sf::RenderTarget& window)
     {
         if(entityManager_.HasComponent(entity, static_cast<Component>(ComponentType::SPRITE)))
         {
+            if(entityManager_.HasComponent(entity, static_cast<Component>(ComponentType::POSITION)))
+            {
+                const auto position = transformManager_.GetPosition(entity);
+                components_[entity].setPosition(position.x*pixelPerMeter + center_.x, position.y*pixelPerMeter + center_.y);
+            }
+            if (entityManager_.HasComponent(entity, static_cast<Component>(ComponentType::ROTATION)))
+            {
+                const auto rotation = transformManager_.GetRotation(entity);
+                components_[entity].setRotation(rotation.value());
+            }
             window.draw(components_[entity]);
         }
     }

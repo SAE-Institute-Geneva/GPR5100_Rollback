@@ -1,6 +1,8 @@
 #include <game/rollback_manager.h>
 #include <game/game_manager.h>
 #include <cassert>
+#include <utils/log.h>
+#include <fmt/format.h>
 
 namespace game
 {
@@ -59,6 +61,11 @@ namespace game
             {
                 const auto playerInput = GetInputAtFrame(playerNumber, frame);
                 const auto playerEntity = gameManager_.GetEntityFromPlayerNumber(playerNumber);
+                if(playerEntity == core::EntityManager::INVALID_ENTITY)
+                {
+                    core::LogWarning(fmt::format("Invalid Entity in {}:line {}", __FILE__, __LINE__));
+                    continue;
+                }
                 auto playerCharacter = currentPlayerManager_.GetComponent(playerEntity);
                 playerCharacter.input = playerInput;
                 currentPlayerManager_.SetComponent(playerEntity, playerCharacter);
@@ -279,7 +286,7 @@ namespace game
 
     PlayerInput RollbackManager::GetInputAtFrame(PlayerNumber playerNumber, Frame frame)
     {
-        assert(currentFrame_ - frame <= inputs_[playerNumber].size() &&
+        assert(currentFrame_ - frame < inputs_[playerNumber].size() &&
             "Trying to get input too far in the past");
         return inputs_[playerNumber][currentFrame_ - frame];
     }

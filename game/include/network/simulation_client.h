@@ -25,8 +25,7 @@ namespace game
 
         void DrawImGui() override;
         void SetPlayerInput(PlayerInput input);
-
-        void SetWindowSize(sf::Vector2u windowSize);
+        
     private:
         SimulationServer& server_;
 

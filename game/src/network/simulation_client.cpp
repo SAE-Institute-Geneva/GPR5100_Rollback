@@ -50,11 +50,6 @@ namespace game
 
     }
 
-    void SimulationClient::SetWindowSize(sf::Vector2u windowSize)
-    {
-        gameManager_.SetWindowSize(windowSize);
-    }
-
     void SimulationClient::DrawImGui()
     {
         const auto windowName = "Client " + std::to_string(clientId_);
@@ -62,8 +57,8 @@ namespace game
         if (gameManager_.GetPlayerNumber() == INVALID_PLAYER && ImGui::Button("Spawn Player"))
         {
             auto joinPacket = std::make_unique<JoinPacket>();
-            auto* clientIdPtr = reinterpret_cast<std::uint8_t*>(&clientId_);
-            for (int i = 0; i < sizeof(clientId_); i++)
+            const auto* clientIdPtr = reinterpret_cast<std::uint8_t*>(&clientId_);
+            for (std::size_t i = 0; i < sizeof(clientId_); i++)
             {
                 joinPacket->clientId[i] = clientIdPtr[i];
             }
