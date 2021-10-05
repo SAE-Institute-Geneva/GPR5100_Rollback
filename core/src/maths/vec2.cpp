@@ -3,11 +3,6 @@
 
 namespace core
 {
-
-    constexpr Vec2f::Vec2f(float x, float y) : x(x), y(y)
-{
-}
-
     Vec2f::Vec2f(sf::Vector2f v) : x(v.x), y(v.y)
     {
     }
@@ -19,7 +14,7 @@ namespace core
 
     Vec2f Vec2f::operator+(Vec2f v) const
     {
-        return Vec2f(x + v.x, y + v.y);
+        return {x + v.x, y + v.y};
     }
 
     Vec2f& Vec2f::operator+=(Vec2f v)
@@ -31,7 +26,7 @@ namespace core
 
     Vec2f Vec2f::operator-(Vec2f v) const
     {
-        return Vec2f(x - v.x, y - v.y);
+        return {x - v.x, y - v.y};
     }
 
     Vec2f& Vec2f::operator-=(Vec2f v)
@@ -43,12 +38,12 @@ namespace core
 
     Vec2f Vec2f::operator*(float f) const
     {
-        return Vec2f(x * f, y * f);
+        return {x * f, y * f};
     }
 
     Vec2f Vec2f::operator/(float f) const
     {
-        return Vec2f(x / f, y / f);
+        return {x / f, y / f};
     }
 
     Vec2f operator*(float f, Vec2f v)

@@ -11,18 +11,21 @@ struct Vec2f
     float x = 0.0f, y = 0.0f;
 
     constexpr Vec2f() = default;
-    constexpr Vec2f(float x, float y);
+    constexpr Vec2f(float x, float y) : x(x), y(y)
+    {
+
+    }
     Vec2f(sf::Vector2f v);
 
 
-    float GetMagnitude() const;
+    [[nodiscard]] float GetMagnitude() const;
     void Normalize();
-    Vec2f GetNormalized() const;
-    float GetSqrMagnitude() const;
-    Vec2f Rotate(degree_t rotation) const;
+    [[nodiscard]] Vec2f GetNormalized() const;
+    [[nodiscard]] float GetSqrMagnitude() const;
+    [[nodiscard]] Vec2f Rotate(degree_t rotation) const;
     static float Dot(Vec2f a, Vec2f b);
     static Vec2f Lerp(Vec2f a, Vec2f b, float t);
-    sf::Vector2f toSf() const;
+    [[nodiscard]] sf::Vector2f toSf() const;
 
     Vec2f operator+(Vec2f v) const;
     Vec2f& operator+=(Vec2f v);

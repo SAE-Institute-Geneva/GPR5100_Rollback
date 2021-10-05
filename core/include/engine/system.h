@@ -18,6 +18,7 @@ public:
 class OnEventInterface
 {
 public:
+    virtual ~OnEventInterface() = default;
     virtual void OnEvent(const sf::Event& event) = 0;
 };
 
