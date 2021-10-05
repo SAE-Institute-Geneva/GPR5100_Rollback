@@ -31,7 +31,7 @@ class NetworkDebugApp : public core::DrawInterface, public core::DrawImGuiInterf
         void OnEvent(const sf::Event& event) override;
     private:
         std::array<ClientNetworkManager, maxPlayerNmb> clients_;
-        std::array<sf::RenderTexture, maxPlayerNmb> clientsFramebuffer_;
+        std::array<sf::RenderTexture, maxPlayerNmb> clientsFramebuffers_;
         sf::Sprite screenQuad_;
         sf::Vector2u windowSize_;
     };
