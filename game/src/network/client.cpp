@@ -29,7 +29,7 @@ namespace game
         case PacketType::START_GAME:
         {
             const auto* startGamePacket = static_cast<const StartGamePacket*>(packet);
-            unsigned long startingTime = core::ConvertFromBinary<unsigned long>(startGamePacket->startTime);
+            const auto startingTime = core::ConvertFromBinary<unsigned long long>(startGamePacket->startTime);
             gameManager_.StartGame(startingTime);
             break;
         }

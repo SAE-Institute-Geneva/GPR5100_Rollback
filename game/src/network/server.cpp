@@ -32,7 +32,7 @@ namespace game
                 auto startGamePacket = std::make_unique<StartGamePacket>();
                 startGamePacket->packetType = PacketType::START_GAME;
                 using namespace std::chrono;
-                unsigned long ms = (duration_cast<milliseconds>(
+                const auto ms = (duration_cast<duration<unsigned long long, std::milli>>(
                     system_clock::now().time_since_epoch()
                     ) + milliseconds(3000)).count();
                 startGamePacket->startTime = core::ConvertToBinary(ms);

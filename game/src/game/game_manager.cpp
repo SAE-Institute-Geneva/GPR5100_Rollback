@@ -223,8 +223,10 @@ namespace game
                 const std::string winnerText = fmt::format("You won!");
                 textRenderer_.setFillColor(sf::Color::White);
                 textRenderer_.setString(winnerText);
-                textRenderer_.setPosition(windowSize_.x / 2.0f, windowSize_.y / 2.0f);
                 textRenderer_.setCharacterSize(32);
+                const auto textBounds = textRenderer_.getLocalBounds();
+                textRenderer_.setPosition(windowSize_.x / 2.0f - textBounds.width/2.0f, 
+                    windowSize_.y / 2.0f - textBounds.height / 2.0f);
                 target.draw(textRenderer_);
             }
             else if (winner_ != INVALID_PLAYER)
@@ -232,8 +234,10 @@ namespace game
                 const std::string winnerText = fmt::format("P{} won!", winner_ + 1);
                 textRenderer_.setFillColor(sf::Color::White);
                 textRenderer_.setString(winnerText);
-                textRenderer_.setPosition(windowSize_.x / 2.0f, windowSize_.y / 2.0f);
                 textRenderer_.setCharacterSize(32);
+                const auto textBounds = textRenderer_.getLocalBounds();
+                textRenderer_.setPosition(windowSize_.x / 2.0f - textBounds.width / 2.0f,
+                    windowSize_.y / 2.0f - textBounds.height / 2.0f);
                 target.draw(textRenderer_);
             }
             else
@@ -241,8 +245,10 @@ namespace game
                 const std::string errorMessage = fmt::format("Error with other players");
                 textRenderer_.setFillColor(sf::Color::Red);
                 textRenderer_.setString(errorMessage);
-                textRenderer_.setPosition(windowSize_.x / 2.0f, windowSize_.y / 2.0f);
                 textRenderer_.setCharacterSize(32);
+                const auto textBounds = textRenderer_.getLocalBounds();
+                textRenderer_.setPosition(windowSize_.x / 2.0f - textBounds.width / 2.0f,
+                    windowSize_.y / 2.0f - textBounds.height / 2.0f);
                 target.draw(textRenderer_);
             }
         }
@@ -259,8 +265,10 @@ namespace game
                     const std::string countDownText = fmt::format("Starts in {}", ((startingTime_ - ms) / 1000 + 1));
                     textRenderer_.setFillColor(sf::Color::White);
                     textRenderer_.setString(countDownText);
-                    textRenderer_.setPosition(windowSize_.x/2.0f, windowSize_.y / 2.0f);
                     textRenderer_.setCharacterSize(32);
+                    const auto textBounds = textRenderer_.getLocalBounds();
+                    textRenderer_.setPosition(windowSize_.x / 2.0f - textBounds.width / 2.0f,
+                        windowSize_.y / 2.0f - textBounds.height / 2.0f);
                     target.draw(textRenderer_);
                 }
             }
@@ -280,8 +288,8 @@ namespace game
             }
             textRenderer_.setFillColor(sf::Color::White);
             textRenderer_.setString(health);
-            textRenderer_.setPosition(0, 0);
-            textRenderer_.setCharacterSize(24);
+            textRenderer_.setPosition(10, 10);
+            textRenderer_.setCharacterSize(20);
             target.draw(textRenderer_);
         }
         
@@ -328,7 +336,7 @@ namespace game
             if (startingTime_ != 0)
             {
                 using namespace std::chrono;
-                unsigned long long ms = duration_cast<milliseconds>(
+                const auto ms = duration_cast<duration<unsigned long long, std::milli>>(
                     system_clock::now().time_since_epoch()
                     ).count();
                 if (ms > startingTime_)
