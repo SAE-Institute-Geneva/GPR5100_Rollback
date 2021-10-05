@@ -8,6 +8,7 @@
 
 #include "game_globals.h"
 #include "rollback_manager.h"
+#include "star_background.h"
 #include "engine/entity.h"
 #include "graphics/graphics.h"
 #include "graphics/sprite.h"
@@ -72,7 +73,6 @@ class GameManager : public core::SystemInterface
 		[[nodiscard]] sf::Vector2u GetWindowSize() const { return windowSize_; }
 		void Draw(sf::RenderTarget& target) override;
 		void SetClientPlayer(PlayerNumber clientPlayer);
-        [[nodiscard]] const sf::View& GetCamera() const { return camera_; }
 		void SpawnPlayer(PlayerNumber playerNumber, core::Vec2f position, core::degree_t rotation) override;
         core::Entity SpawnBullet(PlayerNumber playerNumber, core::Vec2f position, core::Vec2f velocity) override;
 		void FixedUpdate();
@@ -83,11 +83,16 @@ class GameManager : public core::SystemInterface
 		void WinGame(PlayerNumber winner) override;
 		[[nodiscard]] std::uint32_t GetState() const { return state_; }
 	protected:
+
+		void UpdateCameraView();
+
 		PacketSenderInterface& packetSenderInterface_;
 		sf::Vector2u windowSize_;
-		sf::View camera_;
+		sf::View originalView_;
+		sf::View cameraView_;
 		PlayerNumber clientPlayer_ = INVALID_PLAYER;
 		core::SpriteManager spriteManager_;
+		StarBackground starBackground_;
 		float fixedTimer_ = 0.0f;
 		unsigned long long startingTime_ = 0;
 		std::uint32_t state_ = 0;

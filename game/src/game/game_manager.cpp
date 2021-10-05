@@ -136,6 +136,7 @@ namespace game
             core::LogError("Could not load font");
         }
         textRenderer_.setFont(font_);
+        starBackground_.Init();
         GameManager::Init();
     }
 
@@ -200,18 +201,21 @@ namespace game
     {
         windowSize_ = windowsSize;
         const sf::FloatRect visibleArea(0, 0, windowSize_.x, windowSize_.y);
-        camera_ = sf::View(visibleArea);
+        originalView_ = sf::View(visibleArea);
         spriteManager_.SetWindowSize(sf::Vector2f(windowsSize));
         spriteManager_.SetCenter(sf::Vector2f(windowsSize) / 2.0f);
     }
 
     void ClientGameManager::Draw(sf::RenderTarget& target)
     {
-        target.setView(camera_);
-        spriteManager_.Draw(target);
-        // Draw texts on screen
+        UpdateCameraView();
+        target.setView(cameraView_);
 
-        
+        starBackground_.Draw(target);
+        spriteManager_.Draw(target);
+
+        // Draw texts on screen
+        target.setView(originalView_);
         if (state_ & FINISHED)
         {
             if (winner_ == GetPlayerNumber())
@@ -434,4 +438,47 @@ namespace game
         state_ = state_ | FINISHED;
     }
 
+    void ClientGameManager::UpdateCameraView()
+    {
+        if(!(state_ | STARTED))
+        {
+            cameraView_ = originalView_;
+            return;
+        }
+
+        cameraView_ = originalView_;
+        const sf::Vector2f extends{ cameraView_.getSize() / 2.0f / PixelPerUnit };
+        float currentZoom = 1.0f;
+        constexpr float margin = 1.0f;
+        for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+        {
+            const auto playerEntity = GetEntityFromPlayerNumber(playerNumber);
+            if(playerEntity == core::EntityManager::INVALID_ENTITY)
+            {
+                continue;
+            }
+            if(entityManager_.HasComponent(playerEntity, static_cast<core::EntityMask>(core::ComponentType::POSITION)))
+            {
+                const auto position = transformManager_.GetPosition(playerEntity);
+                if((std::abs(position.x) + margin) > extends.x)
+                {
+                    const auto ratio = (std::abs(position.x ) + margin) / extends.x;
+                    if(ratio > currentZoom)
+                    {
+                        currentZoom = ratio;
+                    }
+                }
+                if ((std::abs(position.y) + margin) > extends.y)
+                {
+                    const auto ratio = (std::abs(position.y) + margin) / extends.y;
+                    if (ratio > currentZoom)
+                    {
+                        currentZoom = ratio;
+                    }
+                }
+            }
+        }
+        cameraView_.zoom(currentZoom);
+
+    }
 }
