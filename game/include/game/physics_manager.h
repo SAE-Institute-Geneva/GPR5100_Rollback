@@ -31,17 +31,18 @@ namespace game
         bool isTrigger = false;
     };
 
-    class OnCollisionInterface
+    class OnTriggerInterface
     {
     public:
-        virtual void OnCollision(core::Entity entity1, core::Entity entity2) = 0;
+        virtual ~OnTriggerInterface() = default;
+        virtual void OnTrigger(core::Entity entity1, core::Entity entity2) = 0;
     };
 
-    class BodyManager : public core::ComponentManager<Body, core::EntityMask(core::ComponentType::BODY2D)>
+    class BodyManager : public core::ComponentManager<Body, static_cast<core::EntityMask>(core::ComponentType::BODY2D)>
     {
         using ComponentManager::ComponentManager;
     };
-    class BoxManager : public core::ComponentManager<Box, core::EntityMask(core::ComponentType::BOX_COLLIDER2D)>
+    class BoxManager : public core::ComponentManager<Box, static_cast<core::EntityMask>(core::ComponentType::BOX_COLLIDER2D)>
     {
         using ComponentManager::ComponentManager;
     };
@@ -50,7 +51,6 @@ namespace game
     {
     public:
         explicit PhysicsManager(core::EntityManager& entityManager);
-        PhysicsManager(const PhysicsManager& physicsManager) = default;
         void FixedUpdate(sf::Time dt);
         [[nodiscard]] const Body& GetBody(core::Entity entity) const;
         void SetBody(core::Entity entity, const Body& body);
@@ -60,13 +60,13 @@ namespace game
         void SetBox(core::Entity entity, const Box& box);
         [[nodiscard]] const Box& GetBox(core::Entity entity) const;
 
-        void RegisterCollisionListener(OnCollisionInterface& collisionInterface);
+        void RegisterTriggerListener(OnTriggerInterface& collisionInterface);
         void SetComponents(const PhysicsManager& physicsManager);
     private:
         core::EntityManager& entityManager_;
         BodyManager bodyManager_;
         BoxManager boxManager_;
-        core::Action<core::Entity, core::Entity> onCollisionAction_;
+        core::Action<core::Entity, core::Entity> onTriggerAction_;
     };
 
 }

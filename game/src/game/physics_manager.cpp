@@ -59,7 +59,7 @@ namespace game
                     box2.extends.x * 2.0f,
                     box2.extends.y * 2.0f))
                 {
-                    onCollisionAction_.Execute(entity, otherEntity);
+                    onTriggerAction_.Execute(entity, otherEntity);
                 }
 
             }
@@ -96,10 +96,10 @@ namespace game
         return boxManager_.GetComponent(entity);
     }
 
-    void PhysicsManager::RegisterCollisionListener(OnCollisionInterface& collisionInterface)
+    void PhysicsManager::RegisterTriggerListener(OnTriggerInterface& collisionInterface)
     {
-        onCollisionAction_.RegisterCallback(
-            [&collisionInterface](core::Entity entity1, core::Entity entity2) { collisionInterface.OnCollision(entity1, entity2); });
+        onTriggerAction_.RegisterCallback(
+            [&collisionInterface](core::Entity entity1, core::Entity entity2) { collisionInterface.OnTrigger(entity1, entity2); });
     }
 
     void PhysicsManager::SetComponents(const PhysicsManager& physicsManager)

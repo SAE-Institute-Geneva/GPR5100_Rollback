@@ -26,7 +26,7 @@ class GameManager;
         Frame destroyedFrame = 0;
     };
 
-    class RollbackManager : public OnCollisionInterface
+    class RollbackManager : public OnTriggerInterface
     {
     public:
         explicit RollbackManager(GameManager& gameManager, core::EntityManager& entityManager);
@@ -57,7 +57,7 @@ class GameManager;
          */
         void DestroyEntity(core::Entity entity);
 
-        void OnCollision(core::Entity entity1, core::Entity entity2) override;
+        void OnTrigger(core::Entity entity1, core::Entity entity2) override;
     private:
         PlayerInput GetInputAtFrame(PlayerNumber playerNumber, Frame frame);
         GameManager& gameManager_;

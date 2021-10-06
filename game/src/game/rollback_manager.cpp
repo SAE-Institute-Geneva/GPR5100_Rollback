@@ -19,7 +19,7 @@ namespace game
         {
             std::fill(input.begin(), input.end(), 0u);
         }
-        currentPhysicsManager_.RegisterCollisionListener(*this);
+        currentPhysicsManager_.RegisterTriggerListener(*this);
     }
 
     void RollbackManager::SimulateToCurrentFrame()
@@ -285,7 +285,7 @@ namespace game
         return inputs_[playerNumber][currentFrame_ - frame];
     }
 
-    void RollbackManager::OnCollision(core::Entity entity1, core::Entity entity2)
+    void RollbackManager::OnTrigger(core::Entity entity1, core::Entity entity2)
     {
         std::function<void(const PlayerCharacter&, core::Entity, const Bullet&, core::Entity)> ManageCollision =
             [this](const auto& player, auto playerEntity, const auto& bullet, auto bulletEntity)
