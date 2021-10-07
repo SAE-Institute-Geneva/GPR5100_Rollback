@@ -102,9 +102,9 @@ namespace game
             [&collisionInterface](core::Entity entity1, core::Entity entity2) { collisionInterface.OnTrigger(entity1, entity2); });
     }
 
-    void PhysicsManager::SetComponents(const PhysicsManager& physicsManager)
+    void PhysicsManager::CopyAllComponents(const PhysicsManager& physicsManager)
     {
-        bodyManager_.SetComponents(physicsManager.bodyManager_.GetComponents());
-        boxManager_.SetComponents(physicsManager.boxManager_.GetComponents());
+        bodyManager_.CopyAllComponents(physicsManager.bodyManager_.GetAllComponents());
+        boxManager_.CopyAllComponents(physicsManager.boxManager_.GetAllComponents());
     }
 }

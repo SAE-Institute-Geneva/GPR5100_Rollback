@@ -11,7 +11,7 @@ namespace game
     {
         for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
         {
-            if (entityManager_.HasComponent(entity, core::EntityMask(ComponentType::BULLET)))
+            if (entityManager_.HasComponent(entity, static_cast<core::EntityMask>(ComponentType::BULLET)))
             {
                 auto& bullet = components_[entity];
                 bullet.remainingTime -= dt.asSeconds();

@@ -43,12 +43,11 @@ namespace game
                 entityManager_.RemoveComponent(entity, static_cast<core::EntityMask>(ComponentType::DESTROYED));
             }
         }
-
-        createdEntities_.clear();
+        
         //Revert the current game state to the last validated game state
-        currentBulletManager_.SetComponents(lastValidateBulletManager_.GetComponents());
-        currentPhysicsManager_.SetComponents(lastValidatePhysicsManager_);
-        currentPlayerManager_.SetComponents(lastValidatePlayerManager_.GetComponents());
+        currentBulletManager_.CopyAllComponents(lastValidateBulletManager_.GetAllComponents());
+        currentPhysicsManager_.CopyAllComponents(lastValidatePhysicsManager_);
+        currentPlayerManager_.CopyAllComponents(lastValidatePlayerManager_.GetAllComponents());
 
         for (Frame frame = lastValidateFrame + 1; frame <= currentFrame; frame++)
         {
@@ -79,7 +78,7 @@ namespace game
                                              static_cast<core::EntityMask>(core::ComponentType::BODY2D) |
                                              static_cast<core::EntityMask>(core::ComponentType::TRANSFORM)))
                 continue;
-            const auto body = currentPhysicsManager_.GetBody(entity);
+            const auto& body = currentPhysicsManager_.GetBody(entity);
             currentTransformManager_.SetPosition(entity, body.position);
             currentTransformManager_.SetRotation(entity, body.rotation);
         }
@@ -159,9 +158,9 @@ namespace game
             }
         }
         //We use the current game state as the temporary new validate game state
-        currentBulletManager_.SetComponents(lastValidateBulletManager_.GetComponents());
-        currentPhysicsManager_.SetComponents(lastValidatePhysicsManager_);
-        currentPlayerManager_.SetComponents(lastValidatePlayerManager_.GetComponents());
+        currentBulletManager_.CopyAllComponents(lastValidateBulletManager_.GetAllComponents());
+        currentPhysicsManager_.CopyAllComponents(lastValidatePhysicsManager_);
+        currentPlayerManager_.CopyAllComponents(lastValidatePlayerManager_.GetAllComponents());
 
         //We simulate the frames until the new validated frame
         for (Frame frame = lastValidateFrame_ + 1; frame <= newValidateFrame; frame++)
@@ -190,9 +189,9 @@ namespace game
             }
         }
         //Copy back the new validate game state to the last validated game state
-        lastValidateBulletManager_.SetComponents(currentBulletManager_.GetComponents());
-        lastValidatePlayerManager_.SetComponents(currentPlayerManager_.GetComponents());
-        lastValidatePhysicsManager_.SetComponents(currentPhysicsManager_);
+        lastValidateBulletManager_.CopyAllComponents(currentBulletManager_.GetAllComponents());
+        lastValidatePlayerManager_.CopyAllComponents(currentPlayerManager_.GetAllComponents());
+        lastValidatePhysicsManager_.CopyAllComponents(currentPhysicsManager_);
         lastValidateFrame_ = newValidateFrame;
         createdEntities_.clear();
     }
@@ -356,6 +355,6 @@ namespace game
             entityManager_.DestroyEntity(entity);
             return;
         }
-            entityManager_.AddComponent(entity, core::EntityMask(ComponentType::DESTROYED));
+        entityManager_.AddComponent(entity, static_cast<core::EntityMask>(ComponentType::DESTROYED));
     }
 }

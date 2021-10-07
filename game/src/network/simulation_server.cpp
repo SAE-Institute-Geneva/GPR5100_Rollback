@@ -13,7 +13,6 @@ namespace game
 
     void SimulationServer::Init()
     {
-        gameManager_.Init();
 
     }
 

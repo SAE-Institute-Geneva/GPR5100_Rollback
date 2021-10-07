@@ -69,18 +69,25 @@ class GameManager;
         PhysicsManager currentPhysicsManager_;
         PlayerCharacterManager currentPlayerManager_;
         BulletManager currentBulletManager_;
+        /**
+         * Last Validate (confirm frame) Component Managers used for rollback
+         */
         PhysicsManager lastValidatePhysicsManager_;
         PlayerCharacterManager lastValidatePlayerManager_;
         BulletManager lastValidateBulletManager_;
 
 
-        Frame lastValidateFrame_ = 0;
+        Frame lastValidateFrame_ = 0; //Confirm frame
         Frame currentFrame_ = 0;
         Frame testedFrame_ = 0;
 
-        static constexpr std::size_t windowBufferSize = 5 * 50;
+        static constexpr std::size_t windowBufferSize = 5 * 50; // 5 seconds of frame at 50 fps
         std::array<std::uint32_t, maxPlayerNmb> lastReceivedFrame_{};
         std::array<std::array<PlayerInput, windowBufferSize>, maxPlayerNmb> inputs_{};
+        /**
+         * \brief Array containing all the created entities in the window between the confirm frame and the current frame
+         * to destroy them when rollbacking.
+         */
         std::vector<CreatedEntity> createdEntities_;
     public:
         [[nodiscard]] const std::array<PlayerInput, windowBufferSize>& GetInputs(PlayerNumber playerNumber) const

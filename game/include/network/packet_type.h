@@ -315,6 +315,7 @@ namespace game
     class PacketSenderInterface
     {
     public:
+        virtual ~PacketSenderInterface() = default;
         virtual void SendReliablePacket(std::unique_ptr<Packet> packet) = 0;
         virtual void SendUnreliablePacket(std::unique_ptr<Packet> packet) = 0;
     };

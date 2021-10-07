@@ -13,20 +13,7 @@ namespace game
         transformManager_(entityManager_),
         rollbackManager_(*this, entityManager_)
     {
-    }
-
-    void GameManager::Init()
-    {
-        entityMap_.fill(core::EntityManager::INVALID_ENTITY);
-    }
-
-    void GameManager::Update(sf::Time dt)
-    {
-    }
-
-    void GameManager::Destroy()
-    {
-
+        playerEntityMap_.fill(core::EntityManager::INVALID_ENTITY);
     }
 
     void GameManager::SpawnPlayer(PlayerNumber playerNumber, core::Vec2f position, core::degree_t rotation)
@@ -35,9 +22,8 @@ namespace game
             return;
         core::LogDebug("[GameManager] Spawning new player");
         const auto entity = entityManager_.CreateEntity();
-        entityMap_[playerNumber] = entity;
+        playerEntityMap_[playerNumber] = entity;
 
-        entityManager_.AddComponent(entity, static_cast<core::EntityMask>(ComponentType::PLAYER_CHARACTER));
         transformManager_.AddComponent(entity);
         transformManager_.SetPosition(entity, position);
         transformManager_.SetRotation(entity, rotation);
@@ -46,7 +32,7 @@ namespace game
 
     core::Entity GameManager::GetEntityFromPlayerNumber(PlayerNumber playerNumber) const
     {
-        return entityMap_[playerNumber];
+        return playerEntityMap_[playerNumber];
     }
 
 
@@ -60,9 +46,6 @@ namespace game
     }
     void GameManager::Validate(Frame newValidateFrame)
     {
-#ifdef EASY_PROFILE_USE
-        EASY_BLOCK("Validate Frame");
-#endif
         if (rollbackManager_.GetCurrentFrame() < newValidateFrame)
         {
             rollbackManager_.StartNewFrame(newValidateFrame);
@@ -73,7 +56,7 @@ namespace game
     core::Entity GameManager::SpawnBullet(PlayerNumber playerNumber, core::Vec2f position, core::Vec2f velocity)
     {
         const core::Entity entity = entityManager_.CreateEntity();
-        entityManager_.AddComponent(entity, static_cast<core::EntityMask>(ComponentType::BULLET));
+
         transformManager_.AddComponent(entity);
         transformManager_.SetPosition(entity, position);
         transformManager_.SetScale(entity, core::Vec2f::one() * bulletScale);
@@ -137,7 +120,6 @@ namespace game
         }
         textRenderer_.setFont(font_);
         starBackground_.Init();
-        GameManager::Init();
     }
 
     void ClientGameManager::Update(sf::Time dt)
@@ -194,7 +176,6 @@ namespace game
 
     void ClientGameManager::Destroy()
     {
-        GameManager::Destroy();
     }
 
     void ClientGameManager::SetWindowSize(sf::Vector2u windowsSize)

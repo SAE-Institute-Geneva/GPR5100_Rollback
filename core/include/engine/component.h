@@ -20,82 +20,84 @@ namespace core
         OTHER_TYPE = 1u << 7u
     };
 
-template<typename T, Component C>
-class ComponentManager
-{
-public:
-    ComponentManager(EntityManager& entityManager) : entityManager_(entityManager)
+    template<typename T, Component C>
+    class ComponentManager
     {
-        components_.resize(entityInitNmb);
-    }
-    virtual ~ComponentManager() = default;
+    public:
+        ComponentManager(EntityManager& entityManager) : entityManager_(entityManager)
+        {
+            components_.resize(entityInitNmb);
+        }
+        virtual ~ComponentManager() = default;
 
-    ComponentManager(const ComponentManager& a) = delete;
-    ComponentManager& operator=(ComponentManager&) = delete;
-    ComponentManager(ComponentManager&&) = delete;
-    ComponentManager& operator=(ComponentManager&&) = delete;
+        ComponentManager(const ComponentManager&) = delete;
+        ComponentManager& operator=(ComponentManager&) = delete;
+        ComponentManager(ComponentManager&&) = delete;
+        ComponentManager& operator=(ComponentManager&&) = delete;
 
-    void AddComponent(Entity entity);
-    void RemoveComponent(Entity entity);
+        virtual void AddComponent(Entity entity);
+        virtual void RemoveComponent(Entity entity);
 
-    [[nodiscard]] const T& GetComponent(Entity entity) const;
-    [[nodiscard]] T& GetComponent(Entity entity);
+        [[nodiscard]] const T& GetComponent(Entity entity) const;
+        [[nodiscard]] T& GetComponent(Entity entity);
 
-    void SetComponent(Entity entity, const T& value);
+        void SetComponent(Entity entity, const T& value);
 
-    [[nodiscard]] const std::vector<T>& GetComponents() const;
-    void SetComponents(const std::vector<T>& components);
-protected:
-    EntityManager& entityManager_;
-    std::vector<T> components_;
-};
+        [[nodiscard]] const std::vector<T>& GetAllComponents() const;
+        void CopyAllComponents(const std::vector<T>& components);
+    protected:
+        EntityManager& entityManager_;
+        std::vector<T> components_;
+    };
 
-template <typename T, Component C>
-void ComponentManager<T, C>::AddComponent(Entity entity)
-{
-    auto currentSize = components_.size();
-    while (entity >= currentSize)
+    template <typename T, Component C>
+    void ComponentManager<T, C>::AddComponent(Entity entity)
     {
-        auto newSize = currentSize + currentSize / 2;
-        components_.resize(newSize);
-        currentSize = newSize;
+        // Resize components array if too small
+        auto currentSize = components_.size();
+        while (entity >= currentSize)
+        {
+            auto newSize = currentSize + currentSize / 2;
+            components_.resize(newSize);
+            currentSize = newSize;
+        }
+
+        entityManager_.AddComponent(entity, C);
     }
-    entityManager_.AddComponent(entity, C);
-}
 
-template <typename T, Component C>
-void ComponentManager<T, C>::RemoveComponent(Entity entity)
-{
-    entityManager_.RemoveComponent(entity, C);
-}
+    template <typename T, Component C>
+    void ComponentManager<T, C>::RemoveComponent(Entity entity)
+    {
+        entityManager_.RemoveComponent(entity, C);
+    }
 
-template <typename T, Component C>
-const T& ComponentManager<T, C>::GetComponent(Entity entity) const
-{
-    return components_[entity];
-}
+    template <typename T, Component C>
+    const T& ComponentManager<T, C>::GetComponent(Entity entity) const
+    {
+        return components_[entity];
+    }
 
-template <typename T, Component C>
-T& ComponentManager<T, C>::GetComponent(Entity entity)
-{
-    return components_[entity];
-}
+    template <typename T, Component C>
+    T& ComponentManager<T, C>::GetComponent(Entity entity)
+    {
+        return components_[entity];
+    }
 
-template <typename T, Component C>
-void ComponentManager<T, C>::SetComponent(Entity entity, const T& value)
-{
-    components_[entity] = value;
-}
+    template <typename T, Component C>
+    void ComponentManager<T, C>::SetComponent(Entity entity, const T& value)
+    {
+        components_[entity] = value;
+    }
 
-template <typename T, Component C>
-const std::vector<T>& ComponentManager<T, C>::GetComponents() const
-{
-    return components_;
-}
+    template <typename T, Component C>
+    const std::vector<T>& ComponentManager<T, C>::GetAllComponents() const
+    {
+        return components_;
+    }
 
-template <typename T, Component C>
-void ComponentManager<T, C>::SetComponents(const std::vector<T>& components)
-{
-    components_ = components;
-}
+    template <typename T, Component C>
+    void ComponentManager<T, C>::CopyAllComponents(const std::vector<T>& components)
+    {
+        components_ = components;
+    }
 } // namespace core

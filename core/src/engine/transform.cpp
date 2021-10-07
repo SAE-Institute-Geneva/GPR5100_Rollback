@@ -4,6 +4,12 @@
 
 namespace core
 {
+void ScaleManager::AddComponent(Entity entity)
+{
+    ComponentManager<Vec2f, 4>::AddComponent(entity);
+    components_[entity] = Vec2f::one();
+}
+
 TransformManager::TransformManager(EntityManager& entityManager) :
     positionManager_(entityManager),
     scaleManager_(entityManager),
@@ -17,19 +23,19 @@ Vec2f TransformManager::GetPosition(Entity entity) const
     return positionManager_.GetComponent(entity);
 }
 
-const std::vector<Vec2f>& TransformManager::GetPositions() const
+const std::vector<Vec2f>& TransformManager::GetAllPositions() const
 {
-    return positionManager_.GetComponents();
+    return positionManager_.GetAllComponents();
 }
 
-const std::vector<Vec2f>& TransformManager::GetScales() const
+const std::vector<Vec2f>& TransformManager::GetAllScales() const
 {
-    return scaleManager_.GetComponents();
+    return scaleManager_.GetAllComponents();
 }
 
-const std::vector<degree_t>& TransformManager::GetRotations() const
+const std::vector<degree_t>& TransformManager::GetAllRotations() const
 {
-    return rotationManager_.GetComponents();
+    return rotationManager_.GetAllComponents();
 }
 
 void TransformManager::SetPosition(Entity entity, Vec2f position)

@@ -76,10 +76,9 @@ float Vec2f::GetSqrMagnitude() const
 
 Vec2f Vec2f::Rotate(degree_t rotation) const
 {
-    const auto theta = radian_t(rotation);
 
-    const auto cs = std::cos(theta.value());
-    const auto sn = std::sin(theta.value());
+    const auto cs = Cos(rotation);
+    const auto sn = Sin(rotation);
 
     Vec2f v;
     v.x = x * cs - y * sn;

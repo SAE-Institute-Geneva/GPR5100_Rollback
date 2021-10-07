@@ -10,6 +10,9 @@ namespace core
 using Entity = std::uint32_t;
 using EntityMask = std::uint32_t;
 
+/**
+ * \brief Manages the entities in an array using bitwise operations to know if it has components.
+ */
 class EntityManager
 {
 public:
@@ -18,11 +21,12 @@ public:
 
     Entity CreateEntity();
     void DestroyEntity(Entity entity);
-
+    // Normally called by ComponentManager
     void AddComponent(Entity entity, EntityMask mask);
+    // Normally called by ComponentManager
     void RemoveComponent(Entity entity, EntityMask mask);
-    bool HasComponent(Entity entity, EntityMask mask) const;
-    bool EntityExists(Entity entity) const;
+    [[nodiscard]] bool HasComponent(Entity entity, EntityMask mask) const;
+    [[nodiscard]] bool EntityExists(Entity entity) const;
 
     [[nodiscard]] std::size_t GetEntitiesSize() const;
 

@@ -5,9 +5,9 @@
 
 namespace game
 {
-class PhysicsManager;
+    class PhysicsManager;
 
-struct PlayerCharacter
+    struct PlayerCharacter
     {
         float shootingTime = 0.0f;
         PlayerInput input = 0u;

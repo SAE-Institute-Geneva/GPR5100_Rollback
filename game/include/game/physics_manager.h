@@ -40,10 +40,12 @@ namespace game
 
     class BodyManager : public core::ComponentManager<Body, static_cast<core::EntityMask>(core::ComponentType::BODY2D)>
     {
+    public:
         using ComponentManager::ComponentManager;
     };
     class BoxManager : public core::ComponentManager<Box, static_cast<core::EntityMask>(core::ComponentType::BOX_COLLIDER2D)>
     {
+    public:
         using ComponentManager::ComponentManager;
     };
 
@@ -61,7 +63,7 @@ namespace game
         [[nodiscard]] const Box& GetBox(core::Entity entity) const;
 
         void RegisterTriggerListener(OnTriggerInterface& collisionInterface);
-        void SetComponents(const PhysicsManager& physicsManager);
+        void CopyAllComponents(const PhysicsManager& physicsManager);
     private:
         core::EntityManager& entityManager_;
         BodyManager bodyManager_;

@@ -110,7 +110,7 @@ namespace game
         }
         udpSocket_.setBlocking(false);
         core::LogDebug(fmt::format("[Server] Udp Socket on port: {}", udpPort_));
-        gameManager_.Init();
+
         status_ = status_ | OPEN;
 
     }
@@ -165,7 +165,6 @@ namespace game
         {
             ReceivePacket(udpPacket, PacketSocketSource::UDP, address, port);
         }
-        gameManager_.Update(dt);
     }
 
     void ServerNetworkManager::Destroy()
