@@ -114,7 +114,7 @@ namespace game
         std::array<std::uint8_t, sizeof(ClientId)> clientId{};
         PlayerNumber playerNumber = INVALID_PLAYER;
         std::array<std::uint8_t, sizeof(core::Vec2f)> pos{};
-        std::array<std::uint8_t, sizeof(core::degree_t)> angle{};
+        std::array<std::uint8_t, sizeof(core::Degree)> angle{};
     };
 
     inline sf::Packet& operator<<(sf::Packet& packet, const SpawnPlayerPacket& spawnPlayerPacket)

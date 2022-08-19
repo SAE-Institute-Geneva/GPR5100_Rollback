@@ -33,7 +33,7 @@ const std::vector<Vec2f>& TransformManager::GetAllScales() const
     return scaleManager_.GetAllComponents();
 }
 
-const std::vector<degree_t>& TransformManager::GetAllRotations() const
+const std::vector<Degree>& TransformManager::GetAllRotations() const
 {
     return rotationManager_.GetAllComponents();
 }
@@ -53,12 +53,12 @@ void TransformManager::SetScale(Entity entity, Vec2f scale)
     scaleManager_.SetComponent(entity, scale);
 }
 
-degree_t TransformManager::GetRotation(Entity entity) const
+Degree TransformManager::GetRotation(Entity entity) const
 {
     return rotationManager_.GetComponent(entity);
 }
 
-void TransformManager::SetRotation(Entity entity, degree_t rotation)
+void TransformManager::SetRotation(Entity entity, Degree rotation)
 {
     rotationManager_.SetComponent(entity, rotation);
 }

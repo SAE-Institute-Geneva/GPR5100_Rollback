@@ -12,20 +12,20 @@ namespace game
 {
 
     using PlayerNumber = std::uint8_t;
-    const PlayerNumber INVALID_PLAYER = std::numeric_limits<PlayerNumber>::max();
+    constexpr PlayerNumber INVALID_PLAYER = std::numeric_limits<PlayerNumber>::max();
     using ClientId = std::uint16_t;
     using Frame = std::uint32_t;
 
-    const std::uint32_t maxPlayerNmb = 2;
-    const short playerHealth = 5;
-    const float playerSpeed = 1.0f;
-    const core::degree_t playerAngularSpeed = core::degree_t(90.0f);
-    const float playerShootingPeriod = 0.3f;
-    const float bulletSpeed = 2.0f;
-    const float bulletScale = 0.2f;
-    const float bulletPeriod = 3.0f;
-    const float playerInvincibilityPeriod = 1.5f;
-    const float invincibilityFlashPeriod = 0.5f;
+    constexpr std::uint32_t maxPlayerNmb = 2;
+    constexpr short playerHealth = 5;
+    constexpr float playerSpeed = 1.0f;
+    constexpr core::Degree playerAngularSpeed = core::Degree(90.0f);
+    constexpr float playerShootingPeriod = 0.3f;
+    constexpr float bulletSpeed = 2.0f;
+    constexpr float bulletScale = 0.2f;
+    constexpr float bulletPeriod = 3.0f;
+    constexpr float playerInvincibilityPeriod = 1.5f;
+    constexpr float invincibilityFlashPeriod = 0.5f;
 
     const std::array<sf::Color, std::max(maxPlayerNmb, 4u)> playerColors =
     {
@@ -45,12 +45,12 @@ namespace game
             core::Vec2f(-1,0),
     };
 
-    const std::array<core::degree_t, std::max(4u, maxPlayerNmb)> spawnRotations
+    const std::array<core::Degree, std::max(4u, maxPlayerNmb)> spawnRotations
     {
-        core::degree_t(0.0f),
-        core::degree_t(180.0f),
-        core::degree_t(-90.0f),
-        core::degree_t(90.0f)
+        core::Degree(0.0f),
+        core::Degree(180.0f),
+        core::Degree(-90.0f),
+        core::Degree(90.0f)
     };
 
     enum class ComponentType : core::EntityMask

@@ -4,6 +4,7 @@
 #include <vector>
 #include <limits>
 
+
 namespace core
 {
     
@@ -30,10 +31,12 @@ public:
 
     [[nodiscard]] std::size_t GetEntitiesSize() const;
 
+
     static constexpr Entity INVALID_ENTITY = std::numeric_limits<Entity>::max();
     static constexpr EntityMask INVALID_ENTITY_MASK = 0u;
 private:
     std::vector<EntityMask> entityMasks_;
+
 };
 
 } // namespace core

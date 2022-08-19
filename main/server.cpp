@@ -7,8 +7,8 @@ int main(int argc, char** argv)
     unsigned short port = 0;
     if (argc == 2)
     {
-        std::string portArg = argv[1];
-        port = std::stoi(portArg);
+        const std::string portArg = argv[1];
+        port = static_cast<unsigned short>(std::stoi(portArg));
     }
     game::ServerNetworkManager server;
     if (port != 0)

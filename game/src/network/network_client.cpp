@@ -1,3 +1,4 @@
+#include <chrono>
 #include <imgui.h>
 #include <network/network_client.h>
 
@@ -108,9 +109,9 @@ namespace game
     {
         const auto windowName = "Client " + std::to_string(clientId_);
         ImGui::Begin(windowName.c_str());
-        const size_t bufferSize = 100;
+        constexpr size_t bufferSize = 100;
         char hostBuffer[bufferSize];
-        std::strncpy(hostBuffer, serverAddress_.c_str(), bufferSize);
+        std::memcpy(hostBuffer, serverAddress_.c_str(), bufferSize);
         if (ImGui::InputText("Host", hostBuffer, bufferSize))
         {
             serverAddress_ = hostBuffer;
@@ -132,7 +133,7 @@ namespace game
                 auto joinPacket = std::make_unique<JoinPacket>();
                 joinPacket->clientId = core::ConvertToBinary<ClientId>(clientId_);
                 using namespace std::chrono;
-                const unsigned long clientTime = (duration_cast<milliseconds>(system_clock::now().time_since_epoch())).count();
+                const unsigned long clientTime = static_cast<unsigned long>((duration_cast<milliseconds>(system_clock::now().time_since_epoch())).count());
                 joinPacket->startTime = core::ConvertToBinary<unsigned long>(clientTime);
                 SendReliablePacket(std::move(joinPacket));
                 currentState_ = State::JOINING;

@@ -22,7 +22,7 @@ struct Vec2f
     void Normalize();
     [[nodiscard]] Vec2f GetNormalized() const;
     [[nodiscard]] float GetSqrMagnitude() const;
-    [[nodiscard]] Vec2f Rotate(degree_t rotation) const;
+    [[nodiscard]] Vec2f Rotate(Degree rotation) const;
     static float Dot(Vec2f a, Vec2f b);
     static Vec2f Lerp(Vec2f a, Vec2f b, float t);
     [[nodiscard]] sf::Vector2f toSf() const;

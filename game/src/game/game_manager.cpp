@@ -1,3 +1,4 @@
+
 #include <game/game_manager.h>
 
 #include "utils/log.h"
@@ -5,6 +6,8 @@
 #include <imgui.h>
 
 #include "utils/conversion.h"
+
+#include <chrono>
 
 namespace game
 {
@@ -16,7 +19,7 @@ namespace game
         playerEntityMap_.fill(core::EntityManager::INVALID_ENTITY);
     }
 
-    void GameManager::SpawnPlayer(PlayerNumber playerNumber, core::Vec2f position, core::degree_t rotation)
+    void GameManager::SpawnPlayer(PlayerNumber playerNumber, core::Vec2f position, core::Degree rotation)
     {
         if (GetEntityFromPlayerNumber(playerNumber) != core::EntityManager::INVALID_ENTITY)
             return;
@@ -27,7 +30,7 @@ namespace game
         transformManager_.AddComponent(entity);
         transformManager_.SetPosition(entity, position);
         transformManager_.SetRotation(entity, rotation);
-        rollbackManager_.SpawnPlayer(playerNumber, entity, position, core::degree_t(rotation));
+        rollbackManager_.SpawnPlayer(playerNumber, entity, position, rotation);
     }
 
     core::Entity GameManager::GetEntityFromPlayerNumber(PlayerNumber playerNumber) const
@@ -60,7 +63,7 @@ namespace game
         transformManager_.AddComponent(entity);
         transformManager_.SetPosition(entity, position);
         transformManager_.SetScale(entity, core::Vec2f::one() * bulletScale);
-        transformManager_.SetRotation(entity, core::degree_t(0.0f));
+        transformManager_.SetRotation(entity, core::Degree(0.0f));
         rollbackManager_.SpawnBullet(playerNumber, entity, position, velocity);
         return entity;
     }
@@ -135,16 +138,16 @@ namespace game
                     static_cast<core::EntityMask>(core::ComponentType::SPRITE)))
                 {
                     const auto& player = rollbackManager_.GetPlayerCharacterManager().GetComponent(entity);
-
+                    /*
                     if (player.invincibilityTime > 0.0f)
                     {
-                        auto leftV = std::fmod(player.invincibilityTime, invincibilityFlashPeriod);
-                        auto rightV = invincibilityFlashPeriod / 2.0f;
+                        //auto leftV = std::fmod(player.invincibilityTime, invincibilityFlashPeriod);
+                        //auto rightV = invincibilityFlashPeriod / 2.0f;
                         //core::LogDebug(fmt::format("Comparing {} and {} with time: {}", leftV, rightV, player.invincibilityTime));
                     }
+                    */
                     if (player.invincibilityTime > 0.0f &&
-                        std::fmod(player.invincibilityTime, invincibilityFlashPeriod)
-                    > invincibilityFlashPeriod / 2.0f)
+                        std::fmod(player.invincibilityTime, invincibilityFlashPeriod) > invincibilityFlashPeriod / 2.0f)
                     {
                         spriteManager_.SetColor(entity, sf::Color::Black);
                     }
@@ -181,7 +184,9 @@ namespace game
     void ClientGameManager::SetWindowSize(sf::Vector2u windowsSize)
     {
         windowSize_ = windowsSize;
-        const sf::FloatRect visibleArea(0, 0, windowSize_.x, windowSize_.y);
+        const sf::FloatRect visibleArea(0.0f, 0.0f, 
+            static_cast<float>(windowSize_.x), 
+            static_cast<float>(windowSize_.y));
         originalView_ = sf::View(visibleArea);
         spriteManager_.SetWindowSize(sf::Vector2f(windowsSize));
         spriteManager_.SetCenter(sf::Vector2f(windowsSize) / 2.0f);
@@ -281,7 +286,7 @@ namespace game
         clientPlayer_ = clientPlayer;
     }
 
-    void ClientGameManager::SpawnPlayer(PlayerNumber playerNumber, core::Vec2f position, core::degree_t rotation)
+    void ClientGameManager::SpawnPlayer(PlayerNumber playerNumber, core::Vec2f position, core::Degree rotation)
     {
         core::LogDebug(fmt::format("Spawn player: {}", playerNumber));
 

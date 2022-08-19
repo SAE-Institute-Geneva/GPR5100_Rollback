@@ -75,7 +75,7 @@ namespace game
         
         
         server_.Update(dt);
-        for (auto& client : clients_)
+        for (const auto& client : clients_)
         {
             client->Update(dt);
         }
@@ -83,7 +83,7 @@ namespace game
 
     void SimulationDebugApp::Destroy()
     {
-        for (auto& client : clients_)
+        for (const auto& client : clients_)
         {
             client->Destroy();
         }
@@ -112,7 +112,7 @@ namespace game
         renderTarget.draw(screenQuad_);
 
         screenQuad_.setTexture(clientsFramebuffers_[1].getTexture());
-        screenQuad_.setPosition(sf::Vector2f(windowSize_.x / 2u, 0));
+        screenQuad_.setPosition(sf::Vector2f(static_cast<float>(windowSize_.x / 2u), 0.0f));
         renderTarget.draw(screenQuad_);
 
     }

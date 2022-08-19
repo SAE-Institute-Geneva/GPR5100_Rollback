@@ -28,7 +28,7 @@ namespace core
         void SetOrigin(Entity entity, sf::Vector2f origin);
         void SetTexture(Entity entity, const sf::Texture& texture);
         void SetCenter(sf::Vector2f center) { center_ = center; }
-        void SetWindowSize(sf::Vector2f windowSize) { windowSize_ = windowSize; }
+        void SetWindowSize(sf::Vector2f newWindowSize) { windowSize_ = newWindowSize; }
         void Draw(sf::RenderTarget& window) override;
         void SetColor(Entity entity, sf::Color color);
 

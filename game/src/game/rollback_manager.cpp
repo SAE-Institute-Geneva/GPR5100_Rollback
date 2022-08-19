@@ -17,7 +17,7 @@ namespace game
     {
         for (auto& input : inputs_)
         {
-            std::fill(input.begin(), input.end(), 0u);
+            std::fill(input.begin(), input.end(), '\0');
         }
         currentPhysicsManager_.RegisterTriggerListener(*this);
     }
@@ -245,7 +245,7 @@ namespace game
         return state;
     }
 
-    void RollbackManager::SpawnPlayer(PlayerNumber playerNumber, core::Entity entity, core::Vec2f position, core::degree_t rotation)
+    void RollbackManager::SpawnPlayer(PlayerNumber playerNumber, core::Entity entity, core::Vec2f position, core::Degree rotation)
     {
         Body playerBody;
         playerBody.position = position;
@@ -341,7 +341,7 @@ namespace game
         currentTransformManager_.AddComponent(entity);
         currentTransformManager_.SetPosition(entity, position);
         currentTransformManager_.SetScale(entity, core::Vec2f::one() * bulletScale);
-        currentTransformManager_.SetRotation(entity, core::degree_t(0.0f));
+        currentTransformManager_.SetRotation(entity, core::Degree(0.0f));
     }
 
     void RollbackManager::DestroyEntity(core::Entity entity)

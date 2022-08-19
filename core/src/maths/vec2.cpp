@@ -74,7 +74,7 @@ float Vec2f::GetSqrMagnitude() const
     return x * x + y * y;
 }
 
-Vec2f Vec2f::Rotate(degree_t rotation) const
+Vec2f Vec2f::Rotate(Degree rotation) const
 {
 
     const auto cs = Cos(rotation);

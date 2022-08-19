@@ -75,7 +75,7 @@ namespace game
         renderTarget.draw(screenQuad_);
 
         screenQuad_.setTexture(clientsFramebuffers_[1].getTexture());
-        screenQuad_.setPosition(sf::Vector2f(windowSize_.x / 2u, 0));
+        screenQuad_.setPosition(sf::Vector2f(static_cast<float>(windowSize_.x / 2u), 0));
         renderTarget.draw(screenQuad_);
     }
 

@@ -67,7 +67,7 @@ void Engine::Update(sf::Time dt)
             break;
         case sf::Event::Resized:
         {
-            sf::FloatRect visibleArea(0, 0, e.size.width, e.size.height);
+            sf::FloatRect visibleArea(0, 0, static_cast<float>(e.size.width), static_cast<float>(e.size.height));
             window_->setView(sf::View(visibleArea));
             break;
         }

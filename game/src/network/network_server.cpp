@@ -3,6 +3,7 @@
 #include <fmt/format.h>
 #include <utils/conversion.h>
 #include <cassert>
+#include <chrono>
 
 namespace game
 {
@@ -115,7 +116,7 @@ namespace game
 
     }
 
-    void ServerNetworkManager::Update(sf::Time dt)
+    void ServerNetworkManager::Update([[maybe_unused]] sf::Time dt)
     {
         if (lastSocketIndex_ < maxPlayerNmb)
         {
@@ -182,7 +183,7 @@ namespace game
         return status_ & OPEN;
     }
 
-    void ServerNetworkManager::SpawnNewPlayer(ClientId clientId, PlayerNumber playerNumber)
+    void ServerNetworkManager::SpawnNewPlayer([[maybe_unused]] ClientId clientId, [[maybe_unused]] PlayerNumber newPlayerNumber)
     {
         //Spawning the new player in the arena
         for (PlayerNumber p = 0; p <= lastPlayerNumber_; p++)
@@ -224,7 +225,7 @@ namespace game
             PlayerNumber playerNumber;
             if (it != clientMap_.end())
             {
-                playerNumber = std::distance(clientMap_.begin(), it);
+                playerNumber = static_cast<PlayerNumber>(std::distance(clientMap_.begin(), it));
                 clientInfoMap_[playerNumber].clientId = clientId;
             }
             else
@@ -248,7 +249,7 @@ namespace game
                 //Calculate time difference
                 const auto clientTime = core::ConvertFromBinary<unsigned long>(joinPacket.startTime);
                 using namespace std::chrono;
-                const unsigned long deltaTime = (duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count()) - clientTime;
+                const unsigned long deltaTime = static_cast<unsigned long>((duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count())) - clientTime;
                 core::LogDebug(fmt::format("[Server] Client Server deltaTime: {}", deltaTime));
                 clientInfoMap_[playerNumber].timeDifference = deltaTime;
             }
