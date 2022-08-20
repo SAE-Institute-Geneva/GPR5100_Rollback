@@ -21,7 +21,7 @@ namespace game
     class PacketSenderInterface;
 
     /**
-     * \brief Manages the game, shared between the client and the server
+     * \brief GameManager is a class which manages the state of the game. It is shared between the client and the server.
      */
     class GameManager
     {
@@ -36,15 +36,15 @@ namespace game
         [[nodiscard]] Frame GetLastValidateFrame() const { return rollbackManager_.GetLastValidateFrame(); }
         [[nodiscard]] const core::TransformManager& GetTransformManager() const { return transformManager_; }
         [[nodiscard]] const RollbackManager& GetRollbackManager() const { return rollbackManager_; }
-        virtual void SetPlayerInput(PlayerNumber playerNumber, std::uint8_t playerInput, std::uint32_t inputFrame);
-        /*
+        virtual void SetPlayerInput(PlayerNumber playerNumber, PlayerInput playerInput, std::uint32_t inputFrame);
+        /**
          * \brief Called by the server to validate a frame
          */
         void Validate(Frame newValidateFrame);
         //void CopyAllComponents(const GameManager& gameManager);
         static constexpr float PixelPerUnit = 100.0f;
         static constexpr float FixedPeriod = 0.02f; //50fps
-        PlayerNumber CheckWinner() const;
+        [[nodiscard]] PlayerNumber CheckWinner() const;
         virtual void WinGame(PlayerNumber winner);
     protected:
         core::EntityManager entityManager_;

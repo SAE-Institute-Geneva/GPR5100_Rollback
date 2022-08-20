@@ -9,7 +9,7 @@
 namespace game
 {
 
-    void ClientNetworkManager::Init()
+    void NetworkClient::Init()
     {
 
         clientId_ = core::RandomRange(std::numeric_limits<ClientId>::lowest(),
@@ -26,7 +26,7 @@ namespace game
         udpSocket_.setBlocking(false);
     }
 
-    void ClientNetworkManager::Update(sf::Time dt)
+    void NetworkClient::Update(sf::Time dt)
     {
 
         if (currentState_ != State::NONE)
@@ -100,12 +100,12 @@ namespace game
         gameManager_.Update(dt);
     }
 
-    void ClientNetworkManager::Destroy()
+    void NetworkClient::Destroy()
     {
         gameManager_.Destroy();
     }
 
-    void ClientNetworkManager::DrawImGui()
+    void NetworkClient::DrawImGui()
     {
         const auto windowName = "Client " + std::to_string(clientId_);
         ImGui::Begin(windowName.c_str());
@@ -149,12 +149,12 @@ namespace game
         ImGui::End();
     }
 
-    void ClientNetworkManager::Draw(sf::RenderTarget& renderTarget)
+    void NetworkClient::Draw(sf::RenderTarget& renderTarget)
     {
         gameManager_.Draw(renderTarget);
     }
 
-    void ClientNetworkManager::SendReliablePacket(std::unique_ptr<Packet> packet)
+    void NetworkClient::SendReliablePacket(std::unique_ptr<Packet> packet)
     {
 
         //core::LogDebug("[Client] Sending reliable packet to server");
@@ -167,7 +167,7 @@ namespace game
         }
     }
 
-    void ClientNetworkManager::SendUnreliablePacket(std::unique_ptr<Packet> packet)
+    void NetworkClient::SendUnreliablePacket(std::unique_ptr<Packet> packet)
     {
 
         sf::Packet udpPacket;
@@ -196,7 +196,7 @@ namespace game
         }
     }
 
-    void ClientNetworkManager::SetPlayerInput(PlayerInput input)
+    void NetworkClient::SetPlayerInput(PlayerInput input)
     {
         const auto currentFrame = gameManager_.GetCurrentFrame();
         gameManager_.SetPlayerInput(
@@ -205,7 +205,7 @@ namespace game
             currentFrame);
     }
 
-    void ClientNetworkManager::ReceivePacket(sf::Packet& packet, PacketSource source)
+    void NetworkClient::ReceivePacket(sf::Packet& packet, PacketSource source)
     {
         const auto receivePacket = GenerateReceivedPacket(packet);
         Client::ReceivePacket(receivePacket.get());

@@ -8,16 +8,21 @@
 
 namespace game
 {
-    struct ClientInfo
-    {
-        ClientId clientId = 0;
-        unsigned long long timeDifference = 0;
-        sf::IpAddress udpRemoteAddress;
-        unsigned short udpRemotePort = 0;
+/**
+ * \brief ClientInfo is a struct used by a network server to store all needed infos about a client
+ */
+struct ClientInfo
+{
+    ClientId clientId = 0;
+    unsigned long long timeDifference = 0;
+    sf::IpAddress udpRemoteAddress;
+    unsigned short udpRemotePort = 0;
+};
 
-
-    };
-    class ServerNetworkManager : public Server
+/**
+ * \brief NetworkServer is a network server using SFML sockets.
+ */
+class NetworkServer : public Server
     {
     public:
         enum class PacketSocketSource
@@ -25,6 +30,7 @@ namespace game
             TCP,
             UDP
         };
+
         void SendReliablePacket(std::unique_ptr<Packet> packet) override;
 
         void SendUnreliablePacket(std::unique_ptr<Packet> packet) override;

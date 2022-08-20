@@ -10,7 +10,7 @@ int main(int argc, char** argv)
         const std::string portArg = argv[1];
         port = static_cast<unsigned short>(std::stoi(portArg));
     }
-    game::ServerNetworkManager server;
+    game::NetworkServer server;
     if (port != 0)
     {
         server.SetTcpPort(port);

@@ -7,16 +7,19 @@
 
 namespace game
 {
-    class Server : public PacketSenderInterface, public core::SystemInterface
-    {
-    protected:
-        virtual void SpawnNewPlayer(ClientId clientId, PlayerNumber playerNumber) = 0;
-        virtual void ReceivePacket(std::unique_ptr<Packet> packet);
+/**
+ * \brief Server is an interface to a network or simulated server. It owns a simple GameManager.
+ */
+class Server : public PacketSenderInterface, public core::SystemInterface
+{
+protected:
+    virtual void SpawnNewPlayer(ClientId clientId, PlayerNumber playerNumber) = 0;
+    virtual void ReceivePacket(std::unique_ptr<Packet> packet);
 
-        //Server game manager
-        GameManager gameManager_;
-        PlayerNumber lastPlayerNumber_ = 0;
-        std::array<ClientId, maxPlayerNmb> clientMap_{};
+    //Server game manager
+    GameManager gameManager_;
+    PlayerNumber lastPlayerNumber_ = 0;
+    std::array<ClientId, maxPlayerNmb> clientMap_{};
 
-    };
+};
 }

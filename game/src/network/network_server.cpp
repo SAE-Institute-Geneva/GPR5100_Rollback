@@ -7,7 +7,7 @@
 
 namespace game
 {
-    void ServerNetworkManager::SendReliablePacket(
+    void NetworkServer::SendReliablePacket(
         std::unique_ptr<Packet> packet)
     {
         core::LogDebug(fmt::format("[Server] Sending TCP packet: {}",
@@ -37,7 +37,7 @@ namespace game
         }
     }
 
-    void ServerNetworkManager::SendUnreliablePacket(
+    void NetworkServer::SendUnreliablePacket(
         std::unique_ptr<Packet> packet)
     {
         for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb;
@@ -81,7 +81,7 @@ namespace game
 
     }
 
-    void ServerNetworkManager::Init()
+    void NetworkServer::Init()
     {
         sf::Socket::Status status = sf::Socket::Error;
         while (status != sf::Socket::Done)
@@ -116,7 +116,7 @@ namespace game
 
     }
 
-    void ServerNetworkManager::Update([[maybe_unused]] sf::Time dt)
+    void NetworkServer::Update([[maybe_unused]] sf::Time dt)
     {
         if (lastSocketIndex_ < maxPlayerNmb)
         {
@@ -168,22 +168,22 @@ namespace game
         }
     }
 
-    void ServerNetworkManager::Destroy()
+    void NetworkServer::Destroy()
     {
 
     }
 
-    void ServerNetworkManager::SetTcpPort(unsigned short i)
+    void NetworkServer::SetTcpPort(unsigned short i)
     {
         tcpPort_ = i;
     }
 
-    bool ServerNetworkManager::IsOpen() const
+    bool NetworkServer::IsOpen() const
     {
         return status_ & OPEN;
     }
 
-    void ServerNetworkManager::SpawnNewPlayer([[maybe_unused]] ClientId clientId, [[maybe_unused]] PlayerNumber newPlayerNumber)
+    void NetworkServer::SpawnNewPlayer([[maybe_unused]] ClientId clientId, [[maybe_unused]] PlayerNumber newPlayerNumber)
     {
         //Spawning the new player in the arena
         for (PlayerNumber p = 0; p <= lastPlayerNumber_; p++)
@@ -204,7 +204,7 @@ namespace game
     }
 
 
-    void ServerNetworkManager::ProcessReceivePacket(
+    void NetworkServer::ProcessReceivePacket(
         std::unique_ptr<Packet> packet,
         PacketSocketSource packetSource,
         sf::IpAddress address,
@@ -261,7 +261,7 @@ namespace game
         }
     }
 
-    void ServerNetworkManager::ReceivePacket(sf::Packet& packet,
+    void NetworkServer::ReceivePacket(sf::Packet& packet,
         PacketSocketSource packetSource,
         sf::IpAddress address,
         unsigned short port)

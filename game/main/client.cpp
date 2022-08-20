@@ -54,7 +54,7 @@ namespace game
 
     private:
         sf::Vector2u windowSize_;
-        ClientNetworkManager client_;
+        NetworkClient client_;
     };
 }
 
