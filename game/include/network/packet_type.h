@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <chrono>
 #include <SFML/Network/Packet.hpp>
 
 #include "game/game_globals.h"
@@ -17,6 +18,7 @@ namespace game
         START_GAME,
         JOIN_ACK,
         WIN_GAME,
+        PING,
         NONE,
     };
 
@@ -30,7 +32,7 @@ namespace game
 
     inline sf::Packet& operator<<(sf::Packet& packetReceived, Packet& packet)
     {
-        const std::uint8_t packetType = static_cast<std::uint8_t>(packet.packetType);
+        const auto packetType = static_cast<std::uint8_t>(packet.packetType);
         packetReceived << packetType;
         return packetReceived;
     }
@@ -201,6 +203,21 @@ namespace game
         return packet >> winGamePacket.winner;
     }
 
+    struct PingPacket : TypedPacket<PacketType::PING>
+    {
+        long long time = 0;
+    };
+
+    inline sf::Packet& operator<<(sf::Packet& packet, const PingPacket& pingPacket)
+    {
+        return packet << time;
+    }
+
+    inline sf::Packet& operator>>(sf::Packet& packet, PingPacket& pingPacket)
+    {
+        return packet >> pingPacket.time;
+    }
+
     inline void GeneratePacket(sf::Packet& packet, Packet& sendingPacket)
     {
         packet << sendingPacket;
@@ -245,6 +262,12 @@ namespace game
         case PacketType::WIN_GAME:
         {
             auto& packetTmp = static_cast<WinGamePacket&>(sendingPacket);
+            packet << packetTmp;
+            break;
+        }
+        case PacketType::PING:
+        {
+            auto& packetTmp = static_cast<PingPacket&>(sendingPacket);
             packet << packetTmp;
             break;
         }
@@ -306,6 +329,13 @@ namespace game
             winGamePacket->packetType = packetTmp.packetType;
             packet >> *winGamePacket;
             return winGamePacket;
+        }
+        case PacketType::PING:
+        {
+            auto pingPacket = std::make_unique<PingPacket>();
+            pingPacket->packetType = packetTmp.packetType;
+            packet >> *pingPacket;
+            return pingPacket;
         }
         default:;
         }

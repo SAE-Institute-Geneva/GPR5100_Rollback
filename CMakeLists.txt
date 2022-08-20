@@ -10,14 +10,13 @@ include(cmake/data.cmake)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 
 if (MSVC)
-    # warning level 4 and all warnings as errors
+    # warning level 4 
     add_compile_options(/W4 /w14640)
     add_compile_definitions(_USE_MATH_DEFINES)
 else()
-    # lots of warnings and all warnings as errors
+    # lots of warnings
     add_compile_options(-Wall -Wextra -Wshadow -Wnon-virtual-dtor)
 endif()
 
 add_subdirectory(core)
 add_subdirectory(game)
-add_subdirectory(main)

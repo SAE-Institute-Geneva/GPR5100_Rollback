@@ -1,6 +1,7 @@
 
 #include "engine/engine.h"
 #include "engine/system.h"
+#include "game/input_manager.h"
 #include "graphics/graphics.h"
 #include "network/network_client.h"
 
@@ -19,14 +20,7 @@ namespace game
 
         void Update(sf::Time dt) override
         {
-            PlayerInput clientInput1 = 0;
-            clientInput1 = clientInput1 | (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) ? PlayerInputEnum::PlayerInput::LEFT : 0u);
-            clientInput1 = clientInput1 | (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) ? PlayerInputEnum::PlayerInput::RIGHT : 0u);
-            clientInput1 = clientInput1 | (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) ? PlayerInputEnum::PlayerInput::UP : 0u);
-            clientInput1 = clientInput1 | (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) ? PlayerInputEnum::PlayerInput::DOWN : 0u);
-            clientInput1 = clientInput1 | (sf::Keyboard::isKeyPressed(sf::Keyboard::RControl) ? PlayerInputEnum::PlayerInput::SHOOT : 0u);
-
-            client_.SetPlayerInput(clientInput1);
+            client_.SetPlayerInput(GetPlayerInput(0));
             client_.Update(dt);
         }
 
