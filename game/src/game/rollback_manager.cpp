@@ -83,7 +83,7 @@ namespace game
             currentTransformManager_.SetRotation(entity, body.rotation);
         }
     }
-    void RollbackManager::SetPlayerInput(PlayerNumber playerNumber, PlayerInput playerInput, std::uint32_t inputFrame)
+    void RollbackManager::SetPlayerInput(PlayerNumber playerNumber, PlayerInput playerInput, Frame inputFrame)
     {
         //Should only be called on the server
         if (currentFrame_ < inputFrame)
@@ -277,7 +277,7 @@ namespace game
         currentTransformManager_.SetRotation(entity, rotation);
     }
 
-    PlayerInput RollbackManager::GetInputAtFrame(PlayerNumber playerNumber, Frame frame)
+    PlayerInput RollbackManager::GetInputAtFrame(PlayerNumber playerNumber, Frame frame) const
     {
         assert(currentFrame_ - frame < inputs_[playerNumber].size() &&
             "Trying to get input too far in the past");
@@ -286,7 +286,7 @@ namespace game
 
     void RollbackManager::OnTrigger(core::Entity entity1, core::Entity entity2)
     {
-        std::function<void(const PlayerCharacter&, core::Entity, const Bullet&, core::Entity)> ManageCollision =
+        const std::function<void(const PlayerCharacter&, core::Entity, const Bullet&, core::Entity)> ManageCollision =
             [this](const auto& player, auto playerEntity, const auto& bullet, auto bulletEntity)
         {
             if (player.playerNumber != bullet.playerNumber)
@@ -297,7 +297,7 @@ namespace game
                 if (playerCharacter.invincibilityTime <= 0.0f)
                 {
                     core::LogDebug(fmt::format("Player {} is hit by bullet", playerCharacter.playerNumber));
-                    playerCharacter.health--;
+                    --playerCharacter.health;
                     playerCharacter.invincibilityTime = playerInvincibilityPeriod;
                 }
                 currentPlayerManager_.SetComponent(playerEntity, playerCharacter);

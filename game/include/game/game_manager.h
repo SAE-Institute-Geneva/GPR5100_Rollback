@@ -55,7 +55,7 @@ namespace game
         PlayerNumber winner_ = INVALID_PLAYER;
     };
 
-    class ClientGameManager : public GameManager,
+    class ClientGameManager final : public GameManager,
         public core::DrawInterface, public core::DrawImGuiInterface, public core::SystemInterface
     {
     public:
@@ -76,7 +76,7 @@ namespace game
         void SpawnPlayer(PlayerNumber playerNumber, core::Vec2f position, core::Degree rotation) override;
         core::Entity SpawnBullet(PlayerNumber playerNumber, core::Vec2f position, core::Vec2f velocity) override;
         void FixedUpdate();
-        void SetPlayerInput(PlayerNumber playerNumber, std::uint8_t playerInput, std::uint32_t inputFrame) override;
+        void SetPlayerInput(PlayerNumber playerNumber, PlayerInput playerInput, std::uint32_t inputFrame) override;
         void DrawImGui() override;
         void ConfirmValidateFrame(Frame newValidateFrame, const std::array<PhysicsState, maxPlayerNmb>& physicsStates);
         [[nodiscard]] PlayerNumber GetPlayerNumber() const { return clientPlayer_; }

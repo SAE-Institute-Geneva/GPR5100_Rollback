@@ -12,7 +12,7 @@ namespace game
 		std::unique_ptr<game::Packet> packet = nullptr;
 	};
 	class SimulationClient;
-	class SimulationServer : public Server, public core::DrawImGuiInterface
+	class SimulationServer final : public Server, public core::DrawImGuiInterface
 	{
 	public:
 		explicit SimulationServer(std::array<std::unique_ptr<SimulationClient>, 2>& clients);

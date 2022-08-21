@@ -8,7 +8,7 @@ namespace game
 /**
  * \brief NetworkClient is a network client that uses SFML sockets.
  */
-class NetworkClient : public Client
+class NetworkClient final : public Client
 {
 public:
 	enum class State
@@ -33,7 +33,7 @@ public:
 
 	void DrawImGui() override;
 
-	void Draw(sf::RenderTarget& window) override;
+	void Draw(sf::RenderTarget& renderTarget) override;
 
 	void SendReliablePacket(std::unique_ptr<Packet> packet) override;
 

@@ -4,37 +4,35 @@
 
 #include "client.h"
 #include "network_client.h"
-#include "engine/system.h"
+#include "network/app.h"
 #include "game/game_globals.h"
-#include "graphics/graphics.h"
-#include "maths/vec2.h"
 
 
 namespace game
 {
 
-class NetworkDebugApp : public core::DrawInterface, public core::DrawImGuiInterface, public core::SystemInterface, public core::OnEventInterface
-    {
-    public:
-        NetworkDebugApp();
+class NetworkDebugApp final : public App
+{
+public:
+    NetworkDebugApp();
 
-        void Init() override;
+    void Init() override;
 
-        void Update(sf::Time dt) override;
+    void Update(sf::Time dt) override;
 
-        void Destroy() override;
+    void Destroy() override;
 
-        void DrawImGui() override;
+    void DrawImGui() override;
 
-        void Draw(sf::RenderTarget& window) override;
+    void Draw(sf::RenderTarget& renderTarget) override;
 
-        void OnEvent(const sf::Event& event) override;
-    private:
-        std::array<NetworkClient, maxPlayerNmb> clients_;
-        std::array<sf::RenderTexture, maxPlayerNmb> clientsFramebuffers_;
-        sf::Sprite screenQuad_;
-        sf::Vector2u windowSize_;
-    };
+    void OnEvent(const sf::Event& event) override;
+private:
+    std::array<NetworkClient, maxPlayerNmb> clients_;
+    std::array<sf::RenderTexture, maxPlayerNmb> clientsFramebuffers_;
+    sf::Sprite screenQuad_;
+    sf::Vector2u windowSize_;
+};
 
 
 }

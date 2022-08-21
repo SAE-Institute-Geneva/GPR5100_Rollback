@@ -39,13 +39,13 @@ namespace game
 
     constexpr std::array<core::Vec2f, std::max(4u, maxPlayerNmb)> spawnPositions
     {
-            core::Vec2f(0,1),
-            core::Vec2f(0,-1),
-            core::Vec2f(1,0),
-            core::Vec2f(-1,0),
+        core::Vec2f(0,1),
+        core::Vec2f(0,-1),
+        core::Vec2f(1,0),
+        core::Vec2f(-1,0),
     };
 
-    const std::array<core::Degree, std::max(4u, maxPlayerNmb)> spawnRotations
+    constexpr std::array<core::Degree, std::max(4u, maxPlayerNmb)> spawnRotations
     {
         core::Degree(0.0f),
         core::Degree(180.0f),

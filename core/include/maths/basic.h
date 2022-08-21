@@ -1,25 +1,26 @@
 #pragma once
 
-#include <cmath>
 #include <random>
 
 namespace core
 {
-    inline float Abs(float v)
+
+constexpr float Abs(float v)
 {
-    return std::abs(v);
+    return v < 0.0f ? -v : v;
 }
-inline bool Equal(float a, float b, float epsilon = 0.0000001f)
+
+constexpr  bool Equal(float a, float b, float epsilon = 0.0000001f)
 {
     return Abs(a - b) < epsilon;
 }
 
-inline float Lerp(float start, float end, float t)
+constexpr float Lerp(float start, float end, float t)
 {
     return start + (end - start) * t;
 }
 template<typename T>
-float Clamp(T value, T lower, T upper)
+constexpr float Clamp(T value, T lower, T upper)
 {
     return value < lower ? lower : (value > upper ? upper : value);
 }

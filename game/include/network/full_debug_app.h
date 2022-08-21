@@ -2,14 +2,17 @@
 #include "client.h"
 #include "simulation_client.h"
 #include "simulation_server.h"
-#include "engine/system.h"
+#include "network/app.h"
 #include "game/game_globals.h"
-#include "graphics/graphics.h"
+
 #include <SFML/Graphics/RenderTexture.hpp>
 
 namespace game
 {
-    class SimulationDebugApp : public core::SystemInterface, public core::DrawInterface, public core::DrawImGuiInterface, public core::OnEventInterface
+/**
+ * \brief SimulationApp is an application that owns SimulationClient and SimulationServer.
+ */
+class SimulationDebugApp final : public App
     {
     public:
         SimulationDebugApp();

@@ -19,8 +19,8 @@ namespace game
         }
     }
 
-    void StarBackground::Draw(sf::RenderTarget& window)
+    void StarBackground::Draw(sf::RenderTarget& renderTarget)
     {
-        window.draw(vertexArray_);
+        renderTarget.draw(vertexArray_);
     }
 }

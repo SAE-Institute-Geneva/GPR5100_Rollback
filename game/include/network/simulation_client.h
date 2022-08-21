@@ -7,7 +7,7 @@ namespace game
 {
     class SimulationServer;
 
-    class SimulationClient : public Client
+    class SimulationClient final : public Client
     {
     public:
         explicit SimulationClient(SimulationServer& server);

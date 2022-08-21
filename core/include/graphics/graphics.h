@@ -1,23 +1,18 @@
 #pragma once
 
-namespace sf
-{
-class RenderWindow;
-}
+#include <SFML/Graphics/RenderTarget.hpp>
 
 namespace core
 {
 class DrawInterface
 {
 public:
-    virtual ~DrawInterface() = default;
-    virtual void Draw(sf::RenderTarget& window) = 0;
+    virtual void Draw(sf::RenderTarget& renderTarget) = 0;
 };
 
 class DrawImGuiInterface
 {
 public:
-    virtual ~DrawImGuiInterface() = default;
     virtual void DrawImGui() = 0;
 };
 }
