@@ -25,11 +25,11 @@ public:
 		TCP,
 		UDP
 	};
-	void Init() override;
+	void Begin() override;
 
 	void Update(sf::Time dt) override;
 
-	void Destroy() override;
+	void End() override;
 
 	void DrawImGui() override;
 

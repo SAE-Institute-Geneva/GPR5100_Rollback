@@ -11,63 +11,85 @@
 
 namespace game
 {
-    enum class BodyType
-    {
-        DYNAMIC,
-        STATIC
-    };
-    struct Body
-    {
-        core::Vec2f position = core::Vec2f::zero();
-        core::Vec2f velocity = core::Vec2f::zero();
-        core::Degree angularVelocity = core::Degree(0.0f);
-        core::Degree rotation = core::Degree(0.0f);
-        BodyType bodyType = BodyType::DYNAMIC;
-    };
+enum class BodyType
+{
+    DYNAMIC,
+    STATIC
+};
 
-    struct Box
-    {
-        core::Vec2f extends = core::Vec2f::one();
-        bool isTrigger = false;
-    };
+/**
+ * \brief Body is a class that represents a rigid body.
+ */
+struct Body
+{
+    core::Vec2f position = core::Vec2f::zero();
+    core::Vec2f velocity = core::Vec2f::zero();
+    core::Degree angularVelocity = core::Degree(0.0f);
+    core::Degree rotation = core::Degree(0.0f);
+    BodyType bodyType = BodyType::DYNAMIC;
+};
 
-    class OnTriggerInterface
-    {
-    public:
-        virtual void OnTrigger(core::Entity entity1, core::Entity entity2) = 0;
-    };
+/**
+ * \brief Box is a class that represents an axis-aligned box collider
+ */
+struct Box
+{
+    core::Vec2f extends = core::Vec2f::one();
+    bool isTrigger = false;
+};
 
-    class BodyManager : public core::ComponentManager<Body, static_cast<core::EntityMask>(core::ComponentType::BODY2D)>
-    {
-    public:
-        using ComponentManager::ComponentManager;
-    };
-    class BoxManager : public core::ComponentManager<Box, static_cast<core::EntityMask>(core::ComponentType::BOX_COLLIDER2D)>
-    {
-    public:
-        using ComponentManager::ComponentManager;
-    };
+/**
+ * \brief OnTriggerInterface is an interface for classes that needs to be called when two boxes are in contact.
+ * It needs to be registered in the PhysicsManager.
+ */
+class OnTriggerInterface
+{
+public:
+    virtual void OnTrigger(core::Entity entity1, core::Entity entity2) = 0;
+};
 
-    class PhysicsManager
-    {
-    public:
-        explicit PhysicsManager(core::EntityManager& entityManager);
-        void FixedUpdate(sf::Time dt);
-        [[nodiscard]] const Body& GetBody(core::Entity entity) const;
-        void SetBody(core::Entity entity, const Body& body);
-        void AddBody(core::Entity entity);
+/**
+ * \brief BodyManager is a ComponentManager that holds all the Body in the world.
+ */
+class BodyManager : public core::ComponentManager<Body, static_cast<core::EntityMask>(core::ComponentType::BODY2D)>
+{
+public:
+    using ComponentManager::ComponentManager;
+};
 
-        void AddBox(core::Entity entity);
-        void SetBox(core::Entity entity, const Box& box);
-        [[nodiscard]] const Box& GetBox(core::Entity entity) const;
+/**
+ * \brief BoxManager is a ComponentManager that holds all the Box in the world.
+ */
+class BoxManager : public core::ComponentManager<Box, static_cast<core::EntityMask>(core::ComponentType::BOX_COLLIDER2D)>
+{
+public:
+    using ComponentManager::ComponentManager;
+};
 
-        void RegisterTriggerListener(OnTriggerInterface& collisionInterface);
-        void CopyAllComponents(const PhysicsManager& physicsManager);
-    private:
-        core::EntityManager& entityManager_;
-        BodyManager bodyManager_;
-        BoxManager boxManager_;
-        core::Action<core::Entity, core::Entity> onTriggerAction_;
-    };
+/**
+ * \brief PhysicsManager is a class that holds both BodyManager and BoxManager and manages the physics fixed update.
+ * It allows to register OnTriggerInterface to be called when a trigger occcurs.
+ */
+class PhysicsManager
+{
+public:
+    explicit PhysicsManager(core::EntityManager& entityManager);
+    void FixedUpdate(sf::Time dt);
+    [[nodiscard]] const Body& GetBody(core::Entity entity) const;
+    void SetBody(core::Entity entity, const Body& body);
+    void AddBody(core::Entity entity);
+
+    void AddBox(core::Entity entity);
+    void SetBox(core::Entity entity, const Box& box);
+    [[nodiscard]] const Box& GetBox(core::Entity entity) const;
+
+    void RegisterTriggerListener(OnTriggerInterface& collisionInterface);
+    void CopyAllComponents(const PhysicsManager& physicsManager);
+private:
+    core::EntityManager& entityManager_;
+    BodyManager bodyManager_;
+    BoxManager boxManager_;
+    core::Action<core::Entity, core::Entity> onTriggerAction_;
+};
 
 }

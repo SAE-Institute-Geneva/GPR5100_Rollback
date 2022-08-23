@@ -81,7 +81,7 @@ namespace game
 
     }
 
-    void NetworkServer::Init()
+    void NetworkServer::Begin()
     {
         sf::Socket::Status status = sf::Socket::Error;
         while (status != sf::Socket::Done)
@@ -168,7 +168,7 @@ namespace game
         }
     }
 
-    void NetworkServer::Destroy()
+    void NetworkServer::End()
     {
 
     }

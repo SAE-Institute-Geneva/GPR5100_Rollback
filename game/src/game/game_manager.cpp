@@ -105,7 +105,7 @@ namespace game
     {
     }
 
-    void ClientGameManager::Init()
+    void ClientGameManager::Begin()
     {
         //load textures
         if (!bulletTexture_.loadFromFile("data/sprites/bullet.png"))
@@ -177,7 +177,7 @@ namespace game
 
     }
 
-    void ClientGameManager::Destroy()
+    void ClientGameManager::End()
     {
     }
 

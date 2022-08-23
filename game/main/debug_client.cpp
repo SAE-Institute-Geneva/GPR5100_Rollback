@@ -1,15 +1,12 @@
 #include <engine/engine.h>
 
-#include "network/client_debug_app.h"
+#include "network/network_client_debug_app.h"
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
     core::Engine engine;
-    game::NetworkDebugApp app;
-    engine.RegisterSystem(&app);
-    engine.RegisterDraw(&app);
-    engine.RegisterDrawImGui(&app);
-    engine.RegisterOnEvent(&app);
+    game::NetworkClientDebugApp app;
+    engine.RegisterApp(&app);
 
     engine.Run();
 

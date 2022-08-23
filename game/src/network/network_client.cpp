@@ -9,13 +9,13 @@
 namespace game
 {
 
-    void NetworkClient::Init()
+    void NetworkClient::Begin()
     {
 
         clientId_ = core::RandomRange(std::numeric_limits<ClientId>::lowest(),
                                       std::numeric_limits<ClientId>::max());
         //JOIN packet
-        gameManager_.Init();
+        gameManager_.Begin();
         tcpSocket_.setBlocking(false);
         udpSocket_.setBlocking(true);
         auto status = sf::Socket::Error;
@@ -100,9 +100,9 @@ namespace game
         gameManager_.Update(dt);
     }
 
-    void NetworkClient::Destroy()
+    void NetworkClient::End()
     {
-        gameManager_.Destroy();
+        gameManager_.End();
     }
 
     void NetworkClient::DrawImGui()

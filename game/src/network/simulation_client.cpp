@@ -10,13 +10,13 @@ namespace game
     {
     }
 
-    void SimulationClient::Init()
+    void SimulationClient::Begin()
     {
         
         clientId_ = core::RandomRange(std::numeric_limits<ClientId>::lowest(),
                                       std::numeric_limits<ClientId>::max());
         //JOIN packet
-        gameManager_.Init();
+        gameManager_.Begin();
 
 
     }
@@ -28,9 +28,9 @@ namespace game
 
 
 
-    void SimulationClient::Destroy()
+    void SimulationClient::End()
     {
-        gameManager_.Destroy();
+        gameManager_.End();
 
     }
 

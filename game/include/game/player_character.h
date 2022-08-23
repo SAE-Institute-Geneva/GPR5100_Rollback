@@ -5,25 +5,32 @@
 
 namespace game
 {
-    class PhysicsManager;
+class PhysicsManager;
 
-    struct PlayerCharacter
-    {
-        float shootingTime = 0.0f;
-        PlayerInput input = 0u;
-        PlayerNumber playerNumber = INVALID_PLAYER;
-        short health = playerHealth;
-        float invincibilityTime = 0.0f;
-    };
-    class GameManager;
-    class PlayerCharacterManager : public core::ComponentManager<PlayerCharacter, core::EntityMask(ComponentType::PLAYER_CHARACTER)>
-    {
-    public:
-        explicit PlayerCharacterManager(core::EntityManager& entityManager, PhysicsManager& physicsManager, GameManager& gameManager);
-        void FixedUpdate(sf::Time dt);
+/**
+ * \brief PlayerCharacter is a struct that holds information about the player character (when they can shoot again, their current input, and their current health).
+ */
+struct PlayerCharacter
+{
+    float shootingTime = 0.0f;
+    PlayerInput input = 0u;
+    PlayerNumber playerNumber = INVALID_PLAYER;
+    short health = playerHealth;
+    float invincibilityTime = 0.0f;
+};
+class GameManager;
 
-    private:
-        PhysicsManager& physicsManager_;
-        GameManager& gameManager_;
-    };
+/**
+ * \brief PlayerCharacterManager is a ComponentManager that holds all the PlayerCharacter in the game.
+ */
+class PlayerCharacterManager : public core::ComponentManager<PlayerCharacter, static_cast<core::EntityMask>(ComponentType::PLAYER_CHARACTER)>
+{
+public:
+    explicit PlayerCharacterManager(core::EntityManager& entityManager, PhysicsManager& physicsManager, GameManager& gameManager);
+    void FixedUpdate(sf::Time dt);
+
+private:
+    PhysicsManager& physicsManager_;
+    GameManager& gameManager_;
+};
 }

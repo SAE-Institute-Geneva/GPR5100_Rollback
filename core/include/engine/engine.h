@@ -4,25 +4,30 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
+#include "engine/app.h"
+
 namespace core
 {
-class OnEventInterface;
-class SystemInterface;
-class DrawInterface;
-class DrawImGuiInterface;
 
+/**
+ * \brief Engine is a class that manages the layer between the system and the application and runs the game loop.
+ */
 class Engine
 {
 public:
+    /**
+     * \brief Run is a method that runs the Engine game loop.
+     */
     void Run();
 
+    void RegisterApp(App* app);
     void RegisterSystem(SystemInterface*);
     void RegisterOnEvent(OnEventInterface*);
     void RegisterDraw(DrawInterface*);
     void RegisterDrawImGui(DrawImGuiInterface*);
 protected:
     void Init();
-    void Update(sf::Time dt);
+    void Update(sf::Time dt) const;
     void Destroy();
 
     std::vector<SystemInterface*> systems_;

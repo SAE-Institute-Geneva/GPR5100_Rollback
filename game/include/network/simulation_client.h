@@ -5,29 +5,32 @@
 
 namespace game
 {
-    class SimulationServer;
+class SimulationServer;
 
-    class SimulationClient final : public Client
-    {
-    public:
-        explicit SimulationClient(SimulationServer& server);
+/**
+ * \brief SimulationClient is a Client that uses simulated sockets with a direct reference to the server.
+ */
+class SimulationClient final : public Client
+{
+public:
+    explicit SimulationClient(SimulationServer& server);
 
-        void Init() override;
-        void Update(sf::Time dt) override;
+    void Begin() override;
+    void Update(sf::Time dt) override;
 
-        void Destroy() override;
-        void Draw(sf::RenderTarget& window) override;
-
-
-        void SendUnreliablePacket(std::unique_ptr<Packet> packet) override;
-        void SendReliablePacket(std::unique_ptr<Packet> packet) override;
+    void End() override;
+    void Draw(sf::RenderTarget& window) override;
 
 
-        void DrawImGui() override;
-        void SetPlayerInput(PlayerInput input);
-        
-    private:
-        SimulationServer& server_;
+    void SendUnreliablePacket(std::unique_ptr<Packet> packet) override;
+    void SendReliablePacket(std::unique_ptr<Packet> packet) override;
 
-    };
+
+    void DrawImGui() override;
+    void SetPlayerInput(PlayerInput input);
+    
+private:
+    SimulationServer& server_;
+
+};
 }

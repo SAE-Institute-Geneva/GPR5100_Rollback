@@ -66,9 +66,9 @@ namespace game
         };
         explicit ClientGameManager(PacketSenderInterface& packetSenderInterface);
         void StartGame(unsigned long long int startingTime);
-        void Init() override;
+        void Begin() override;
         void Update(sf::Time dt) override;
-        void Destroy() override;
+        void End() override;
         void SetWindowSize(sf::Vector2u windowsSize);
         [[nodiscard]] sf::Vector2u GetWindowSize() const { return windowSize_; }
         void Draw(sf::RenderTarget& target) override;

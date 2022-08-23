@@ -15,7 +15,7 @@ int main(int argc, char** argv)
     {
         server.SetTcpPort(port);
     }
-    server.Init();
+    server.Begin();
     sf::Clock clock;
     while (server.IsOpen())
     {

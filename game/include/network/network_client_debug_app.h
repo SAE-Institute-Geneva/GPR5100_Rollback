@@ -4,23 +4,25 @@
 
 #include "client.h"
 #include "network_client.h"
-#include "network/app.h"
+#include "engine/app.h"
 #include "game/game_globals.h"
 
 
 namespace game
 {
-
-class NetworkDebugApp final : public App
+/**
+ * \brief NetworkClientDebugApp is a class that have several NetworkClient and shows them on the screen, each in their own RenderTexture.
+ * It allows to debug network apps as easily as the SimulationApp.
+ */
+class NetworkClientDebugApp final : public core::App
 {
 public:
-    NetworkDebugApp();
 
-    void Init() override;
+    void Begin() override;
 
     void Update(sf::Time dt) override;
 
-    void Destroy() override;
+    void End() override;
 
     void DrawImGui() override;
 

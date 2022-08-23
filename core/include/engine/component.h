@@ -20,6 +20,11 @@ namespace core
         OTHER_TYPE = 1u << 7u
     };
 
+    /**
+     * \brief ComponentManager is a class that owns Component in a contiguous array. Component indexing is done with an Entity.
+     * \tparam T type of the component
+     * \tparam C unique binary flag of the component. This will be set in the EntityMask of the EntityManager when added.
+     */
     template<typename T, Component C>
     class ComponentManager
     {
@@ -35,7 +40,15 @@ namespace core
         ComponentManager(ComponentManager&&) = delete;
         ComponentManager& operator=(ComponentManager&&) = delete;
 
+        /**
+         * \brief AddComponent is a method that sets the flag C in the EntityManager and resize if need the components_ array.
+         * \param entity will have its flag C added in EntityManager
+         */
         virtual void AddComponent(Entity entity);
+        /**
+         * \brief RemoveComponent is a method that unsets the flag C in the EntityManager
+         * \param entity will have its flag C removed
+         */
         virtual void RemoveComponent(Entity entity);
 
         [[nodiscard]] const T& GetComponent(Entity entity) const;

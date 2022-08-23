@@ -13,12 +13,20 @@ namespace game
 {
 class GameManager;
 
+/**
+ * \brief CreatedEntity is a struct that contains information on the newly created entities.
+ * It is used by the RollbackManager to destroy newly created entities when going back in time.
+ */
 struct CreatedEntity
 {
     core::Entity entity = core::EntityManager::INVALID_ENTITY;
     Frame createdFrame = 0;
 };
 
+/**
+ * \brief DestroyedBullet is a struct that contains information on newly "destroyed" Bullet.
+ * It allows the RollbackManager to recreate newly destroyed bullet.
+ */
 struct DestroyedBullet
 {
     Bullet bullet;
@@ -26,6 +34,11 @@ struct DestroyedBullet
     Frame destroyedFrame = 0;
 };
 
+/**
+ * \brief RollbackManager is a class that manages all the rollback mechanisms of the game.
+ * It contains two copies of the world (PhysicsManager, TransformManager, etc...), the current one and the validated one.
+ * When receiving new information, it can reupdate the current copy of the world.
+ */
 class RollbackManager final : public OnTriggerInterface
 {
 public:

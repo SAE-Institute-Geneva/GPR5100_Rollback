@@ -3,55 +3,51 @@
 
 namespace core
 {
-    Vec2f::Vec2f(sf::Vector2f v) : x(v.x), y(v.y)
-    {
-    }
+Vec2f::Vec2f(sf::Vector2f v) : x(v.x), y(v.y)
+{
+}
 
-    sf::Vector2f Vec2f::toSf() const
-    {
-        return sf::Vector2f(x, y);
-    }
 
-    Vec2f Vec2f::operator+(Vec2f v) const
-    {
-        return {x + v.x, y + v.y};
-    }
+Vec2f Vec2f::operator+(Vec2f v) const
+{
+    return {x + v.x, y + v.y};
+}
 
-    Vec2f& Vec2f::operator+=(Vec2f v)
-    {
-        x += v.x;
-        y += v.y;
-        return *this;
-    }
+Vec2f& Vec2f::operator+=(Vec2f v)
+{
+    x += v.x;
+    y += v.y;
+    return *this;
+}
 
-    Vec2f Vec2f::operator-(Vec2f v) const
-    {
-        return {x - v.x, y - v.y};
-    }
+Vec2f Vec2f::operator-(Vec2f v) const
+{
+    return {x - v.x, y - v.y};
+}
 
-    Vec2f& Vec2f::operator-=(Vec2f v)
-    {
-        x -= v.x;
-        y -= v.y;
-        return *this;
-    }
+Vec2f& Vec2f::operator-=(Vec2f v)
+{
+    x -= v.x;
+    y -= v.y;
+    return *this;
+}
 
-    Vec2f Vec2f::operator*(float f) const
-    {
-        return {x * f, y * f};
-    }
+Vec2f Vec2f::operator*(float f) const
+{
+    return {x * f, y * f};
+}
 
-    Vec2f Vec2f::operator/(float f) const
-    {
-        return {x / f, y / f};
-    }
+Vec2f Vec2f::operator/(float f) const
+{
+    return {x / f, y / f};
+}
 
-    Vec2f operator*(float f, Vec2f v)
-    {
-        return v*f;
-    }
+Vec2f operator*(float f, Vec2f v)
+{
+    return v*f;
+}
 
-    float Vec2f::GetMagnitude() const
+float Vec2f::GetMagnitude() const
 {
     return std::sqrt(GetSqrMagnitude());
 }

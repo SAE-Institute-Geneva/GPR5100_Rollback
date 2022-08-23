@@ -2,7 +2,7 @@
 #include "client.h"
 #include "simulation_client.h"
 #include "simulation_server.h"
-#include "network/app.h"
+#include "engine/app.h"
 #include "game/game_globals.h"
 
 #include <SFML/Graphics/RenderTexture.hpp>
@@ -12,16 +12,16 @@ namespace game
 /**
  * \brief SimulationApp is an application that owns SimulationClient and SimulationServer.
  */
-class SimulationDebugApp final : public App
+class SimulationApp final : public core::App
     {
     public:
-        SimulationDebugApp();
+        SimulationApp();
 
-        void Init() override;
+        void Begin() override;
 
         void Update(sf::Time dt) override;
 
-        void Destroy() override;
+        void End() override;
 
         void DrawImGui() override;
 

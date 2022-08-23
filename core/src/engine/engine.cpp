@@ -24,6 +24,14 @@ void Engine::Run()
     Destroy();
 }
 
+void Engine::RegisterApp(App* app)
+{
+    RegisterSystem(app);
+    RegisterDraw(app);
+    RegisterOnEvent(app);
+    RegisterDrawImGui(app);
+}
+
 void Engine::RegisterSystem(SystemInterface* system)
 {
     systems_.push_back(system);
@@ -48,13 +56,13 @@ void Engine::Init()
 {
     window_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(windowSize.x, windowSize.y), "Rollback Game");
     ImGui::SFML::Init(*window_);
-    for(auto& system : systems_)
+    for(auto* system : systems_)
     {
-        system->Init();
+        system->Begin();
     }
 }
 
-void Engine::Update(sf::Time dt)
+void Engine::Update(sf::Time dt) const
 {
     sf::Event e{};
     while (window_->pollEvent(e))
@@ -101,9 +109,9 @@ void Engine::Update(sf::Time dt)
 
 void Engine::Destroy()
 {
-    for (auto& system : systems_)
+    for (auto* system : systems_)
     {
-        system->Destroy();
+        system->End();
     }
     window_ = nullptr;
 }

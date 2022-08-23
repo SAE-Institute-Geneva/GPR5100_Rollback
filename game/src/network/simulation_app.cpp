@@ -1,11 +1,11 @@
-#include <network/full_debug_app.h>
+#include "network/simulation_app.h"
 
 #include "engine/globals.h"
 #include "game/input_manager.h"
 
 namespace game
 {
-    SimulationDebugApp::SimulationDebugApp() : server_(clients_)
+    SimulationApp::SimulationApp() : server_(clients_)
     {
         for (auto& client : clients_)
         {
@@ -13,7 +13,7 @@ namespace game
         }
     }
 
-    void SimulationDebugApp::OnEvent(const sf::Event& event)
+    void SimulationApp::OnEvent(const sf::Event& event)
     {
         switch(event.type)
         {
@@ -36,7 +36,7 @@ namespace game
         }
     }
 
-    void SimulationDebugApp::Init()
+    void SimulationApp::Begin()
     {
         windowSize_ = core::windowSize;
         for(auto& framebuffer: clientsFramebuffers_)
@@ -46,13 +46,13 @@ namespace game
         for(auto& client : clients_)
         {
             client->SetWindowSize(sf::Vector2u(windowSize_.x / 2u, windowSize_.y));
-            client->Init();
+            client->Begin();
         }
-        server_.Init();
+        server_.Begin();
         
     }
 
-    void SimulationDebugApp::Update(sf::Time dt)
+    void SimulationApp::Update(sf::Time dt)
     {
         
         //Checking if keys are down
@@ -69,16 +69,16 @@ namespace game
         }
     }
 
-    void SimulationDebugApp::Destroy()
+    void SimulationApp::End()
     {
         for (const auto& client : clients_)
         {
-            client->Destroy();
+            client->End();
         }
-        server_.Destroy();
+        server_.End();
     }
 
-    void SimulationDebugApp::DrawImGui()
+    void SimulationApp::DrawImGui()
     {
         server_.DrawImGui();
         for (auto& client : clients_)
@@ -87,7 +87,7 @@ namespace game
         }
     }
 
-    void SimulationDebugApp::Draw(sf::RenderTarget& renderTarget)
+    void SimulationApp::Draw(sf::RenderTarget& renderTarget)
     {
         for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
         {

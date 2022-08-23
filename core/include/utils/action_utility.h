@@ -27,13 +27,14 @@
 
 namespace core
 {
-
+/**
+ * \brief Action is an utility class loosely based on the observer pattern and close to C# Action class
+ * \tparam Ts arguments types of the callback function
+ */
 template<class ... Ts>
 class Action
 {
 public:
-    Action() = default;
-    virtual ~Action() = default;
 
     void RegisterCallback(const std::function<void(Ts ...)>& callback)
     {

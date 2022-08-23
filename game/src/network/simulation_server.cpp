@@ -11,7 +11,7 @@ namespace game
     {
     }
 
-    void SimulationServer::Init()
+    void SimulationServer::Begin()
     {
 
     }
@@ -55,7 +55,7 @@ namespace game
         }
     }
 
-    void SimulationServer::Destroy()
+    void SimulationServer::End()
     {
     }
 

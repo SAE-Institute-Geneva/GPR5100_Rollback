@@ -7,7 +7,11 @@ namespace core
 
 inline constexpr static float PI = static_cast<float>(M_PI);
 class Degree;
-
+/**
+ * \brief Radian is an utility class that describes radian angles (0 to 2PI).
+ * It can be easily converted to Radian with conversion constructor.
+ * It can be used with trigonometric functions (Sin, Cos, Tan)
+ */
 class Radian
 {
 public:
@@ -19,7 +23,11 @@ private:
     float value_ = 0.0f;
 };
 
-
+/**
+ * \brief Degree is an utility class that describes degree angles (0 to 360).
+ * It can be easily converted to Radian with conversion constructor.
+ * It can be used with trigonometric functions (Sin, Cos, Tan)
+ */
 class Degree
 {
 public:
@@ -49,33 +57,74 @@ constexpr Radian::Radian(const Degree& angle)
     value_ = angle.value() / 180.0f * PI;
 }
 
+/**
+ * \brief Sin is a function that calculates the sinus of a given angle.
+ * \param angle is the given angle
+ * \return the result of the sinus of angle
+ */
 inline float Sin(Radian angle)
 {
     return std::sin(angle.value());
 }
+
+/**
+ * \brief Cos is a function that calculates the cosinus of a given angle.
+ * \param angle is the given angle
+ * \return the result of the cosinus of angle
+ */
 inline float Cos(Radian angle)
 {
     return std::cos(angle.value());
 }
+
+/**
+ * \brief Tan is a function that calculates the tangent of a given angle.
+ * \param angle is the given angle
+ * \return the result of the tangent of angle
+ */
 inline float Tan(Radian angle)
 {
     return std::tan(angle.value());
 }
+
+/**
+ * \brief Asin is a function that calculates the angle of a given ratio.
+ * \param ratio is the given ratio between the opponent and hypothenuse
+ * \return the result of the asinus function
+ */
 inline Radian Asin(float ratio)
 {
-    return Radian(std::asin(ratio));
-}
-inline Radian Acos(float ratio)
-{
-    return Radian(std::acos(ratio));
-}
-inline Radian Atan(float ratio)
-{
-    return Radian(std::atan(ratio));
+    return {std::asin(ratio)};
 }
 
-inline Radian Atan2(float a, float b)
+/**
+ * \brief Acos is a function that calculates the angle of a given ratio.
+ * \param ratio is the given ratio between the adjacent and hypothenuse
+ * \return the result of the acosinus function
+ */
+inline Radian Acos(float ratio)
 {
-    return Radian(std::atan2(a,b));
+    return {std::acos(ratio)};
+}
+
+/**
+ * \brief Atan is a function that calculates the angle of a given ratio.
+ * \param ratio is the given ratio between the adjacent and hypothenuse
+ * \return the result of the atan function
+ */
+inline Radian Atan(float ratio)
+{
+    return {std::atan(ratio)};
+}
+
+/**
+ * \brief Atan2 is a function that calculates the angle of a given ratio between two parameters.
+ * \param y is the upper value of the ratio
+ * \param x is the lower value of the ratio
+ * \return the result of the atan function
+ */
+inline Radian Atan2(float y, float x)
+{
+    return {std::atan2(y,x)};
 }
 }

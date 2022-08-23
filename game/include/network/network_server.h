@@ -35,11 +35,11 @@ public:
 
     void SendUnreliablePacket(std::unique_ptr<Packet> packet) override;
 
-    void Init() override;
+    void Begin() override;
 
     void Update(sf::Time dt) override;
 
-    void Destroy() override;
+    void End() override;
 
     void SetTcpPort(unsigned short i);
 
