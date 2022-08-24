@@ -1,10 +1,17 @@
+/**
+ * \file basic.h
+ */
 #pragma once
 
 #include <random>
 
 namespace core
 {
-
+/**
+ * \brief Abs is a constexpr function that returns the absolute value.
+ * \param v is the value that will be transform to absolute value
+ * \return the absolute value of v
+ */
 constexpr float Abs(float v)
 {
     return v < 0.0f ? -v : v;
@@ -15,10 +22,29 @@ constexpr  bool Equal(float a, float b, float epsilon = 0.0000001f)
     return Abs(a - b) < epsilon;
 }
 
+/**
+ * \brief Lerp is a function calculating the linear interpolation between two points.
+ * \param start is the lower value of the interpolation.
+ * \param end is the upper value of the interpolation.
+ * \param t is the ratio of the interpolation.
+ * t = 0, return start
+ * t = 1, return end
+ * t > 1 or t < 0, return an extrapolation of the linear function
+ * \return the linear interpolation result
+ */
 constexpr float Lerp(float start, float end, float t)
 {
     return start + (end - start) * t;
 }
+
+/**
+ * \brief Clamp is a math function that clamps the input value between an upper and lower value.
+ * \tparam T is the inputs and outputs type
+ * \param value is the input value that will be clamped
+ * \param lower is the lower bound of the clamp
+ * \param upper is the upper bound of the clamp
+ * \return the clamped value between lower and upper
+ */
 template<typename T>
 constexpr float Clamp(T value, T lower, T upper)
 {
@@ -51,9 +77,11 @@ T constexpr SqrtNewtonRaphson(T x, T curr, T prev)
 }
 
 
-/*
-* Constexpr version of the square root
-* Return value:
+/**
+* \brief Sqrt is a constexpr version of the square root
+* \tparam T is the input and output value type
+* \param x is the input value
+* \return 
 *   - For a finite and non-negative value of "x", returns an approximation for the square root of "x"
 *   - Otherwise, returns NaN
 */
