@@ -11,7 +11,7 @@ namespace core
     class TransformManager;
 
     /**
-     * \brief Manages sprites, order by greater entity index, background entity < foreground entity
+     * \brief SpriteManager is a ComponentManager that manages sprites, order by greater entity index, background entity < foreground entity
      * Positions are centered at the center of the render target and use pixelPerMeter from globals.h
      */
     class SpriteManager :

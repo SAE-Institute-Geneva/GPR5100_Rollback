@@ -3,6 +3,7 @@
 #include <SFML/System/Time.hpp>
 
 #include "server.h"
+#include "graphics/graphics.h"
 
 namespace game
 {

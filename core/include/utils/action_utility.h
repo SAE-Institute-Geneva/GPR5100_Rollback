@@ -35,19 +35,25 @@ template<class ... Ts>
 class Action
 {
 public:
-
+    /**
+     * \brief RegisterCallback is a method that registers a function that will be called when the Execute method is called.
+     * \param callback is a function to be called when calling Execute
+     */
     void RegisterCallback(const std::function<void(Ts ...)>& callback)
     {
-	callbacks_.push_back(callback);
-	    
+	    callbacks_.push_back(callback);
     }
 
+    /**
+     * \brief Execute is a method that calls the functions registered in the callbacks_.
+     * \param args are the arguments needed to call the registered functions.
+     */
     void Execute(Ts ... args)
     {
-	for(auto& callback : callbacks_)
-	{
-	    callback(args...);
-	}
+	    for(auto& callback : callbacks_)
+	    {
+	        callback(args...);
+	    }
     }
 
 private:
