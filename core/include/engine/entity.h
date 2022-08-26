@@ -52,9 +52,7 @@ public:
     void DestroyEntity(Entity entity);
     /**
      * \brief AddComponent is a method that adds the bitwise entity mask to the entity mask.
-     * It is normally called by the ComponentManager.
-     * For example:
-     * entityManager_.AddComponent(static_cast<EntityMask>(core::ComponentType::TRANSFORM) | static_cast<EntityMask>(core::ComponentType::SPRITE));
+     * It is normally called by the ComponentManager. 
      * \param entity is the entity to add the new EntityMask
      * \param mask is the Component bitwise mask to be added to the Entity
      */

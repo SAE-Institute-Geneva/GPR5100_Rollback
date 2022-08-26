@@ -20,6 +20,13 @@ target_link_libraries(CoreLib PUBLIC sfml-system sfml-network sfml-graphics sfml
 	sfml-network sfml-audio ImGui-SFML::ImGui-SFML spdlog::spdlog fmt::fmt)
 set_target_properties(CoreLib PROPERTIES UNITY_BUILD ON)
 
+if(Gpr_Assert)
+	target_compile_definitions(CoreLib PUBLIC "GPR_ASSERT=1")
+endif()
+if(Gpr_Exit_On_Warning)
+	target_compile_definitions(CoreLib PUBLIC "GPR_ABORT_WARN=1")
+endif(Gpr_Exit_On_Warning)
+
 find_package(GTest CONFIG REQUIRED)
 file(GLOB_RECURSE test_files test/*.cpp)
 add_executable(CoreTest ${test_files})

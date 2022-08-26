@@ -1,8 +1,11 @@
 #pragma once
 
+#include "engine/globals.h"
+#include "engine/entity.h"
+#include "utils/assert.h"
+
 #include <cstdint>
-#include <engine/globals.h>
-#include <engine/entity.h>
+
 
 namespace core
 {
@@ -50,13 +53,34 @@ namespace core
          * \param entity will have its flag C removed
          */
         virtual void RemoveComponent(Entity entity);
-
+        /**
+         * \brief GetComponent is a method that gets a constant reference to a Component given the Entity
+         * \param entity is the one that we want the Component of.
+         * \return the constant reference to the Component of Entity entity.
+         */
         [[nodiscard]] const T& GetComponent(Entity entity) const;
+        /**
+         * \brief GetComponent is a method that gets a reference to a Component given the Entity
+         * \param entity is the one that we want the Component of.
+         * \return the reference to the Component of Entity entity.
+         */
         [[nodiscard]] T& GetComponent(Entity entity);
-
+        /**
+         * \brief SetComponent is a method that sets a new value of the Component of an Entity.
+         * \param entity will have its component set.
+         * \param value is the new value that will be set.
+         */
         void SetComponent(Entity entity, const T& value);
-
+        /**
+         * \brief GetAllComponents is a method that returns the internal array of components
+         * \return the internal array of components
+         */
         [[nodiscard]] const std::vector<T>& GetAllComponents() const;
+        /**
+         * \brief CopyAllComponents is a method that changes the internal components array by copying a newly provided one.
+         * It is used by the RollbackManager when reverting the current game world data with the last validated game world data.
+         * \param components is the new component array to be copy instead of the old components array
+         */
         void CopyAllComponents(const std::vector<T>& components);
     protected:
         EntityManager& entityManager_;
@@ -66,14 +90,21 @@ namespace core
     template <typename T, Component C>
     void ComponentManager<T, C>::AddComponent(Entity entity)
     {
+        gpr_assert(entity != INVALID_ENTITY, "Invalid Entity");
+        //Invalid entity would allocate too much memory
+        if(entity == INVALID_ENTITY)
+            return;
         // Resize components array if too small
-        auto currentSize = components_.size();
-        while (entity >= currentSize)
+        auto newSize = components_.size();
+        if(newSize == 0)
         {
-            auto newSize = currentSize + currentSize / 2;
-            components_.resize(newSize);
-            currentSize = newSize;
+            newSize = 2;
         }
+        while (entity >= newSize)
+        {
+            newSize = newSize + newSize / 2;
+        }
+        components_.resize(newSize);
 
         entityManager_.AddComponent(entity, C);
     }
@@ -81,24 +112,32 @@ namespace core
     template <typename T, Component C>
     void ComponentManager<T, C>::RemoveComponent(Entity entity)
     {
+        gpr_assert(entity != INVALID_ENTITY, "Invalid Entity");
+        gpr_warn(entityManager_.HasComponent(entity, C), "Entity has not the removing component");
         entityManager_.RemoveComponent(entity, C);
     }
 
     template <typename T, Component C>
     const T& ComponentManager<T, C>::GetComponent(Entity entity) const
     {
+        gpr_assert(entity != INVALID_ENTITY, "Invalid Entity");
+        gpr_warn(entityManager_.HasComponent(entity, C), "Entity has not the requested component");
         return components_[entity];
     }
 
     template <typename T, Component C>
     T& ComponentManager<T, C>::GetComponent(Entity entity)
     {
+        gpr_assert(entity != INVALID_ENTITY, "Invalid Entity");
+        gpr_warn(entityManager_.HasComponent(entity, C), "Entity has not the requested component");
         return components_[entity];
     }
 
     template <typename T, Component C>
     void ComponentManager<T, C>::SetComponent(Entity entity, const T& value)
     {
+        gpr_assert(entity != INVALID_ENTITY, "Invalid Entity");
+        gpr_warn(entityManager_.HasComponent(entity, C), "Entity has not the requested component");
         components_[entity] = value;
     }
 

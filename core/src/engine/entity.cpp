@@ -1,6 +1,6 @@
-#include <engine/entity.h>
-
+#include "engine/entity.h"
 #include "engine/component.h"
+#include "utils/assert.h"
 
 namespace core
 {
@@ -41,22 +41,26 @@ Entity EntityManager::CreateEntity()
 
 void EntityManager::DestroyEntity(Entity entity)
 {
+    gpr_assert(entity != INVALID_ENTITY, "Invalid Entity");
     entityMasks_[entity] = INVALID_ENTITY_MASK;
 }
 
 void EntityManager::AddComponent(Entity entity, EntityMask mask)
 {
+    gpr_assert(entity != INVALID_ENTITY, "Invalid Entity");
     entityMasks_[entity] |= mask;
 }
 
 void EntityManager::RemoveComponent(Entity entity, EntityMask mask)
 {
+    gpr_assert(entity != INVALID_ENTITY, "Invalid Entity");
     entityMasks_[entity] &= ~mask;
 
 }
 
 bool EntityManager::EntityExists(Entity entity) const
 {
+    gpr_assert(entity != INVALID_ENTITY, "Invalid Entity");
     return entityMasks_[entity] != INVALID_ENTITY_MASK;
 }
 
@@ -67,6 +71,7 @@ std::size_t EntityManager::GetEntitiesSize() const
 
 bool EntityManager::HasComponent(Entity entity, EntityMask mask) const
 {
+    gpr_assert(entity != INVALID_ENTITY, "Invalid Entity");
     return (entityMasks_[entity] & mask) == mask;
 }
 }

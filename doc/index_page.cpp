@@ -16,8 +16,27 @@
  * The implementation is pretty straightforward. Using bitwise operation, we store the Component type in a unique EntityMask. This saves a lot of memory and is pretty fast to get the result.
  * 
  * However, you cannot get access to the specific Component of an Entity. For that, you need to get access to its ComponentManager.
+ * 
+ * Here are the typical use-case of the EntityManager:
+ * \code
+ * const auto entity = entityManager_.CreateEntity();
+ * //...
+ * if(entityManager_.HasComponent(entity, static_cast<core::EntityMask>(core::ComponentType::TRANSFORM)))
+ * {
+ * //...
+ * entityManager_.DestroyEntity(entity);
+ * \endcode
  * \subsection component_manager Component Manager
  * The ComponentManager is a template class that automatically generates a std::vector of the given component type T. It requires an EntityMManager, such that when adding or removing a component, the ComponentManager can notify the EntityManager of the change.
+ * Here are the typical use-case:
+ * \code
+ * //With Entity entity and ComponentManager spriteManager_
+ * spriteManager_.AddComponent(entity);
+ * //...
+ * auto& sprite = spriteManager_.GetComponent(entity);
+ * //... Do things with sprite
+ * spriteMManager_.RemoveComponent(entity);
+ * \endcode
  * \subsection sprite_manager Sprite Manager
  * The SpriteManager is a ComponentManager that owns the sprites in the game. Sprites are using sprites from SFML to draw on the window.
  * 

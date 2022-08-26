@@ -1,8 +1,9 @@
 #include <network/network_server.h>
-#include <utils/log.h>
+#include "utils/log.h"
+#include "utils/conversion.h"
+#include "utils/assert.h"
+
 #include <fmt/format.h>
-#include <utils/conversion.h>
-#include <cassert>
 #include <chrono>
 
 namespace game
@@ -230,7 +231,7 @@ namespace game
             }
             else
             {
-                assert(false && "Player Number is supposed to be already set!");
+                gpr_assert(false, "Player Number is supposed to be already set!");
             }
 
             auto joinAckPacket = std::make_unique<JoinAckPacket>();

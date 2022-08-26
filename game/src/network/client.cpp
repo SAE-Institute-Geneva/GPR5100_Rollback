@@ -1,6 +1,7 @@
-#include <network/client.h>
-#include <utils/conversion.h>
-#include <cassert>
+#include "network/client.h"
+
+#include "utils/assert.h"
+#include "utils/conversion.h"
 
 namespace game
 {
@@ -53,7 +54,7 @@ namespace game
                     }
                     if (inputs[index] != playerInputPacket->inputs[i])
                     {
-                        assert(false && "Inputs coming back from server are not coherent!!!");
+                        gpr_assert(false, "Inputs coming back from server are not coherent!!!");
                     }
                     if (inputFrame - i == 0)
                     {

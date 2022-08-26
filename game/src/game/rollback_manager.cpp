@@ -1,6 +1,6 @@
 #include <game/rollback_manager.h>
 #include <game/game_manager.h>
-#include <cassert>
+#include "utils/assert.h"
 #include <utils/log.h>
 #include <fmt/format.h>
 
@@ -153,7 +153,7 @@ namespace game
         {
             if (GetLastReceivedFrame(playerNumber) < newValidateFrame)
             {
-                assert(false && "We should not validate a frame if we did not receive all inputs!!!");
+                gpr_assert(false, "We should not validate a frame if we did not receive all inputs!!!");
                 return;
             }
         }
@@ -203,7 +203,7 @@ namespace game
             const PhysicsState lastPhysicsState = GetValidatePhysicsState(playerNumber);
             if (serverPhysicsState[playerNumber] != lastPhysicsState)
             {
-                assert(false && "Physics State are not equal");
+                gpr_assert(false, "Physics State are not equal");
             }
         }
     }
@@ -279,7 +279,7 @@ namespace game
 
     PlayerInput RollbackManager::GetInputAtFrame(PlayerNumber playerNumber, Frame frame) const
     {
-        assert(currentFrame_ - frame < inputs_[playerNumber].size() &&
+        gpr_assert(currentFrame_ - frame < inputs_[playerNumber].size(), 
             "Trying to get input too far in the past");
         return inputs_[playerNumber][currentFrame_ - frame];
     }
