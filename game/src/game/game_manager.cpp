@@ -16,12 +16,12 @@ namespace game
         transformManager_(entityManager_),
         rollbackManager_(*this, entityManager_)
     {
-        playerEntityMap_.fill(core::EntityManager::INVALID_ENTITY);
+        playerEntityMap_.fill(core::INVALID_ENTITY);
     }
 
     void GameManager::SpawnPlayer(PlayerNumber playerNumber, core::Vec2f position, core::Degree rotation)
     {
-        if (GetEntityFromPlayerNumber(playerNumber) != core::EntityManager::INVALID_ENTITY)
+        if (GetEntityFromPlayerNumber(playerNumber) != core::INVALID_ENTITY)
             return;
         core::LogDebug("[GameManager] Spawning new player");
         const auto entity = entityManager_.CreateEntity();
@@ -266,7 +266,7 @@ namespace game
             for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
             {
                 const auto playerEntity = GetEntityFromPlayerNumber(playerNumber);
-                if (playerEntity == core::EntityManager::INVALID_ENTITY)
+                if (playerEntity == core::INVALID_ENTITY)
                 {
                     continue;
                 }
@@ -447,7 +447,7 @@ namespace game
         for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
         {
             const auto playerEntity = GetEntityFromPlayerNumber(playerNumber);
-            if(playerEntity == core::EntityManager::INVALID_ENTITY)
+            if(playerEntity == core::INVALID_ENTITY)
             {
                 continue;
             }

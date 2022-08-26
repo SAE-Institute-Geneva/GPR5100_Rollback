@@ -57,7 +57,7 @@ namespace game
             {
                 const auto playerInput = GetInputAtFrame(playerNumber, frame);
                 const auto playerEntity = gameManager_.GetEntityFromPlayerNumber(playerNumber);
-                if(playerEntity == core::EntityManager::INVALID_ENTITY)
+                if(playerEntity == core::INVALID_ENTITY)
                 {
                     core::LogWarning(fmt::format("Invalid Entity in {}:line {}", __FILE__, __LINE__));
                     continue;

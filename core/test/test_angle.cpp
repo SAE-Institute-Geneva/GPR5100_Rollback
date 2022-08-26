@@ -20,6 +20,45 @@ TEST(Angle, DegreeToRadian)
     EXPECT_FLOAT_EQ(core::PI, angle2.value());
 }
 
+TEST(Angle, DegreeAdd)
+{
+
+    constexpr core::Degree angle1{ 180.0f };
+    constexpr core::Degree angle2{ 70.0f };
+    auto tmpAngle = angle1;
+    tmpAngle += angle2;
+    constexpr auto result = angle1 + angle2;
+    EXPECT_FLOAT_EQ(result.value(), angle1.value() + angle2.value());
+    EXPECT_FLOAT_EQ(tmpAngle.value(), result.value());
+}
+
+TEST(Angle, DegreeSub)
+{
+    constexpr core::Degree angle1{ 180.0f };
+    constexpr core::Degree angle2{ 70.0f };
+    constexpr auto result = angle1 - angle2;
+    auto tmpAngle = angle1;
+    tmpAngle -= angle2;
+    EXPECT_FLOAT_EQ(result.value(), angle1.value() - angle2.value());
+    EXPECT_FLOAT_EQ(tmpAngle.value(), result.value());
+}
+
+TEST(Angle, DegreeMul)
+{
+    constexpr core::Degree angle1{ 180.0f };
+    constexpr float ratio = 3.5f;
+    constexpr auto result = angle1 * ratio;
+    EXPECT_FLOAT_EQ(result.value(), angle1.value() * ratio);
+}
+
+TEST(Angle, DegreeDivS)
+{
+    constexpr core::Degree angle1{ 180.0f };
+    constexpr float ratio = 3.5f;
+    constexpr auto result = angle1 / ratio;
+    EXPECT_FLOAT_EQ(result.value(), angle1.value() / ratio);
+}
+
 TEST(Angle, Cosinus)
 {
     constexpr core::Degree angle{180.0f};

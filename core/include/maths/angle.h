@@ -1,3 +1,6 @@
+/**
+ * \file angle.h
+ */
 #pragma once
 
 #include <cmath>
@@ -9,7 +12,7 @@ inline constexpr static float PI = static_cast<float>(M_PI);
 class Degree;
 /**
  * \brief Radian is an utility class that describes radian angles (0 to 2PI).
- * It can be easily converted to Radian with conversion constructor.
+ * It can be easily converted to Degree with conversion constructor.
  * It can be used with trigonometric functions (Sin, Cos, Tan)
  */
 class Radian
@@ -17,6 +20,10 @@ class Radian
 public:
     constexpr Radian() = default;
     constexpr Radian(float value) : value_(value){}
+    /**
+     * \brief Conversion constructor that implicitly converts Degree to Radian
+     * \param angle is the degree angle to be converted to Radian
+     */
     constexpr Radian(const Degree& angle);
     [[nodiscard]] constexpr float value() const { return value_; }
 private:
@@ -33,7 +40,11 @@ class Degree
 public:
     constexpr Degree() = default;;
     constexpr Degree(float value) : value_(value){}
-    constexpr Degree(const Radian& radian) : value_(radian.value()/PI*180.0f){}
+    /**
+     * \brief Conversion constructor that implicitly converts Radian to Degree
+     * \param angle is the radian angle to be converted to Degree 
+     */
+    constexpr Degree(const Radian& angle) : value_(angle.value()/PI*180.0f){}
     [[nodiscard]] constexpr float value() const { return value_; }
     constexpr Degree operator+(Degree angle) const { return { value_ + angle.value() }; }
     constexpr Degree& operator+=(Degree angle)
@@ -42,6 +53,11 @@ public:
         return *this;
     }
     constexpr Degree operator-(Degree angle) const { return { value_ - angle.value() }; }
+    constexpr Degree& operator-=(Degree angle)
+    {
+        value_ -= angle.value();
+        return *this;
+    }
     constexpr Degree operator*(float value) const { return { value_ * value }; }
     constexpr Degree operator/(float value) const { return { value_ / value }; }
     constexpr Degree operator-() const { return { -value_ }; }

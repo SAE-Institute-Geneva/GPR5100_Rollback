@@ -6,6 +6,8 @@
  *
  * \section install_sec Installation
  * To start working on the project, you are required CMake and vcpkg.
+ * \subsection windows Windows
+ * On Windows, you can used Visual Studio 2022 that supports C++20 pretty well.
  * \section ecs ECS implementation
  * ECS or Entity-Component-System is a pattern of structuring game world objects and their components. In our purpose, it allows to simply replicate the game data as each component is stored by type. 
  * \subsection entity_manager Entity Manager
@@ -22,19 +24,30 @@
  * Sprite draw ordering works with entity ordering. It means that the background shoudl be the first entity to spawn because it will drawn first, therefore behind the next sprites.
  * \subsection physics_manager Physics Manager
  * The PhysicsManager is a class that contains two ComponentManager:
- * - BodyManager
- * - BoxManager
+ * - BodyManager owns the Body (or rigid bodies) of the physics engine.
+ * - BoxManager owns the Box (or box colliders) of the physics engine.
+ * 
+ * The Physics Engine is a REALLY simple implementation of basic box triggering. 
  * \subsection transform_manager Transform Manager
  * The TransformManager is a class that contains three ComponentManager:
- * - PositionManager
- * - ScaleManager
- * - RotationManager
+ * - PositionManager owns the positions in meter of all entities, both used in physics and graphics (converted to pixel with pixelToMeter).
+ * - ScaleManager owns the scaling ratios of all entities. This only applies to the graphics part of the game, NOT the physics part.
+ * - RotationManager owns the angles of all entites. This only applies to the graphics part of the game, NOT the physics.
  * \section netcode Netcode
- * This project netcode is pretty simple, but should work for any simple game project.
+ * This project netcode is pretty simple, but should work for any simple game project. 
  * \subsection server_connection Connecting to the server
+ * When a client wants to connect to the server, they will be required to connect both in TCP and UDP. 
  * \subsection start_game Starting the game
+ * When all players are connected, the server automatically send a START_GAME packet to each player. 
  * \subsection send_input Sending player inputs
+ * Each frame, the game sends the current player inputs, as well as the last game::maxInputNmb inputs.
  * \subsection validate_frame Validating the frame
- * \section rollback Rollback mechanisms
+ * When the server finally receives all the player inputs for a specific frame, it will automatically validate the specific frame and will update its lastValidateFrame_ to the new specific frame.
  * 
+ * On the client side, when receiving a VALIDATE_FRAME packet, the client will calculate the frame physics status and check that the result is the same as the server one. If it is not the case, there is desynchronisation and the game must end!
+ * \section rollback Rollback mechanisms
+ * \subsection rollback_how How the rollback works?
+ * At any time, each client and the server have the game states of two points time:
+ * - Last Validated Frame
+ * - Current Frame (except the server)
  */

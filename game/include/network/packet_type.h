@@ -141,7 +141,7 @@ inline sf::Packet& operator>>(sf::Packet& packet, SpawnPlayerPacket& spawnPlayer
 }
 
     
-    const size_t maxInputNmb = 50;
+constexpr std::size_t maxInputNmb = 50;
 /**
  * \brief PlayerInputPacket is a UDP Packet sent by the player client and then replicated by the server to all clients to share the currentFrame
  * and all the previous ones player inputs.

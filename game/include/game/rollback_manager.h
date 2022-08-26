@@ -19,7 +19,7 @@ class GameManager;
  */
 struct CreatedEntity
 {
-    core::Entity entity = core::EntityManager::INVALID_ENTITY;
+    core::Entity entity = core::INVALID_ENTITY;
     Frame createdFrame = 0;
 };
 

@@ -24,14 +24,23 @@ TEST(Entity, CreateEntity)
 TEST(Entity, EntityComponent)
 {
     static constexpr core::Component newComponent = 2u;
+    static constexpr core::Component newComponent2 = 4u;
     core::EntityManager entityManager;
     const auto newEntity = entityManager.CreateEntity();
-    entityManager.AddComponent(newEntity, newComponent);
 
+    entityManager.AddComponent(newEntity, newComponent);
     EXPECT_TRUE(entityManager.HasComponent(newEntity, newComponent));
+    EXPECT_FALSE(entityManager.HasComponent(newEntity, newComponent2));
+
+    entityManager.AddComponent(newEntity, newComponent2);
+    EXPECT_TRUE(entityManager.HasComponent(newEntity, newComponent));
+    EXPECT_TRUE(entityManager.HasComponent(newEntity, newComponent2));
+
     entityManager.RemoveComponent(newEntity, newComponent);
     EXPECT_FALSE(entityManager.HasComponent(newEntity, newComponent));
-    entityManager.AddComponent(newEntity, newComponent);
+    EXPECT_TRUE(entityManager.HasComponent(newEntity, newComponent2));
+    
     entityManager.DestroyEntity(newEntity);
     EXPECT_FALSE(entityManager.HasComponent(newEntity, newComponent));
+    EXPECT_FALSE(entityManager.HasComponent(newEntity, newComponent2));
 }
