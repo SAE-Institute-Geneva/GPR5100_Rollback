@@ -9,6 +9,9 @@
 #include <imgui-SFML.h>
 
 #include "engine/globals.h"
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
 
 namespace core
 {
@@ -20,6 +23,9 @@ void Engine::Run()
     {
         const auto dt = clock.restart();
         Update(dt);
+#ifdef TRACY_ENABLE
+        FrameMark;
+#endif
     }
     Destroy();
 }
@@ -54,6 +60,10 @@ void Engine::RegisterDrawImGui(DrawImGuiInterface* drawImGuiInterface)
 
 void Engine::Init()
 {
+
+#ifdef TRACY_ENABLE
+    ZoneScoped;
+#endif
     window_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(windowSize.x, windowSize.y), "Rollback Game");
     ImGui::SFML::Init(*window_);
     for(auto* system : systems_)
@@ -64,6 +74,10 @@ void Engine::Init()
 
 void Engine::Update(sf::Time dt) const
 {
+
+#ifdef TRACY_ENABLE
+    ZoneScoped;
+#endif
     sf::Event e{};
     while (window_->pollEvent(e))
     {
@@ -109,6 +123,10 @@ void Engine::Update(sf::Time dt) const
 
 void Engine::Destroy()
 {
+
+#ifdef TRACY_ENABLE
+    ZoneScoped;
+#endif
     for (auto* system : systems_)
     {
         system->End();

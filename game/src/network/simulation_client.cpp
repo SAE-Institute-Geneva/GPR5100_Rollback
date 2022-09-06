@@ -3,6 +3,11 @@
 #include <imgui.h>
 #include <network/simulation_server.h>
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
+
+
 namespace game
 {
     SimulationClient::SimulationClient(SimulationServer& server) :
@@ -12,6 +17,9 @@ namespace game
 
     void SimulationClient::Begin()
     {
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         clientId_ = ClientId{ core::RandomRange(std::numeric_limits<std::underlying_type_t<ClientId>>::lowest(),
                                       std::numeric_limits<std::underlying_type_t<ClientId>>::max()) };
         debugDb_.Open(fmt::format("Client_{}.db", static_cast<unsigned>(clientId_)));
@@ -21,6 +29,9 @@ namespace game
 
     void SimulationClient::Update(sf::Time dt)
     {
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         Client::Update(dt);
         gameManager_.Update(dt);
     }
@@ -29,6 +40,9 @@ namespace game
 
     void SimulationClient::End()
     {
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         gameManager_.End();
         debugDb_.Close();
 
@@ -36,6 +50,9 @@ namespace game
 
     void SimulationClient::Draw(sf::RenderTarget& renderTarget)
     {
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         gameManager_.Draw(renderTarget);
     }
 

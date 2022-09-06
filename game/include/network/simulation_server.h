@@ -2,6 +2,7 @@
 #include <memory>
 #include <SFML/System/Time.hpp>
 
+#include "debug_db.h"
 #include "server.h"
 #include "graphics/graphics.h"
 
@@ -41,6 +42,7 @@ private:
 	std::vector<DelayPacket> sentPackets_;
 	std::array<std::unique_ptr<SimulationClient>, maxPlayerNmb>& clients_;
 
+	DebugDatabase db_;
 
 	float avgDelay_ = 0.25f;
 	float marginDelay_ = 0.1f;

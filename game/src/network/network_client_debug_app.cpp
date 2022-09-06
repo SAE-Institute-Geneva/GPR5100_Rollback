@@ -2,11 +2,19 @@
 
 #include "game/input_manager.h"
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
+
 namespace game
 {
 
 void NetworkClientDebugApp::Begin()
 {
+
+#ifdef TRACY_ENABLE
+    ZoneScoped;
+#endif
     windowSize_ = core::windowSize;
     for (auto& framebuffer : clientsFramebuffers_)
     {
@@ -21,6 +29,10 @@ void NetworkClientDebugApp::Begin()
 
 void NetworkClientDebugApp::Update(sf::Time dt)
 {
+
+#ifdef TRACY_ENABLE
+    ZoneScoped;
+#endif
     for(std::size_t i = 0; i < clients_.size(); i++)
     {
         clients_[i].SetPlayerInput(GetPlayerInput(static_cast<int>(i)));
@@ -34,6 +46,9 @@ void NetworkClientDebugApp::Update(sf::Time dt)
 
 void NetworkClientDebugApp::End()
 {
+#ifdef TRACY_ENABLE
+    ZoneScoped;
+#endif
     for (auto& client : clients_)
     {
         client.End();
@@ -51,6 +66,10 @@ void NetworkClientDebugApp::DrawImGui()
 
 void NetworkClientDebugApp::Draw(sf::RenderTarget& renderTarget)
 {
+
+#ifdef TRACY_ENABLE
+    ZoneScoped;
+#endif
     for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
     {
         clientsFramebuffers_[playerNumber].clear(sf::Color::Black);

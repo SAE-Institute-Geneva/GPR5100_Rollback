@@ -4,10 +4,18 @@
 #include "utils/assert.h"
 #include "utils/conversion.h"
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
+
 namespace game
 {
     void Client::ReceivePacket(const Packet* packet)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         const auto packetType = packet->packetType;
         switch (packetType)
         {
@@ -141,6 +149,10 @@ namespace game
 
     void Client::Update(sf::Time dt)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         pingTimer_ -= dt.asSeconds();
         if(pingTimer_ < 0.0f)
         {

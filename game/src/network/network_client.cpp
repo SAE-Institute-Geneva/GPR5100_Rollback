@@ -6,12 +6,19 @@
 #include "utils/conversion.h"
 #include "utils/log.h"
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
+
 namespace game
 {
 
     void NetworkClient::Begin()
     {
 
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         clientId_ = ClientId{ core::RandomRange(std::numeric_limits<std::underlying_type_t<ClientId>>::lowest(),
                                       std::numeric_limits<std::underlying_type_t<ClientId>>::max()) };
         //JOIN packet
@@ -28,6 +35,9 @@ namespace game
 
     void NetworkClient::Update(sf::Time dt)
     {
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         Client::Update(dt);
         if (currentState_ != State::NONE)
         {
@@ -151,6 +161,9 @@ namespace game
 
     void NetworkClient::Draw(sf::RenderTarget& renderTarget)
     {
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         gameManager_.Draw(renderTarget);
     }
 

@@ -3,6 +3,10 @@
 #include "engine/globals.h"
 #include "game/input_manager.h"
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
+
 namespace game
 {
     SimulationApp::SimulationApp() : server_(clients_)
@@ -38,6 +42,10 @@ namespace game
 
     void SimulationApp::Begin()
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         windowSize_ = core::windowSize;
         for(auto& framebuffer: clientsFramebuffers_)
         {
@@ -54,7 +62,10 @@ namespace game
 
     void SimulationApp::Update(sf::Time dt)
     {
-        
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         //Checking if keys are down
         for(std::size_t i = 0; i < clients_.size(); i++)
         {
@@ -71,6 +82,9 @@ namespace game
 
     void SimulationApp::End()
     {
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         for (const auto& client : clients_)
         {
             client->End();
@@ -80,6 +94,10 @@ namespace game
 
     void SimulationApp::DrawImGui()
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         server_.DrawImGui();
         for (auto& client : clients_)
         {
@@ -89,6 +107,10 @@ namespace game
 
     void SimulationApp::Draw(sf::RenderTarget& renderTarget)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
         {
             clientsFramebuffers_[playerNumber].clear(sf::Color::Black);

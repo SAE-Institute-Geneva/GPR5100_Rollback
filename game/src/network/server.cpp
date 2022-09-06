@@ -4,11 +4,19 @@
 #include <utils/conversion.h>
 #include <cstdint>
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
+
 namespace game
 {
 
     void Server::ReceivePacket(std::unique_ptr<Packet> packet)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         switch (packet->packetType)
         {
         case PacketType::JOIN:

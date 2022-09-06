@@ -9,6 +9,10 @@
 
 #include <chrono>
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
+
 namespace game
 {
 
@@ -49,6 +53,10 @@ namespace game
     }
     void GameManager::Validate(Frame newValidateFrame)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         if (rollbackManager_.GetCurrentFrame() < newValidateFrame)
         {
             rollbackManager_.StartNewFrame(newValidateFrame);
@@ -107,6 +115,10 @@ namespace game
 
     void ClientGameManager::Begin()
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         //load textures
         if (!bulletTexture_.loadFromFile("data/sprites/bullet.png"))
         {
@@ -127,6 +139,10 @@ namespace game
 
     void ClientGameManager::Update(sf::Time dt)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         if (state_ & STARTED)
         {
             rollbackManager_.SimulateToCurrentFrame();
@@ -194,6 +210,10 @@ namespace game
 
     void ClientGameManager::Draw(sf::RenderTarget& target)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         UpdateCameraView();
         target.setView(cameraView_);
 
@@ -317,6 +337,10 @@ namespace game
 
     void ClientGameManager::FixedUpdate()
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         if (!(state_ & STARTED))
         {
             if (startingTime_ != 0)

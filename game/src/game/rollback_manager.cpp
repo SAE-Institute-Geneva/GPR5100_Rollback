@@ -4,6 +4,10 @@
 #include <utils/log.h>
 #include <fmt/format.h>
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
+
 namespace game
 {
 
@@ -24,6 +28,10 @@ namespace game
 
     void RollbackManager::SimulateToCurrentFrame()
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         const auto currentFrame = gameManager_.GetCurrentFrame();
         const auto lastValidateFrame = gameManager_.GetLastValidateFrame();
         //Destroying all created Entities after the last validated frame
@@ -104,6 +112,10 @@ namespace game
 
     void RollbackManager::StartNewFrame(Frame newFrame)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         if (currentFrame_ > newFrame)
             return;
         const auto delta = newFrame - currentFrame_;
@@ -128,6 +140,10 @@ namespace game
 
     void RollbackManager::ValidateFrame(Frame newValidateFrame)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         const auto lastValidateFrame = gameManager_.GetLastValidateFrame();
         //Destroying all created Entities after the last validated frame
         for (const auto& createdEntity : createdEntities_)
@@ -197,6 +213,10 @@ namespace game
     }
     void RollbackManager::ConfirmFrame(Frame newValidateFrame, const std::array<PhysicsState, maxPlayerNmb>& serverPhysicsState)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         ValidateFrame(newValidateFrame);
         for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
         {
@@ -247,6 +267,10 @@ namespace game
 
     void RollbackManager::SpawnPlayer(PlayerNumber playerNumber, core::Entity entity, core::Vec2f position, core::Degree rotation)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         Body playerBody;
         playerBody.position = position;
         playerBody.rotation = rotation;
@@ -346,6 +370,10 @@ namespace game
 
     void RollbackManager::DestroyEntity(core::Entity entity)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         //we don't need to save a bullet that has been created in the time window
         if (std::find_if(createdEntities_.begin(), createdEntities_.end(), [entity](auto newEntity)
             {

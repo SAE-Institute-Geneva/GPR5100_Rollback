@@ -9,6 +9,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 option(Gpr_Assert "Activate Assertion" ON)
 option(Gpr_Exit_On_Warning "Exit on Warning Assertion" ON)
+option(ENABLE_PROFILING "Enable Tracy Profiling" OFF)
 
 include(cmake/data.cmake)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
@@ -21,6 +22,8 @@ else()
     # lots of warnings
     add_compile_options(-Wall -Wextra -Wshadow -Wnon-virtual-dtor)
 endif()
-
+if(ENABLE_PROFILING)
+    add_subdirectory(externals/tracy)
+endif()
 add_subdirectory(core)
 add_subdirectory(game)

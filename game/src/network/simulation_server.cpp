@@ -5,6 +5,10 @@
 #include <utils/conversion.h>
 #include <utils/log.h>
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
+
 namespace game
 {
     SimulationServer::SimulationServer(std::array<std::unique_ptr<SimulationClient>, 2>& clients) : clients_(clients)
@@ -13,11 +17,15 @@ namespace game
 
     void SimulationServer::Begin()
     {
-
+        db_.Open("Server.db");
     }
 
     void SimulationServer::Update(sf::Time dt)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         auto packetIt = receivedPackets_.begin();
         while (packetIt != receivedPackets_.end())
         {
@@ -57,6 +65,7 @@ namespace game
 
     void SimulationServer::End()
     {
+        db_.Close();
     }
 
     void SimulationServer::DrawImGui()

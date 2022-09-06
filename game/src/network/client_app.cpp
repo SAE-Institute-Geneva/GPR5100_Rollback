@@ -3,10 +3,18 @@
 #include "engine/globals.h"
 #include "game/input_manager.h"
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
+
 namespace game
 {
 void ClientApp::Begin()
 {
+
+#ifdef TRACY_ENABLE
+    ZoneScoped;
+#endif
     windowSize_ = core::windowSize;
     client_.SetWindowSize(windowSize_);
     client_.Begin();
@@ -14,12 +22,20 @@ void ClientApp::Begin()
 
 void ClientApp::Update(sf::Time dt)
 {
+
+#ifdef TRACY_ENABLE
+    ZoneScoped;
+#endif
     client_.SetPlayerInput(GetPlayerInput(0));
     client_.Update(dt);
 }
 
 void ClientApp::End()
 {
+
+#ifdef TRACY_ENABLE
+    ZoneScoped;
+#endif
     client_.End();
 }
 

@@ -6,6 +6,10 @@
 #include <sqlite3.h>
 #include <fmt/format.h>
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
+
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -36,15 +40,20 @@ void DebugDatabase::Open(std::string_view path)
         db = nullptr;
     }
     CreateTables();
+    t_ = std::thread{ &DebugDatabase::Loop, this };
+    t_.detach();
 }
 
-void DebugDatabase::StorePacket(const PlayerInputPacket* inputPacket) const
+void DebugDatabase::StorePacket(const PlayerInputPacket* inputPacket)
 {
+#ifdef TRACY_ENABLE
+    ZoneScoped;
+#endif
     const PlayerNumber playerNumber = inputPacket->playerNumber;
     const auto frame = core::ConvertFromBinary<Frame>(inputPacket->currentFrame);
     const PlayerInput input = inputPacket->inputs[0];
 
-    const auto query = fmt::format("INSERT INTO inputs (player_number, frame, up, down, left, right, shoot) VALUES({}, {}, {}, {}, {}, {},  {});",
+    auto query = fmt::format("INSERT INTO inputs (player_number, frame, up, down, left, right, shoot) VALUES({}, {}, {}, {}, {}, {},  {});",
                                    playerNumber,
                                    frame,
                                    (input & PlayerInputEnum::UP) == PlayerInputEnum::UP,
@@ -53,25 +62,54 @@ void DebugDatabase::StorePacket(const PlayerInputPacket* inputPacket) const
                                    (input & PlayerInputEnum::RIGHT) == PlayerInputEnum::RIGHT,
                                    (input & PlayerInputEnum::SHOOT) == PlayerInputEnum::SHOOT);
 
-
-    /* Execute SQL statement */
-
-    char* zErrMsg = nullptr;
-    const auto rc = sqlite3_exec(db, query.c_str(), callback, nullptr, &zErrMsg);
-
-    if (rc != SQLITE_OK) {
-        core::LogError(fmt::format("SQL error with storing input: {}", zErrMsg));
-        sqlite3_free(zErrMsg);
+    {
+        std::lock_guard lock(m_);
+        commands_.push_back(query);
     }
+
+    cv_.notify_one();
 }
 
 void DebugDatabase::Close()
 {
+    cv_.notify_one();
+    isOver_.store(true, std::memory_order_release);
+
+    //t_.join();
     if(db != nullptr)
     {
         sqlite3_close(db);
         db = nullptr;
     }
+}
+
+void DebugDatabase::Loop()
+{
+    std::unique_lock lock(m_);
+    while(!isOver_.load(std::memory_order_acquire))
+    {
+        while(!commands_.empty())
+        {
+#ifdef TRACY_ENABLE
+            ZoneNamedN(sqlExecuteCommand, "SQL Execute Command", true);
+#endif
+            std::string command = std::move(commands_[0]);
+            commands_.erase(commands_.begin());
+            lock.unlock();
+            /* Execute SQL statement */
+
+            char* zErrMsg = nullptr;
+            const auto rc = sqlite3_exec(db, command.c_str(), callback, nullptr, &zErrMsg);
+
+            if (rc != SQLITE_OK) {
+                core::LogError(fmt::format("SQL error with storing input: {}", zErrMsg));
+                sqlite3_free(zErrMsg);
+            }
+            lock.lock();
+        }
+        cv_.wait(lock);
+    }
+    isOver_ = false;
 }
 
 void DebugDatabase::CreateTables() const

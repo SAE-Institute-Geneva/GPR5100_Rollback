@@ -6,6 +6,10 @@
 #include <fmt/format.h>
 #include <chrono>
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
+
 namespace game
 {
     void NetworkServer::SendReliablePacket(
@@ -85,6 +89,9 @@ namespace game
 
     void NetworkServer::Begin()
     {
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         sf::Socket::Status status = sf::Socket::Error;
         while (status != sf::Socket::Done)
         {
@@ -120,6 +127,10 @@ namespace game
 
     void NetworkServer::Update([[maybe_unused]] sf::Time dt)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         if (lastSocketIndex_ < maxPlayerNmb)
         {
             const sf::Socket::Status status = tcpListener_.accept(
