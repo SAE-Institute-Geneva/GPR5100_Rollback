@@ -1,5 +1,9 @@
 #include <game/physics_manager.h>
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
+
 namespace game
 {
 
@@ -19,6 +23,9 @@ namespace game
 
     void PhysicsManager::FixedUpdate(sf::Time dt)
     {
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
         {
             if (!entityManager_.HasComponent(entity, static_cast<core::EntityMask>(core::ComponentType::BODY2D)))

@@ -1,5 +1,8 @@
 #include <game/bullet_manager.h>
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
 namespace game
 {
 BulletManager::BulletManager(core::EntityManager& entityManager, GameManager& gameManager) :
@@ -9,6 +12,10 @@ BulletManager::BulletManager(core::EntityManager& entityManager, GameManager& ga
 
 void BulletManager::FixedUpdate(sf::Time dt)
 {
+
+#ifdef TRACY_ENABLE
+    ZoneScoped;
+#endif
     for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
     {
         if (entityManager_.HasComponent(entity, static_cast<core::EntityMask>(ComponentType::BULLET)))

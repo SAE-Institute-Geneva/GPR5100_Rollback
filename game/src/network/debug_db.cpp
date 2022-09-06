@@ -72,8 +72,8 @@ void DebugDatabase::StorePacket(const PlayerInputPacket* inputPacket)
 
 void DebugDatabase::Close()
 {
-    cv_.notify_one();
     isOver_.store(true, std::memory_order_release);
+    cv_.notify_one();
 
     //t_.join();
     if(db != nullptr)
@@ -90,6 +90,10 @@ void DebugDatabase::Loop()
     {
         while(!commands_.empty())
         {
+            if(isOver_.load(std::memory_order_acquire))
+            {
+                break;
+            }
 #ifdef TRACY_ENABLE
             ZoneNamedN(sqlExecuteCommand, "SQL Execute Command", true);
 #endif

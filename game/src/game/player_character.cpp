@@ -1,6 +1,9 @@
 #include <game/player_character.h>
 #include <game/game_manager.h>
 
+#ifdef TRACY_ENABLE
+#include <Tracy.hpp>
+#endif
 namespace game
 {
     PlayerCharacterManager::PlayerCharacterManager(core::EntityManager& entityManager, PhysicsManager& physicsManager, GameManager& gameManager) :
@@ -14,6 +17,10 @@ namespace game
 
     void PlayerCharacterManager::FixedUpdate(sf::Time dt)
     {
+
+#ifdef TRACY_ENABLE
+        ZoneScoped;
+#endif
         for (core::Entity playerEntity = 0; playerEntity < entityManager_.GetEntitiesSize(); playerEntity++)
         {
             if (!entityManager_.HasComponent(playerEntity,
