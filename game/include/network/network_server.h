@@ -43,7 +43,7 @@ public:
 
     void SetTcpPort(unsigned short i);
 
-    bool IsOpen() const;
+    [[nodiscard]] bool IsOpen() const;
 protected:
     void SpawnNewPlayer(ClientId clientId, PlayerNumber playerNumber) override;
 

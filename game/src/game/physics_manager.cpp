@@ -4,7 +4,7 @@ namespace game
 {
 
     PhysicsManager::PhysicsManager(core::EntityManager& entityManager) :
-        bodyManager_(entityManager), boxManager_(entityManager), entityManager_(entityManager)
+        entityManager_(entityManager), bodyManager_(entityManager), boxManager_(entityManager)
     {
 
     }

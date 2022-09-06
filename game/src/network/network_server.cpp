@@ -31,7 +31,8 @@ namespace game
                         playerNumber));
                     break;
                 case sf::Socket::Disconnected:
-
+                    break;
+                default:
                     break;
                 }
             }

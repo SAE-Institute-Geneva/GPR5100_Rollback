@@ -100,8 +100,8 @@ namespace game
 
     ClientGameManager::ClientGameManager(PacketSenderInterface& packetSenderInterface) :
         GameManager(),
-        spriteManager_(entityManager_, transformManager_),
-        packetSenderInterface_(packetSenderInterface)
+        packetSenderInterface_(packetSenderInterface),
+        spriteManager_(entityManager_, transformManager_)
     {
     }
 
@@ -211,8 +211,8 @@ namespace game
                 textRenderer_.setString(winnerText);
                 textRenderer_.setCharacterSize(32);
                 const auto textBounds = textRenderer_.getLocalBounds();
-                textRenderer_.setPosition(windowSize_.x / 2.0f - textBounds.width/2.0f, 
-                    windowSize_.y / 2.0f - textBounds.height / 2.0f);
+                textRenderer_.setPosition(static_cast<float>(windowSize_.x) / 2.0f - textBounds.width/2.0f,
+                    static_cast<float>(windowSize_.y) / 2.0f - textBounds.height / 2.0f);
                 target.draw(textRenderer_);
             }
             else if (winner_ != INVALID_PLAYER)
@@ -222,8 +222,8 @@ namespace game
                 textRenderer_.setString(winnerText);
                 textRenderer_.setCharacterSize(32);
                 const auto textBounds = textRenderer_.getLocalBounds();
-                textRenderer_.setPosition(windowSize_.x / 2.0f - textBounds.width / 2.0f,
-                    windowSize_.y / 2.0f - textBounds.height / 2.0f);
+                textRenderer_.setPosition(static_cast<float>(windowSize_.x) / 2.0f - textBounds.width / 2.0f,
+                    static_cast<float>(windowSize_.y) / 2.0f - textBounds.height / 2.0f);
                 target.draw(textRenderer_);
             }
             else
@@ -233,8 +233,8 @@ namespace game
                 textRenderer_.setString(errorMessage);
                 textRenderer_.setCharacterSize(32);
                 const auto textBounds = textRenderer_.getLocalBounds();
-                textRenderer_.setPosition(windowSize_.x / 2.0f - textBounds.width / 2.0f,
-                    windowSize_.y / 2.0f - textBounds.height / 2.0f);
+                textRenderer_.setPosition(static_cast<float>(windowSize_.x) / 2.0f - textBounds.width / 2.0f,
+                    static_cast<float>(windowSize_.y) / 2.0f - textBounds.height / 2.0f);
                 target.draw(textRenderer_);
             }
         }
@@ -253,8 +253,8 @@ namespace game
                     textRenderer_.setString(countDownText);
                     textRenderer_.setCharacterSize(32);
                     const auto textBounds = textRenderer_.getLocalBounds();
-                    textRenderer_.setPosition(windowSize_.x / 2.0f - textBounds.width / 2.0f,
-                        windowSize_.y / 2.0f - textBounds.height / 2.0f);
+                    textRenderer_.setPosition(static_cast<float>(windowSize_.x) / 2.0f - textBounds.width / 2.0f,
+                       static_cast<float>(windowSize_.y) / 2.0f - textBounds.height / 2.0f);
                     target.draw(textRenderer_);
                 }
             }

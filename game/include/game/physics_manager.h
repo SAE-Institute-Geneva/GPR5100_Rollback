@@ -45,6 +45,7 @@ struct Box
 class OnTriggerInterface
 {
 public:
+    virtual ~OnTriggerInterface() = default;
     virtual void OnTrigger(core::Entity entity1, core::Entity entity2) = 0;
 };
 
