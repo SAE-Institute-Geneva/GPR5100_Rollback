@@ -1,5 +1,6 @@
 #include "network/client.h"
 
+#include "maths/basic.h"
 #include "utils/assert.h"
 #include "utils/conversion.h"
 
@@ -102,9 +103,57 @@ namespace game
             gameManager_.WinGame(winGamePacket->winner);
             break;
         }
+        case PacketType::PING:
+        {
+            const auto* pingPacket = static_cast<const PingPacket*>(packet);
+            const auto clientId = core::ConvertFromBinary<ClientId>(pingPacket->clientId);
+            if (clientId == clientId_)
+            {
+                const auto originTime = core::ConvertFromBinary<unsigned long long>(pingPacket->time);
+                using namespace std::chrono;
+                const auto currentTime = duration_cast<duration<unsigned long long, std::milli>>(
+                    system_clock::now().time_since_epoch()
+                    ).count();
+                const auto delta = currentTime - originTime;
+                const auto ping = static_cast<float>(delta);
+
+                //TODO calculate average and var ping
+                if(srtt_ < 0.0f)
+                {
+                    srtt_ = ping;
+                    rttvar_ = ping / 2.0f;
+                }
+                else
+                {
+                    srtt_ = (1.0f - alpha) * srtt_ + alpha * ping;
+                    rttvar_ = (1.0f - beta) * rttvar_ + beta * core::Abs(srtt_ - ping);
+                }
+
+                rto_ = srtt_ + std::max(g, k * rttvar_);
+            }
+
+        }
         case PacketType::SPAWN_BULLET: break;
         default:;
         }
 
+    }
+
+    void Client::Update(sf::Time dt)
+    {
+        pingTimer_ -= dt.asSeconds();
+        if(pingTimer_ < 0.0f)
+        {
+            if (clientId_ != INVALID_CLIENT_ID)
+            {
+                using namespace std::chrono;
+                auto pingPacket = std::make_unique<PingPacket>();
+                pingPacket->time = core::ConvertToBinary(duration_cast<duration<unsigned long long, std::milli>>(
+                    system_clock::now().time_since_epoch()).count());
+                pingPacket->clientId = core::ConvertToBinary(clientId_);
+                SendUnreliablePacket(std::move(pingPacket));
+            }
+            pingTimer_ = pingPeriod_;
+        }
     }
 }

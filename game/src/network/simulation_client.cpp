@@ -12,17 +12,16 @@ namespace game
 
     void SimulationClient::Begin()
     {
-        
-        clientId_ = core::RandomRange(std::numeric_limits<ClientId>::lowest(),
-                                      std::numeric_limits<ClientId>::max());
+        clientId_ = ClientId{ core::RandomRange(std::numeric_limits<std::underlying_type_t<ClientId>>::lowest(),
+                                      std::numeric_limits<std::underlying_type_t<ClientId>>::max()) };
+        debugDb_.Open(fmt::format("Client_{}.db", static_cast<unsigned>(clientId_)));
         //JOIN packet
         gameManager_.Begin();
-
-
     }
 
     void SimulationClient::Update(sf::Time dt)
     {
+        Client::Update(dt);
         gameManager_.Update(dt);
     }
 
@@ -31,6 +30,7 @@ namespace game
     void SimulationClient::End()
     {
         gameManager_.End();
+        debugDb_.Close();
 
     }
 
@@ -38,6 +38,7 @@ namespace game
     {
         gameManager_.Draw(renderTarget);
     }
+
 
 
     void SimulationClient::SetPlayerInput(PlayerInput playerInput)
@@ -52,7 +53,7 @@ namespace game
 
     void SimulationClient::DrawImGui()
     {
-        const auto windowName = "Client " + std::to_string(clientId_);
+        const auto windowName = "Client " + std::to_string(static_cast<unsigned>(clientId_));
         ImGui::Begin(windowName.c_str());
         if (gameManager_.GetPlayerNumber() == INVALID_PLAYER && ImGui::Button("Spawn Player"))
         {
@@ -65,6 +66,12 @@ namespace game
             SendReliablePacket(std::move(joinPacket));
         }
         gameManager_.DrawImGui();
+        if(srtt_ > 0.0f)
+        {
+            ImGui::Text("SRTT: %f", srtt_);
+            ImGui::Text("RTTVAR: %f", rttvar_);
+            ImGui::Text("RTO: %f", rto_);
+        }
         ImGui::End();
     }
 
@@ -78,4 +85,27 @@ namespace game
         server_.PutPacketInReceiveQueue(std::move(packet));
     }
 
+    void SimulationClient::ReceivePacket(const Packet* packet)
+    {
+        Client::ReceivePacket(packet);
+        switch (packet->packetType)
+        {
+        case PacketType::JOIN: break;
+        case PacketType::SPAWN_PLAYER: break;
+        case PacketType::INPUT:
+        {
+            auto* inputPacket = static_cast<const PlayerInputPacket*>(packet);
+            debugDb_.StorePacket(inputPacket);
+            break;
+        }
+        case PacketType::SPAWN_BULLET: break;
+        case PacketType::VALIDATE_STATE: break;
+        case PacketType::START_GAME: break;
+        case PacketType::JOIN_ACK: break;
+        case PacketType::WIN_GAME: break;
+        case PacketType::PING: break;
+        case PacketType::NONE: break;
+        default: ;
+        }
+    }
 }

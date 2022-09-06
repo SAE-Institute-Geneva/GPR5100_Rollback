@@ -4,10 +4,13 @@ file(GLOB_RECURSE Network_SRC src/network/*.cpp include/network/*.h)
 source_group("Game"				FILES ${Game_SRC})
 source_group("Network"				FILES ${Network_SRC})
 
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
+
 add_library(GameLib STATIC ${Game_SRC} ${Network_SRC})
 target_include_directories(GameLib PUBLIC include/)
 target_link_libraries(GameLib PUBLIC CoreLib)
-set_target_properties(GameLib PROPERTIES UNITY_BUILD ON)
+target_link_libraries(GameLib PUBLIC unofficial::sqlite3::sqlite3)
+#set_target_properties(GameLib PROPERTIES UNITY_BUILD ON)
 set_target_properties (GameLib PROPERTIES FOLDER Game)
 
 add_data_folder(GameLib)

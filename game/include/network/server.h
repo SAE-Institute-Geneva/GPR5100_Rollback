@@ -4,6 +4,7 @@
 #include "packet_type.h"
 #include "engine/system.h"
 #include "game/game_globals.h"
+#include "game/game_manager.h"
 
 namespace game
 {
@@ -13,7 +14,12 @@ namespace game
 class Server : public PacketSenderInterface, public core::SystemInterface
 {
 protected:
+
     virtual void SpawnNewPlayer(ClientId clientId, PlayerNumber playerNumber) = 0;
+    /**
+     * \brief ReceivePacket is a method that is called when the Server receives a Packet from a Client.
+     * \param packet is the received Packet.
+     */
     virtual void ReceivePacket(std::unique_ptr<Packet> packet);
 
     //Server game manager

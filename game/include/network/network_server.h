@@ -13,7 +13,7 @@ namespace game
  */
 struct ClientInfo
 {
-    ClientId clientId = 0;
+    ClientId clientId = INVALID_CLIENT_ID;
     unsigned long long timeDifference = 0;
     sf::IpAddress udpRemoteAddress;
     unsigned short udpRemotePort = 0;

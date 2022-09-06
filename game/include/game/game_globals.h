@@ -18,12 +18,13 @@ using PlayerNumber = std::uint8_t;
 /**
  * \brief INVALID_PLAYER is an integer constant that defines an invalid player number.
  */
-constexpr PlayerNumber INVALID_PLAYER = std::numeric_limits<PlayerNumber>::max();
+constexpr auto INVALID_PLAYER = std::numeric_limits<PlayerNumber>::max();
 /**
  * \brief ClientId is a type used to define the client identification.
  * It is given by the server to clients.
  */
-using ClientId = std::uint16_t;
+enum class ClientId : std::uint16_t {};
+constexpr auto INVALID_CLIENT_ID = ClientId{ 0 };
 using Frame = std::uint32_t;
 /**
  * \brief mmaxPlayerNmb is a integer constant that defines the maximum number of player per game

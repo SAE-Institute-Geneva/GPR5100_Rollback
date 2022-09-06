@@ -27,9 +27,21 @@ public:
      * \param packet A non-owning pointer to a packet (you don't need to care about deleting it
      */
     virtual void ReceivePacket(const Packet* packet);
+
+    void Update(sf::Time dt) override;
 protected:
 
     ClientGameManager gameManager_;
-    ClientId clientId_ = 0;
+    ClientId clientId_ = INVALID_CLIENT_ID;
+    float pingTimer_ = -1.0f;
+    static constexpr float pingPeriod_ = 0.3f;
+
+    float srtt_ = -1.0f;
+    float rttvar_ = 0.0f;
+    float rto_ = 1.0f;
+    static constexpr float k = 4.0f;
+    static constexpr float g = 100.0f;
+    static constexpr float alpha = 1.0f/8.0f;
+    static constexpr float beta = 1.0f/4.0f;
 };
 }

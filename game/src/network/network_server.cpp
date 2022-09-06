@@ -138,9 +138,8 @@ namespace game
             playerNumber++)
         {
             sf::Packet tcpPacket;
-            const auto status = tcpSockets_[playerNumber].receive(
-                tcpPacket);
-            switch (status)
+            switch (tcpSockets_[playerNumber].receive(
+                tcpPacket))
             {
             case sf::Socket::Done:
                 ReceivePacket(tcpPacket, PacketSocketSource::TCP);
@@ -220,7 +219,7 @@ namespace game
             const auto joinPacket = *static_cast<JoinPacket*>(packet.get());
             Server::ReceivePacket(std::move(packet));
             auto clientId = core::ConvertFromBinary<ClientId>(joinPacket.clientId);
-            core::LogDebug(fmt::format("[Server] Received Join Packet from: {} {}", clientId,
+            core::LogDebug(fmt::format("[Server] Received Join Packet from: {} {}", static_cast<unsigned>(clientId),
                 (packetSource == PacketSocketSource::UDP ? fmt::format(" UDP with port: {}", port) : " TCP")));
             const auto it = std::find(clientMap_.begin(), clientMap_.end(), clientId);
             PlayerNumber playerNumber;

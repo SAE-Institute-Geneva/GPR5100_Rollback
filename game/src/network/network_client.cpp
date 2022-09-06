@@ -12,8 +12,8 @@ namespace game
     void NetworkClient::Begin()
     {
 
-        clientId_ = core::RandomRange(std::numeric_limits<ClientId>::lowest(),
-                                      std::numeric_limits<ClientId>::max());
+        clientId_ = ClientId{ core::RandomRange(std::numeric_limits<std::underlying_type_t<ClientId>>::lowest(),
+                                      std::numeric_limits<std::underlying_type_t<ClientId>>::max()) };
         //JOIN packet
         gameManager_.Begin();
         tcpSocket_.setBlocking(false);
@@ -28,7 +28,7 @@ namespace game
 
     void NetworkClient::Update(sf::Time dt)
     {
-
+        Client::Update(dt);
         if (currentState_ != State::NONE)
         {
             auto status = sf::Socket::Done;
@@ -50,7 +50,7 @@ namespace game
                     break;
                 case sf::Socket::Disconnected: break;
                 case sf::Socket::Error: break;
-                default:;
+                default: break;
                 }
             }
             //Receive UDP packet
@@ -107,7 +107,7 @@ namespace game
 
     void NetworkClient::DrawImGui()
     {
-        const auto windowName = "Client " + std::to_string(clientId_);
+        const auto windowName = "Client " + std::to_string(static_cast<unsigned>(clientId_));
         ImGui::Begin(windowName.c_str());
         constexpr size_t bufferSize = 100;
         char hostBuffer[bufferSize];

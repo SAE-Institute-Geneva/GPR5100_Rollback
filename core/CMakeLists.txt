@@ -18,7 +18,7 @@ add_library(CoreLib STATIC ${Engine_SRC} ${Maths_SRC} ${Utils_SRC} ${Graphics_SR
 target_include_directories(CoreLib PUBLIC include/)
 target_link_libraries(CoreLib PUBLIC sfml-system sfml-network sfml-graphics sfml-window
 	sfml-network sfml-audio ImGui-SFML::ImGui-SFML spdlog::spdlog fmt::fmt)
-set_target_properties(CoreLib PROPERTIES UNITY_BUILD ON)
+#set_target_properties(CoreLib PROPERTIES UNITY_BUILD ON)
 
 if(Gpr_Assert)
 	target_compile_definitions(CoreLib PUBLIC "GPR_ASSERT=1")

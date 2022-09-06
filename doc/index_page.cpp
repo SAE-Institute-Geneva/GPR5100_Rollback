@@ -8,6 +8,8 @@
  * To start working on the project, you are required CMake and vcpkg.
  * \subsection windows Windows
  * On Windows, you can used Visual Studio 2022 that supports C++20 pretty well.
+ * \subsection ubuntu Ubuntu
+ * sudo apt install autoconf libtool
  * \section ecs ECS implementation
  * ECS or Entity-Component-System is a pattern of structuring game world objects and their components. In our purpose, it allows to simply replicate the game data as each component is stored by type. 
  * \subsection entity_manager Entity Manager
@@ -41,6 +43,8 @@
  * The SpriteManager is a ComponentManager that owns the sprites in the game. Sprites are using sprites from SFML to draw on the window.
  * 
  * Sprite draw ordering works with entity ordering. It means that the background shoudl be the first entity to spawn because it will drawn first, therefore behind the next sprites.
+ * 
+ * Sprite are centered on the position of the PositionManager by default.
  * \subsection physics_manager Physics Manager
  * The PhysicsManager is a class that contains two ComponentManager:
  * - BodyManager owns the Body (or rigid bodies) of the physics engine.
@@ -55,18 +59,30 @@
  * \section netcode Netcode
  * This project netcode is pretty simple, but should work for any simple game project. 
  * \subsection server_connection Connecting to the server
- * When a client wants to connect to the server, they will be required to connect both in TCP and UDP. 
+ * When a client wants to connect to the server to be able to join a game, they will have to connect both in TCP and UDP. This is the step-by-step:
+ * 1. The Client connects to the TCP IP address and port and sends a JOIN packet
+ * 2. The Server answers with a JOIN_ACK packet containing the UDP port.
+ * 3. The Client sends a JOIN packet on the UDP channel.
+ * 4. The Server answers with a JOIN_ACK on the UDP channel. The Client is then a valid connected client. 
  * \subsection start_game Starting the game
- * When all players are connected, the server automatically send a START_GAME packet to each player. 
+ * When all players are connected, the server automatically send a START_GAME packet to each player through the TCP channel. Each client will then wait about 3 seconds before starting their game session.
  * \subsection send_input Sending player inputs
- * Each frame, the game sends the current player inputs, as well as the last game::maxInputNmb inputs.
+ * Each frame, the game sends the current player inputs, as well as the last game::maxInputNmb inputs in an UDP packet.
  * \subsection validate_frame Validating the frame
  * When the server finally receives all the player inputs for a specific frame, it will automatically validate the specific frame and will update its lastValidateFrame_ to the new specific frame.
  * 
  * On the client side, when receiving a VALIDATE_FRAME packet, the client will calculate the frame physics status and check that the result is the same as the server one. If it is not the case, there is desynchronisation and the game must end!
+ * \subsection ping Ping
+ * It is always important to know the current round trip time between a client and a server. The ping system is pretty simple. The client sends a PING Packet to the server containing the current time and the server sends the same Packet back. When the client gets the Packet back, it can calculate the time it took for the Packet to do the round trip (RTT).
+ * 
+ * We then use TCP Retransmission Timer to calculate srtt and rttvar to get an idea of the average and variability of the packet.
  * \section rollback Rollback mechanisms
  * \subsection rollback_how How the rollback works?
- * At any time, each client and the server have the game states of two points time:
+ * At any time, each client and the server have the game world state of two points time:
  * - Last Validated Frame
  * - Current Frame (except the server)
+ * \section sqlite SQLite
+ * To debug efficiently the missbehavior of the netcode, the framework is providing a SQLite database allowing to review the last session.
+ * \subsection input_dbg Input debugging
+ * The SQLite stores the input of all players per frame on each client and servers.
  */

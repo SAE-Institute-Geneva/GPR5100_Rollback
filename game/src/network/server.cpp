@@ -9,19 +9,21 @@ namespace game
 
     void Server::ReceivePacket(std::unique_ptr<Packet> packet)
     {
-        const auto packetType = static_cast<PacketType>(packet->packetType);
-        switch (packetType)
+        switch (packet->packetType)
         {
         case PacketType::JOIN:
         {
             const auto* joinPacket = static_cast<const JoinPacket*>(packet.get());
             const auto clientId = core::ConvertFromBinary<ClientId>(joinPacket->clientId);
-            if (std::find(clientMap_.begin(), clientMap_.end(), clientId) != clientMap_.end())
+            if (std::any_of(clientMap_.begin(), clientMap_.end(), [clientId](const auto clientMapId)
+            {
+                    return clientMapId == clientId;
+            }))
             {
                 //Player joined twice!
                 return;
             }
-            core::LogDebug("Managing Received Packet Join from: " + std::to_string(clientId));
+            core::LogDebug("Managing Received Packet Join from: " + std::to_string(static_cast<unsigned>(clientId)));
             clientMap_[lastPlayerNumber_] = clientId;
             SpawnNewPlayer(clientId, lastPlayerNumber_);
 
@@ -93,7 +95,7 @@ namespace game
                 const auto winner = gameManager_.CheckWinner();
                 if (winner != INVALID_PLAYER)
                 {
-                    core::LogDebug(fmt::format("Server declares P{} a winner", winner + 1));
+                    core::LogDebug(fmt::format("Server declares P{} a winner", static_cast<unsigned>(winner) + 1));
                     auto winGamePacket = std::make_unique<WinGamePacket>();
                     winGamePacket->winner = winner;
                     SendReliablePacket(std::move(winGamePacket));
@@ -101,6 +103,13 @@ namespace game
                 }
             }
 
+            break;
+        }
+        case PacketType::PING:
+        {
+            auto pingPacket = std::make_unique<PingPacket>();
+            *pingPacket = *static_cast<PingPacket*>(packet.get());
+            SendUnreliablePacket(std::move(pingPacket));
             break;
         }
         default: break;

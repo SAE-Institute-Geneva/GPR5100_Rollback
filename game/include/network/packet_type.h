@@ -226,17 +226,18 @@ inline sf::Packet& operator>>(sf::Packet& packet, WinGamePacket& winGamePacket)
  */
 struct PingPacket : TypedPacket<PacketType::PING>
 {
-    long long time = 0;
+    std::array<std::uint8_t, sizeof(unsigned long long)> time{};
+    std::array<std::uint8_t, sizeof(ClientId)> clientId{};
 };
 
 inline sf::Packet& operator<<(sf::Packet& packet, const PingPacket& pingPacket)
 {
-    return packet << pingPacket.time;
+    return packet << pingPacket.time << pingPacket.clientId;
 }
 
 inline sf::Packet& operator>>(sf::Packet& packet, PingPacket& pingPacket)
 {
-    return packet >> pingPacket.time;
+    return packet >> pingPacket.time >> pingPacket.clientId;
 }
 
 inline void GeneratePacket(sf::Packet& packet, Packet& sendingPacket)

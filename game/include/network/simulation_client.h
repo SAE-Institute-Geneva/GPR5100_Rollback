@@ -3,6 +3,8 @@
 #include <network/client.h>
 #include <SFML/System/Time.hpp>
 
+#include "debug_db.h"
+
 namespace game
 {
 class SimulationServer;
@@ -25,12 +27,14 @@ public:
     void SendUnreliablePacket(std::unique_ptr<Packet> packet) override;
     void SendReliablePacket(std::unique_ptr<Packet> packet) override;
 
-
+    void ReceivePacket(const Packet* packet) override;
+    
     void DrawImGui() override;
     void SetPlayerInput(PlayerInput input);
     
 private:
     SimulationServer& server_;
+    DebugDatabase debugDb_;
 
 };
 }
