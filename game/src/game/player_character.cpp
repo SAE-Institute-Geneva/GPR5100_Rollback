@@ -21,10 +21,11 @@ namespace game
 #ifdef TRACY_ENABLE
         ZoneScoped;
 #endif
-        for (core::Entity playerEntity = 0; playerEntity < entityManager_.GetEntitiesSize(); playerEntity++)
+        for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
         {
-            if (!entityManager_.HasComponent(playerEntity,
-                                                   static_cast<core::EntityMask>(ComponentType::PLAYER_CHARACTER)))
+            const auto playerEntity = gameManager_.GetEntityFromPlayerNumber(playerNumber);
+            if (!entityManager_.HasComponent(playerEntity, 
+                static_cast<core::EntityMask>(ComponentType::PLAYER_CHARACTER)))
                 continue;
             auto playerBody = physicsManager_.GetBody(playerEntity);
             auto playerCharacter = GetComponent(playerEntity);

@@ -88,7 +88,7 @@ public:
     void OnTrigger(core::Entity entity1, core::Entity entity2) override;
 private:
 
-    PlayerInput GetInputAtFrame(PlayerNumber playerNumber, Frame frame) const;
+    [[nodiscard]] PlayerInput GetInputAtFrame(PlayerNumber playerNumber, Frame frame) const;
     GameManager& gameManager_;
     core::EntityManager& entityManager_;
     /**

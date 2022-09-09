@@ -10,6 +10,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 option(Gpr_Assert "Activate Assertion" ON)
 option(Gpr_Exit_On_Warning "Exit on Warning Assertion" ON)
 option(ENABLE_PROFILING "Enable Tracy Profiling" OFF)
+option(ENABLE_SQLITE_STORE "Enable info storing in sqlite" ON)
 
 include(cmake/data.cmake)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)

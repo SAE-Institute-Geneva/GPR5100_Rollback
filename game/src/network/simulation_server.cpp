@@ -17,7 +17,9 @@ namespace game
 
     void SimulationServer::Begin()
     {
+#ifdef ENABLE_SQLITE
         db_.Open("Server.db");
+#endif
     }
 
     void SimulationServer::Update(sf::Time dt)
@@ -65,7 +67,9 @@ namespace game
 
     void SimulationServer::End()
     {
+#ifdef ENABLE_SQLITE
         db_.Close();
+#endif
     }
 
     void SimulationServer::DrawImGui()

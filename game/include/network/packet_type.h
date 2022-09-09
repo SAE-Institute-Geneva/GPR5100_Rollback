@@ -1,10 +1,10 @@
 #pragma once
-#include <memory>
-#include <chrono>
+
 #include <SFML/Network/Packet.hpp>
 
 #include "game/game_globals.h"
-
+#include <memory>
+#include <chrono>
 
 namespace game
 {
@@ -190,7 +190,7 @@ inline sf::Packet& operator>>(sf::Packet& packet, StartGamePacket& startGamePack
 struct ValidateFramePacket : TypedPacket<PacketType::VALIDATE_STATE>
 {
     std::array<std::uint8_t, sizeof(Frame)> newValidateFrame{};
-    std::array<std::uint8_t, sizeof(PhysicsState)* maxPlayerNmb> physicsState{};
+    std::array<std::uint8_t, sizeof(PhysicsState) * maxPlayerNmb> physicsState{};
 };
 
 inline sf::Packet& operator<<(sf::Packet& packet, const ValidateFramePacket& validateFramePacket)

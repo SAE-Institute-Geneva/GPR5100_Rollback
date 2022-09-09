@@ -34,7 +34,9 @@ public:
     
 private:
     SimulationServer& server_;
+#ifdef ENABLE_SQLITE
     DebugDatabase debugDb_;
+#endif
 
 };
 }

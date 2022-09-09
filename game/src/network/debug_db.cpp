@@ -1,4 +1,7 @@
 #include "network/debug_db.h"
+
+#ifdef ENABLE_SQLITE
+
 #include "utils/log.h"
 #include "utils/conversion.h"
 
@@ -62,6 +65,29 @@ void DebugDatabase::StorePacket(const PlayerInputPacket* inputPacket)
                                    (input & PlayerInputEnum::RIGHT) == PlayerInputEnum::RIGHT,
                                    (input & PlayerInputEnum::SHOOT) == PlayerInputEnum::SHOOT);
 
+    {
+        std::lock_guard lock(m_);
+        commands_.push_back(query);
+    }
+
+    cv_.notify_one();
+}
+
+void DebugDatabase::StorePhysicsState(const DbPhysicsState& physicsState)
+{
+#ifdef TRACY_ENABLE
+    ZoneScoped;
+#endif
+
+    std::string query = "INSERT INTO physics_state (local_frame, validate_frame ";
+    std::string arguments;
+    std::string values = fmt::format(" VALUES ({}, {}", physicsState.lastLocalValidateFrame, physicsState.validateFrame);
+    for(PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+    {
+        arguments += fmt::format(",state_p{}_local, state_p{}_server ", playerNumber+1, playerNumber+1);
+        values += fmt::format(",{},{}", physicsState.localStates[playerNumber], physicsState.serverStates[playerNumber]);
+    }
+    query += arguments+") " + values+" );";
     {
         std::lock_guard lock(m_);
         commands_.push_back(query);
@@ -139,5 +165,24 @@ void DebugDatabase::CreateTables() const
         core::LogError(fmt::format("SQL error while creating table: {}", zErrMsg));
         sqlite3_free(zErrMsg);
     }
+
+    std::string createPhysicsStateTable = "CREATE TABLE physics_state ("\
+    "phys_id INTEGER PRIMARY KEY,"\
+    "local_frame INTEGER NOT NULL,"\
+    "validate_frame INTEGER NOT NULL"\
+    ;
+    for(PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+    {
+        createPhysicsStateTable += fmt::format(",state_p{}_local INTEGER NOT NULL, state_p{}_server INTEGER NOT NULL", playerNumber+1, playerNumber+1);
+    }
+    createPhysicsStateTable += ");";
+    zErrMsg = nullptr;
+    const auto rc2 = sqlite3_exec(db, createPhysicsStateTable.data(), callback, nullptr, &zErrMsg);
+    if (rc2 != SQLITE_OK) {
+        core::LogError(fmt::format("SQL error while creating table: {}", zErrMsg));
+        sqlite3_free(zErrMsg);
+    }
 }
 }
+
+#endif
