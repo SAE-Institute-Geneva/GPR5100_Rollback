@@ -42,7 +42,6 @@ namespace game
 
     void SimulationApp::Begin()
     {
-
 #ifdef TRACY_ENABLE
         ZoneScoped;
 #endif
@@ -62,7 +61,6 @@ namespace game
 
     void SimulationApp::Update(sf::Time dt)
     {
-
 #ifdef TRACY_ENABLE
         ZoneScoped;
 #endif

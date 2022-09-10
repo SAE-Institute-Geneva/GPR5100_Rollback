@@ -50,7 +50,7 @@ namespace game
                 switch (status)
                 {
                 case sf::Socket::Done:
-                    ReceivePacket(packet, PacketSource::TCP);
+                    ReceiveNetPacket(packet, PacketSource::TCP);
                     break;
                 case sf::Socket::NotReady:
                     //core::LogDebug("[Client] Error while receiving tcp socket is not ready");
@@ -74,7 +74,7 @@ namespace game
                 switch (status)
                 {
                 case sf::Socket::Done:
-                    ReceivePacket(packet, PacketSource::UDP);
+                    ReceiveNetPacket(packet, PacketSource::UDP);
                     break;
                 case sf::Socket::NotReady: break;
                 case sf::Socket::Partial:
@@ -218,7 +218,7 @@ namespace game
             currentFrame);
     }
 
-    void NetworkClient::ReceivePacket(sf::Packet& packet, PacketSource source)
+    void NetworkClient::ReceiveNetPacket(sf::Packet& packet, PacketSource source)
     {
         const auto receivePacket = GenerateReceivedPacket(packet);
         Client::ReceivePacket(receivePacket.get());

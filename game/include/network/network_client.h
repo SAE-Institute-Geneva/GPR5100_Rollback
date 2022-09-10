@@ -42,7 +42,7 @@ public:
 
 
 private:
-	void ReceivePacket(sf::Packet& packet, PacketSource source);
+	void ReceiveNetPacket(sf::Packet& packet, PacketSource source);
 	sf::UdpSocket udpSocket_;
 	sf::TcpSocket tcpSocket_;
 

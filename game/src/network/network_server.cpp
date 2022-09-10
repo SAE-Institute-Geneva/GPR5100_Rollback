@@ -154,7 +154,7 @@ namespace game
                 tcpPacket))
             {
             case sf::Socket::Done:
-                ReceivePacket(tcpPacket, PacketSocketSource::TCP);
+                ReceiveNetPacket(tcpPacket, PacketSocketSource::TCP);
                 break;
             case sf::Socket::Disconnected:
             {
@@ -176,7 +176,7 @@ namespace game
         const auto status = udpSocket_.receive(udpPacket, address, port);
         if (status == sf::Socket::Done)
         {
-            ReceivePacket(udpPacket, PacketSocketSource::UDP, address, port);
+            ReceiveNetPacket(udpPacket, PacketSocketSource::UDP, address, port);
         }
     }
 
@@ -273,10 +273,10 @@ namespace game
         }
     }
 
-    void NetworkServer::ReceivePacket(sf::Packet& packet,
-        PacketSocketSource packetSource,
-        sf::IpAddress address,
-        unsigned short port)
+    void NetworkServer::ReceiveNetPacket(sf::Packet& packet,
+                                         PacketSocketSource packetSource,
+                                         sf::IpAddress address,
+                                         unsigned short port)
     {
         auto receivedPacket = GenerateReceivedPacket(packet);
 

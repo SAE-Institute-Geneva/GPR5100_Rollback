@@ -115,7 +115,6 @@ namespace game
 
     void ClientGameManager::Begin()
     {
-
 #ifdef TRACY_ENABLE
         ZoneScoped;
 #endif
@@ -169,7 +168,7 @@ namespace game
                     }
                     else
                     {
-                        spriteManager_.SetColor(entity, playerColors[player.playerNumber]);
+                        spriteManager_.SetColor(entity, GetPlayerColor(player.playerNumber));
                     }
                 }
 
@@ -315,9 +314,7 @@ namespace game
         spriteManager_.AddComponent(entity);
         spriteManager_.SetTexture(entity, shipTexture_);
         spriteManager_.SetOrigin(entity, sf::Vector2f(shipTexture_.getSize())/2.0f);
-        auto sprite = spriteManager_.GetComponent(entity);
-        sprite.setColor(playerColors[playerNumber]);
-        spriteManager_.SetComponent(entity, sprite);
+        spriteManager_.SetColor(entity, GetPlayerColor(playerNumber));
 
     }
 
@@ -328,9 +325,8 @@ namespace game
         spriteManager_.AddComponent(entity);
         spriteManager_.SetTexture(entity, bulletTexture_);
         spriteManager_.SetOrigin(entity, sf::Vector2f(bulletTexture_.getSize())/2.0f);
-        auto sprite = spriteManager_.GetComponent(entity);
-        sprite.setColor(playerColors[playerNumber]);
-        spriteManager_.SetComponent(entity, sprite);
+        spriteManager_.SetColor(entity, GetPlayerColor(playerNumber));
+
         return entity;
     }
 
@@ -459,7 +455,7 @@ namespace game
 
     void ClientGameManager::UpdateCameraView()
     {
-        if(!(state_ | STARTED))
+        if((state_ & STARTED) != STARTED)
         {
             cameraView_ = originalView_;
             return;

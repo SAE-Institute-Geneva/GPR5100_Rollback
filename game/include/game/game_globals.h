@@ -40,15 +40,20 @@ constexpr float bulletPeriod = 3.0f;
 constexpr float playerInvincibilityPeriod = 1.5f;
 constexpr float invincibilityFlashPeriod = 0.5f;
 
-const std::array<sf::Color, std::max(maxPlayerNmb, 4u)> playerColors =
+inline sf::Color GetPlayerColor(PlayerNumber playerNumber)
 {
-  {
-        sf::Color::Red,
-        sf::Color::Blue,
-        sf::Color::Yellow,
-        sf::Color::Cyan
-    }
-};
+    const std::array<sf::Color, std::max(maxPlayerNmb, 4u)> playerColors =
+            {
+                    {
+                            sf::Color::Red,
+                            sf::Color::Blue,
+                            sf::Color::Yellow,
+                            sf::Color::Cyan
+                    }
+            };
+    return playerColors[playerNumber];
+}
+
 
 constexpr std::array<core::Vec2f, std::max(4u, maxPlayerNmb)> spawnPositions
 {
