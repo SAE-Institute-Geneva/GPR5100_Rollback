@@ -4,6 +4,7 @@
 
 #include "engine/component.h"
 #include "engine/entity.h"
+#include "graphics/color.h"
 #include "maths/angle.h"
 #include "maths/vec2.h"
 
@@ -40,20 +41,14 @@ constexpr float bulletPeriod = 3.0f;
 constexpr float playerInvincibilityPeriod = 1.5f;
 constexpr float invincibilityFlashPeriod = 0.5f;
 
-inline sf::Color GetPlayerColor(PlayerNumber playerNumber)
-{
-    const std::array<sf::Color, std::max(maxPlayerNmb, 4u)> playerColors =
-            {
-                    {
-                            sf::Color::Red,
-                            sf::Color::Blue,
-                            sf::Color::Yellow,
-                            sf::Color::Cyan
-                    }
-            };
-    return playerColors[playerNumber];
-}
 
+constexpr std::array<core::Color, std::max(4u, maxPlayerNmb)> playerColors
+{
+    core::Color::red(),
+    core::Color::blue(),
+    core::Color::yellow(),
+    core::Color::cyan()
+};
 
 constexpr std::array<core::Vec2f, std::max(4u, maxPlayerNmb)> spawnPositions
 {

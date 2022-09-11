@@ -168,7 +168,7 @@ namespace game
                     }
                     else
                     {
-                        spriteManager_.SetColor(entity, GetPlayerColor(player.playerNumber));
+                        spriteManager_.SetColor(entity, playerColors[player.playerNumber]);
                     }
                 }
 
@@ -314,7 +314,7 @@ namespace game
         spriteManager_.AddComponent(entity);
         spriteManager_.SetTexture(entity, shipTexture_);
         spriteManager_.SetOrigin(entity, sf::Vector2f(shipTexture_.getSize())/2.0f);
-        spriteManager_.SetColor(entity, GetPlayerColor(playerNumber));
+        spriteManager_.SetColor(entity, playerColors[playerNumber]);
 
     }
 
@@ -325,7 +325,7 @@ namespace game
         spriteManager_.AddComponent(entity);
         spriteManager_.SetTexture(entity, bulletTexture_);
         spriteManager_.SetOrigin(entity, sf::Vector2f(bulletTexture_.getSize())/2.0f);
-        spriteManager_.SetColor(entity, GetPlayerColor(playerNumber));
+        spriteManager_.SetColor(entity, playerColors[playerNumber]);
 
         return entity;
     }

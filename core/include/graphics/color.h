@@ -5,7 +5,9 @@
 
 namespace core
 {
-    
+/**
+ * \brief Color is a struct defining an RGBA color with 4 bytes
+ */
 struct Color
 {
     std::uint8_t r = 0u;
