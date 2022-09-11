@@ -1,14 +1,15 @@
-#include <engine/engine.h>
-
-#include <SFML/Window/Event.hpp>
+#include "engine/engine.h"
+#include "utils/log.h"
 
 #include "engine/system.h"
 #include "graphics/graphics.h"
 
+#include "engine/globals.h"
+
+#include <SFML/Window/Event.hpp>
 #include <imgui.h>
 #include <imgui-SFML.h>
 
-#include "engine/globals.h"
 #ifdef TRACY_ENABLE
 #include <Tracy.hpp>
 #endif
@@ -65,7 +66,11 @@ void Engine::Init()
     ZoneScoped;
 #endif
     window_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(windowSize.x, windowSize.y), "Rollback Game");
-    ImGui::SFML::Init(*window_);
+    bool status = ImGui::SFML::Init(*window_);
+    if(!status)
+    {
+        core::LogError("Could not init ImGui-SFML");
+    }
     for(auto* system : systems_)
     {
         system->Begin();

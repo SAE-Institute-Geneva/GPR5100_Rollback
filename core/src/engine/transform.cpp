@@ -1,5 +1,3 @@
-#pragma once
-
 #include <engine/transform.h>
 
 namespace core

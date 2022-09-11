@@ -22,7 +22,7 @@ public:
     }
 
     /**
-     * \brief ReceivePacket is a method called by an app owning a client when receiving a packet.
+     * \brief ReceiveNetPacket is a method called by an app owning a client when receiving a packet.
      * It is the same one for simulated and network client
      * \param packet A non-owning pointer to a packet (you don't need to care about deleting it
      */

@@ -137,6 +137,8 @@ void DebugDatabase::Loop()
             }
             lock.lock();
         }
+        if(isOver_.load(std::memory_order_acquire))
+            break;
         cv_.wait(lock);
     }
     isOver_ = false;

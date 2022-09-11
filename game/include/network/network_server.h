@@ -52,9 +52,9 @@ private:
         PacketSocketSource packetSource,
         sf::IpAddress address = "localhost",
         unsigned short port = 0);
-    void ReceivePacket(sf::Packet& packet, PacketSocketSource packetSource,
-        sf::IpAddress address = "localhost",
-        unsigned short port = 0);
+    void ReceiveNetPacket(sf::Packet& packet, PacketSocketSource packetSource,
+                          sf::IpAddress address = "localhost",
+                          unsigned short port = 0);
 
     enum ServerStatus
     {
