@@ -55,7 +55,7 @@ namespace game
                 playerCharacter.invincibilityTime -= dt.asSeconds();
                 SetComponent(playerEntity, playerCharacter);
             }
-            //Check if cannot shoot, and increase shootingTime
+            //Check if playerCharacter cannot shoot, and increase shootingTime
             if (playerCharacter.shootingTime < playerShootingPeriod)
             {
                 playerCharacter.shootingTime += dt.asSeconds();

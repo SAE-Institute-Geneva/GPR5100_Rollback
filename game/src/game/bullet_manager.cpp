@@ -1,4 +1,5 @@
-#include <game/bullet_manager.h>
+#include "game/bullet_manager.h"
+#include "game/game_manager.h"
 
 #ifdef TRACY_ENABLE
 #include <Tracy.hpp>
@@ -18,13 +19,17 @@ void BulletManager::FixedUpdate(sf::Time dt)
 #endif
     for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
     {
+        if(entityManager_.HasComponent(entity, static_cast<core::EntityMask>(ComponentType::DESTROYED)))
+        {
+            continue;
+        }
         if (entityManager_.HasComponent(entity, static_cast<core::EntityMask>(ComponentType::BULLET)))
         {
             auto& bullet = components_[entity];
             bullet.remainingTime -= dt.asSeconds();
             if (bullet.remainingTime < 0.0f)
             {
-                entityManager_.DestroyEntity(entity);
+                gameManager_.DestroyBullet(entity);
             }
         }
     }

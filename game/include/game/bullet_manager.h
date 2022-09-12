@@ -26,6 +26,7 @@ public:
     explicit BulletManager(core::EntityManager& entityManager, GameManager& gameManager);
     void FixedUpdate(sf::Time dt);
 private:
-    GameManager& gameManager_;
+    [[
+    maybe_unused]] GameManager& gameManager_;
 };
 }

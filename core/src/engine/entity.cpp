@@ -2,6 +2,8 @@
 #include "engine/component.h"
 #include "utils/assert.h"
 
+#include <algorithm>
+
 namespace core
 {
 EntityManager::EntityManager()
