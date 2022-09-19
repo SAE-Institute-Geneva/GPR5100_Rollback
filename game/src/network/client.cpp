@@ -38,6 +38,7 @@ namespace game
         }
         case PacketType::START_GAME:
         {
+            core::LogDebug("Start Game Packet Received");
             using namespace std::chrono;
             const auto startingTime = (duration_cast<duration<long long, std::milli>>(
                 system_clock::now().time_since_epoch()

@@ -1,3 +1,6 @@
+/**
+ * \file packet_type.h
+ */
 #pragma once
 
 #include <SFML/Network/Packet.hpp>
@@ -8,21 +11,24 @@
 
 namespace game
 {
-    enum class PacketType : std::uint8_t
-    {
-        JOIN = 0u,
-        SPAWN_PLAYER,
-        INPUT,
-        SPAWN_BULLET,
-        VALIDATE_STATE,
-        START_GAME,
-        JOIN_ACK,
-        WIN_GAME,
-        PING,
-        NONE,
-    };
+enum class PacketType : std::uint8_t
+{
+    JOIN = 0u,
+    SPAWN_PLAYER,
+    INPUT,
+    SPAWN_BULLET,
+    VALIDATE_STATE,
+    START_GAME,
+    JOIN_ACK,
+    WIN_GAME,
+    PING,
+    NONE,
+};
 
-    using PhysicsState = std::uint16_t;
+/**
+ * \brief PhysicsState is the type of the physics state checksum
+ */
+using PhysicsState = std::uint16_t;
 
 /**
  * \brief Packet is a interface that defines what a packet with a PacketType.
@@ -141,7 +147,6 @@ inline sf::Packet& operator>>(sf::Packet& packet, SpawnPlayerPacket& spawnPlayer
 }
 
     
-constexpr std::size_t maxInputNmb = 50;
 /**
  * \brief PlayerInputPacket is a UDP Packet sent by the player client and then replicated by the server to all clients to share the currentFrame
  * and all the previous ones player inputs.

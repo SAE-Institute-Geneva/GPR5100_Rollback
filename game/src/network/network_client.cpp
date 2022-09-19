@@ -1,5 +1,6 @@
 #include <chrono>
 #include <imgui.h>
+#include <imgui_stdlib.h>
 #include <network/network_client.h>
 
 #include "maths/basic.h"
@@ -135,13 +136,9 @@ namespace game
             ImGui::Text("RTO: %f", rto_);
         }
 
-        constexpr size_t bufferSize = 100;
-        char hostBuffer[bufferSize];
-        std::memcpy(hostBuffer, serverAddress_.c_str(), bufferSize);
-        if (ImGui::InputText("Host", hostBuffer, bufferSize))
-        {
-            serverAddress_ = hostBuffer;
-        }
+
+        ImGui::InputText("Host", &serverAddress_);
+
         int portBuffer = serverTcpPort_;
         if (ImGui::InputInt("Port", &portBuffer))
         {
@@ -166,7 +163,7 @@ namespace game
             }
             else
             {
-                core::LogDebug("[Client] Error trying to connect to " + serverAddress_ + " with port: " +
+                core::LogError("[Client] Error trying to connect to " + serverAddress_ + " with port: " +
                     std::to_string(serverTcpPort_) + " with status: " + std::to_string(status));
             }
         }
@@ -199,6 +196,10 @@ namespace game
     void NetworkClient::SendUnreliablePacket(std::unique_ptr<Packet> packet)
     {
 
+        if(currentState_ == State::NONE)
+        {
+            return;
+        }
         sf::Packet udpPacket;
         GeneratePacket(udpPacket, *packet);
         const auto status = udpSocket_.send(udpPacket, serverAddress_, serverUdpPort_);

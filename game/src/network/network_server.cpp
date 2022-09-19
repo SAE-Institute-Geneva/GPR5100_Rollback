@@ -243,7 +243,7 @@ namespace game
             }
             else
             {
-                gpr_assert(false, "Player Number is supposed to be already set!");
+                gpr_assert(false, "Player Number is supposed to be already set before join!");
             }
 
             auto joinAckPacket = std::make_unique<JoinAckPacket>();

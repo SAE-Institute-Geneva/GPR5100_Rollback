@@ -17,11 +17,11 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 
 if (MSVC)
     # warning level 4 
-    add_compile_options(/W4 /w14640)
+    add_compile_options(/W4 /w14640 /permissive-)
     add_compile_definitions(_USE_MATH_DEFINES)
 else()
     # lots of warnings
-    add_compile_options(-Wall -Wextra -Wshadow -Wnon-virtual-dtor)
+    add_compile_options(-Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic)
 endif()
 if(ENABLE_PROFILING)
     add_subdirectory(externals/tracy)

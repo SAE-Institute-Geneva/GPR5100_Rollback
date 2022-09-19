@@ -1,3 +1,7 @@
+/**
+ * \file game_globals.h
+ */
+
 #pragma once
 #include <SFML/Graphics/Color.hpp>
 #include <array>
@@ -44,6 +48,10 @@ constexpr float invincibilityFlashPeriod = 0.5f;
  * \brief startDelay is the delay to wait before starting a game in milliseconds
  */
 constexpr long long startDelay = 3000;
+/**
+ * \brief maxInputNmb is the number of inputs stored into an PlayerInputPacket
+ */
+constexpr std::size_t maxInputNmb = 50;
 
 
 constexpr std::array<core::Color, std::max(4u, maxPlayerNmb)> playerColors
