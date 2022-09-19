@@ -34,6 +34,7 @@ protected:
     ClientGameManager gameManager_;
     ClientId clientId_ = INVALID_CLIENT_ID;
     float pingTimer_ = -1.0f;
+    float currentPing_ = 0.0f;
     static constexpr float pingPeriod_ = 0.3f;
 
     float srtt_ = -1.0f;

@@ -42,7 +42,7 @@ public:
 	void SendReliablePacket(std::unique_ptr<Packet> packet) override;
 
 	void SendUnreliablePacket(std::unique_ptr<Packet> packet) override;
-	void SetPlayerInput(PlayerInput input);
+	void SetPlayerInput(PlayerInput playerInput);
 
 	void ReceivePacket(const Packet* packet) override;
 private:

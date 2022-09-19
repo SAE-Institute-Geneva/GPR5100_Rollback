@@ -170,19 +170,7 @@ inline sf::Packet& operator>>(sf::Packet& packet, PlayerInputPacket& playerInput
  */
 struct StartGamePacket : TypedPacket<PacketType::START_GAME>
 {
-    std::array<std::uint8_t, sizeof(unsigned long long)> startTime{};
 };
-
-
-inline sf::Packet& operator<<(sf::Packet& packet, const StartGamePacket& startGamePacket)
-{
-    return packet << startGamePacket.startTime;
-}
-
-inline sf::Packet& operator>>(sf::Packet& packet, StartGamePacket& startGamePacket)
-{
-    return packet >> startGamePacket.startTime;
-}
 
 /**
  * \brief ValidateFramePacket is an UDP packet that is sent by the server to validate the last physics state of the world.
@@ -271,8 +259,6 @@ inline void GeneratePacket(sf::Packet& packet, Packet& sendingPacket)
     }
     case PacketType::START_GAME:
     {
-        const auto& packetTmp = static_cast<StartGamePacket&>(sendingPacket);
-        packet << packetTmp;
         break;
     }
     case PacketType::JOIN_ACK:
@@ -337,7 +323,6 @@ inline std::unique_ptr<Packet> GenerateReceivedPacket(sf::Packet& packet)
     {
         auto startGamePacket = std::make_unique<StartGamePacket>();
         startGamePacket->packetType = packetTmp.packetType;
-        packet >> *startGamePacket;
         return startGamePacket;
     }
     case PacketType::JOIN_ACK:

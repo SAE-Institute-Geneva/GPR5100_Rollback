@@ -34,7 +34,8 @@ void Engine::Run()
         }
         catch ([[maybe_unused]] const AssertException& e)
         {
-            
+            LogError("Exit with exception");
+            window_->close();
         }
     }
     Destroy();
@@ -75,10 +76,10 @@ void Engine::Init()
     ZoneScoped;
 #endif
     window_ = std::make_unique<sf::RenderWindow>(sf::VideoMode(windowSize.x, windowSize.y), "Rollback Game");
-    bool status = ImGui::SFML::Init(*window_);
+    const bool status = ImGui::SFML::Init(*window_);
     if(!status)
     {
-        core::LogError("Could not init ImGui-SFML");
+        LogError("Could not init ImGui-SFML");
     }
     for(auto* system : systems_)
     {

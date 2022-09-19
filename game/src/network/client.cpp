@@ -38,8 +38,11 @@ namespace game
         }
         case PacketType::START_GAME:
         {
-            const auto* startGamePacket = static_cast<const StartGamePacket*>(packet);
-            const auto startingTime = core::ConvertFromBinary<unsigned long long>(startGamePacket->startTime);
+            using namespace std::chrono;
+            const auto startingTime = (duration_cast<duration<long long, std::milli>>(
+                system_clock::now().time_since_epoch()
+                ) + milliseconds(startDelay)).count() - milliseconds(static_cast<long long>(currentPing_)).count();
+            
             gameManager_.StartGame(startingTime);
             break;
         }
@@ -125,7 +128,7 @@ namespace game
                 const auto delta = currentTime - originTime;
                 const auto ping = static_cast<float>(delta);
 
-                //TODO calculate average and var ping
+                //calculate average and var ping
                 if(srtt_ < 0.0f)
                 {
                     srtt_ = ping;
@@ -138,6 +141,7 @@ namespace game
                 }
 
                 rto_ = srtt_ + std::max(g, k * rttvar_);
+                currentPing_ = srtt_;
             }
 
         }

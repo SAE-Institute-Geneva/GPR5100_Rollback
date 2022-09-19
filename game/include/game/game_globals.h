@@ -40,6 +40,10 @@ constexpr float bulletScale = 0.2f;
 constexpr float bulletPeriod = 3.0f;
 constexpr float playerInvincibilityPeriod = 1.5f;
 constexpr float invincibilityFlashPeriod = 0.5f;
+/**
+ * \brief startDelay is the delay to wait before starting a game in milliseconds
+ */
+constexpr long long startDelay = 3000;
 
 
 constexpr std::array<core::Color, std::max(4u, maxPlayerNmb)> playerColors

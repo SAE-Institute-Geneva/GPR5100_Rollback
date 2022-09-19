@@ -127,6 +127,14 @@ namespace game
     {
         const auto windowName = "Client " + std::to_string(static_cast<unsigned>(clientId_));
         ImGui::Begin(windowName.c_str());
+
+        if (srtt_ > 0.0f)
+        {
+            ImGui::Text("SRTT: %f", srtt_);
+            ImGui::Text("RTTVAR: %f", rttvar_);
+            ImGui::Text("RTO: %f", rto_);
+        }
+
         constexpr size_t bufferSize = 100;
         char hostBuffer[bufferSize];
         std::memcpy(hostBuffer, serverAddress_.c_str(), bufferSize);
@@ -217,12 +225,12 @@ namespace game
         }
     }
 
-    void NetworkClient::SetPlayerInput(PlayerInput input)
+    void NetworkClient::SetPlayerInput(PlayerInput playerInput)
     {
         const auto currentFrame = gameManager_.GetCurrentFrame();
         gameManager_.SetPlayerInput(
             gameManager_.GetPlayerNumber(),
-            input,
+            playerInput,
             currentFrame);
     }
 
