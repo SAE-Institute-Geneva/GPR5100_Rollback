@@ -3,6 +3,10 @@
 #include <SFML/Network/TcpSocket.hpp>
 #include <SFML/Network/UdpSocket.hpp>
 
+#ifdef ENABLE_SQLITE
+#include "network/debug_db.h"
+#endif
+
 namespace game
 {
 /**
@@ -40,7 +44,7 @@ public:
 	void SendUnreliablePacket(std::unique_ptr<Packet> packet) override;
 	void SetPlayerInput(PlayerInput input);
 
-
+	void ReceivePacket(const Packet* packet) override;
 private:
 	void ReceiveNetPacket(sf::Packet& packet, PacketSource source);
 	sf::UdpSocket udpSocket_;
@@ -52,5 +56,9 @@ private:
 
 
 	State currentState_ = State::NONE;
+
+#ifdef ENABLE_SQLITE
+	DebugDatabase debugDb_;
+#endif
 };
 }

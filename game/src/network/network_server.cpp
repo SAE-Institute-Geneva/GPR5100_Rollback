@@ -195,6 +195,7 @@ namespace game
         return status_ & OPEN;
     }
 
+
     void NetworkServer::SpawnNewPlayer([[maybe_unused]] ClientId clientId, [[maybe_unused]] PlayerNumber newPlayerNumber)
     {
         //Spawning the new player in the arena

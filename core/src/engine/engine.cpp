@@ -10,6 +10,8 @@
 #include <imgui.h>
 #include <imgui-SFML.h>
 
+#include "utils/assert.h"
+
 #ifdef TRACY_ENABLE
 #include <Tracy.hpp>
 #endif
@@ -22,11 +24,18 @@ void Engine::Run()
     sf::Clock clock;
     while (window_->isOpen())
     {
-        const auto dt = clock.restart();
-        Update(dt);
+        try
+        {
+            const auto dt = clock.restart();
+            Update(dt);
 #ifdef TRACY_ENABLE
-        FrameMark;
+            FrameMark;
 #endif
+        }
+        catch ([[maybe_unused]] const AssertException& e)
+        {
+            
+        }
     }
     Destroy();
 }

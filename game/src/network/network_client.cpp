@@ -31,6 +31,9 @@ namespace game
             status = udpSocket_.bind(sf::Socket::AnyPort);
         }
         udpSocket_.setBlocking(false);
+#ifdef ENABLE_SQLITE
+        debugDb_.Open(fmt::format("Client_{}.db", static_cast<unsigned>(clientId_)));
+#endif
     }
 
     void NetworkClient::Update(sf::Time dt)
@@ -113,6 +116,11 @@ namespace game
     void NetworkClient::End()
     {
         gameManager_.End();
+
+#ifdef ENABLE_SQLITE
+        debugDb_.Close();
+#endif
+
     }
 
     void NetworkClient::DrawImGui()
@@ -216,6 +224,50 @@ namespace game
             gameManager_.GetPlayerNumber(),
             input,
             currentFrame);
+    }
+
+    void NetworkClient::ReceivePacket(const Packet* packet)
+    {
+        Client::ReceivePacket(packet);
+#ifdef ENABLE_SQLITE
+        switch (packet->packetType)
+        {
+        case PacketType::JOIN: break;
+        case PacketType::SPAWN_PLAYER: break;
+        case PacketType::INPUT:
+        {
+            auto* inputPacket = static_cast<const PlayerInputPacket*>(packet);
+            debugDb_.StorePacket(inputPacket);
+            break;
+        }
+        case PacketType::SPAWN_BULLET: break;
+        case PacketType::VALIDATE_STATE:
+        {
+            auto* validateStatePacket = static_cast<const ValidateFramePacket*>(packet);
+            const auto newValidateFrame = core::ConvertFromBinary<Frame>(validateStatePacket->newValidateFrame);
+            DbPhysicsState state{};
+            state.validateFrame = newValidateFrame;
+            state.lastLocalValidateFrame = gameManager_.GetLastValidateFrame();
+            for (size_t i = 0; i < validateStatePacket->physicsState.size(); i++)
+            {
+                auto* statePtr = reinterpret_cast<std::uint8_t*>(state.serverStates.data());
+                statePtr[i] = validateStatePacket->physicsState[i];
+            }
+            for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+            {
+                state.localStates[playerNumber] = gameManager_.GetRollbackManager().GetValidatePhysicsState(playerNumber);
+            }
+            debugDb_.StorePhysicsState(state);
+            break;
+        }
+        case PacketType::START_GAME: break;
+        case PacketType::JOIN_ACK: break;
+        case PacketType::WIN_GAME: break;
+        case PacketType::PING: break;
+        case PacketType::NONE: break;
+        default:;
+        }
+#endif
     }
 
     void NetworkClient::ReceiveNetPacket(sf::Packet& packet, PacketSource source)

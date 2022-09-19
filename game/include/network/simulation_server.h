@@ -41,9 +41,6 @@ private:
 	std::vector<DelayPacket> receivedPackets_;
 	std::vector<DelayPacket> sentPackets_;
 	std::array<std::unique_ptr<SimulationClient>, maxPlayerNmb>& clients_;
-#ifdef ENABLE_SQLITE
-	DebugDatabase db_;
-#endif
 	float avgDelay_ = 0.25f;
 	float marginDelay_ = 0.1f;
 };

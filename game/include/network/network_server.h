@@ -44,6 +44,7 @@ public:
     void SetTcpPort(unsigned short i);
 
     [[nodiscard]] bool IsOpen() const;
+    
 protected:
     void SpawnNewPlayer(ClientId clientId, PlayerNumber playerNumber) override;
 
@@ -73,5 +74,9 @@ private:
     unsigned short udpPort_ = 12345;
     std::uint32_t lastSocketIndex_ = 0;
     std::uint8_t status_ = 0;
+
+#ifdef ENABLE_SQLITE
+    DebugDatabase db_;
+#endif
 };
 }
