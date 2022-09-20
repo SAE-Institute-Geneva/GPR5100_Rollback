@@ -44,6 +44,12 @@ constexpr float bulletScale = 0.2f;
 constexpr float bulletPeriod = 3.0f;
 constexpr float playerInvincibilityPeriod = 1.5f;
 constexpr float invincibilityFlashPeriod = 0.5f;
+
+/**
+ * \brief windowBufferSize is the size of input stored by a client. 5 seconds of frame at 50 fps
+ */
+constexpr std::size_t windowBufferSize = 5u * 50u;
+
 /**
  * \brief startDelay is the delay to wait before starting a game in milliseconds
  */

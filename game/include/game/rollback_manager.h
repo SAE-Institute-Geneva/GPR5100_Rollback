@@ -24,17 +24,6 @@ struct CreatedEntity
 };
 
 /**
- * \brief DestroyedBullet is a struct that contains information on newly "destroyed" Bullet.
- * It allows the RollbackManager to recreate newly destroyed bullet.
- */
-struct DestroyedBullet
-{
-    Bullet bullet;
-    Body body;
-    Frame destroyedFrame = 0;
-};
-
-/**
  * \brief RollbackManager is a class that manages all the rollback mechanisms of the game.
  * It contains two copies of the world (PhysicsManager, TransformManager, etc...), the current one and the validated one.
  * When receiving new information, it can reupdate the current copy of the world.
@@ -86,6 +75,10 @@ public:
     void DestroyEntity(core::Entity entity);
 
     void OnTrigger(core::Entity entity1, core::Entity entity2) override;
+        [[nodiscard]] const std::array<PlayerInput, windowBufferSize>& GetInputs(PlayerNumber playerNumber) const
+    {
+        return inputs_[playerNumber];
+    }
 private:
 
     [[nodiscard]] PlayerInput GetInputAtFrame(PlayerNumber playerNumber, Frame frame) const;
@@ -105,12 +98,19 @@ private:
     PlayerCharacterManager lastValidatePlayerManager_;
     BulletManager lastValidateBulletManager_;
 
-
-    Frame lastValidateFrame_ = 0; //Confirm frame
+    /**
+     * \brief lastValidateFrame_ is the last validated frame from the server side.
+     */
+    Frame lastValidateFrame_ = 0;
+    /**
+     * \brief currentFrame_ is the current frame on the client side.
+     */
     Frame currentFrame_ = 0;
-    Frame testedFrame_ = 0;
+    /**
+     * \brief testedFrame_ is the current simulated frame used mainly for entity creation and collision.
+     */
+    Frame testedFrame_ = 0; 
 
-    static constexpr std::size_t windowBufferSize = 5 * 50; // 5 seconds of frame at 50 fps
     std::array<std::uint32_t, maxPlayerNmb> lastReceivedFrame_{};
     std::array<std::array<PlayerInput, windowBufferSize>, maxPlayerNmb> inputs_{};
     /**
@@ -118,11 +118,5 @@ private:
      * to destroy them when rollbacking.
      */
     std::vector<CreatedEntity> createdEntities_;
-public:
-    [[nodiscard]] const std::array<PlayerInput, windowBufferSize>& GetInputs(PlayerNumber playerNumber) const
-    {
-        return inputs_[playerNumber];
-    }
-
 };
 }

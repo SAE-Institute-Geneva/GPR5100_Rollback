@@ -83,8 +83,11 @@ public:
     void AddBox(core::Entity entity);
     void SetBox(core::Entity entity, const Box& box);
     [[nodiscard]] const Box& GetBox(core::Entity entity) const;
-
-    void RegisterTriggerListener(OnTriggerInterface& collisionInterface);
+    /**
+     * \brief RegisterTriggerListener is a method that stores an OnTriggerInterface in the PhysicsManager that will call the OnTrigger method in case of a trigger.
+     * \param onTriggerInterface is the OnTriggerInterface to be called when a trigger occurs.
+     */
+    void RegisterTriggerListener(OnTriggerInterface& onTriggerInterface);
     void CopyAllComponents(const PhysicsManager& physicsManager);
 private:
     core::EntityManager& entityManager_;

@@ -101,10 +101,10 @@ namespace game
         return boxManager_.GetComponent(entity);
     }
 
-    void PhysicsManager::RegisterTriggerListener(OnTriggerInterface& collisionInterface)
+    void PhysicsManager::RegisterTriggerListener(OnTriggerInterface& onTriggerInterface)
     {
         onTriggerAction_.RegisterCallback(
-            [&collisionInterface](core::Entity entity1, core::Entity entity2) { collisionInterface.OnTrigger(entity1, entity2); });
+            [&onTriggerInterface](core::Entity entity1, core::Entity entity2) { onTriggerInterface.OnTrigger(entity1, entity2); });
     }
 
     void PhysicsManager::CopyAllComponents(const PhysicsManager& physicsManager)

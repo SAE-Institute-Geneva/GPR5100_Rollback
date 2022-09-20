@@ -3,12 +3,13 @@
  */
 #pragma once
 
+#include <numbers>
 #include <cmath>
 
 namespace core
 {
 
-inline constexpr static float PI = static_cast<float>(M_PI);
+inline constexpr static float PI = std::numbers::pi_v<float>;
 class Degree;
 /**
  * \brief Radian is an utility class that describes radian angles (0 to 2PI).
