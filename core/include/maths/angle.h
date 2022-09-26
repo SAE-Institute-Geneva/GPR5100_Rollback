@@ -27,6 +27,22 @@ public:
      */
     constexpr Radian(const Degree& angle);
     [[nodiscard]] constexpr float value() const { return value_; }
+
+    constexpr Radian operator+(Radian angle) const { return { value_ + angle.value() }; }
+    constexpr Radian& operator+=(Radian angle)
+    {
+        value_ += angle.value();
+        return *this;
+    }
+    constexpr Radian operator-(Radian angle) const { return { value_ - angle.value() }; }
+    constexpr Radian& operator-=(Radian angle)
+    {
+        value_ -= angle.value();
+        return *this;
+    }
+    constexpr Radian operator*(float value) const { return { value_ * value }; }
+    constexpr Radian operator/(float value) const { return { value_ / value }; }
+    constexpr Radian operator-() const { return { -value_ }; }
 private:
     float value_ = 0.0f;
 };
@@ -39,7 +55,7 @@ private:
 class Degree
 {
 public:
-    constexpr Degree() = default;;
+    constexpr Degree() = default;
     constexpr Degree(float value) : value_(value){}
     /**
      * \brief Conversion constructor that implicitly converts Radian to Degree
@@ -66,7 +82,7 @@ private:
     float value_ = 0.0f;
 };
 
-constexpr Degree operator*(float value, Degree angle) { return angle.value() * value; };
+constexpr Degree operator*(float value, Degree angle) { return angle.value() * value; }
 
 
 constexpr Radian::Radian(const Degree& angle)

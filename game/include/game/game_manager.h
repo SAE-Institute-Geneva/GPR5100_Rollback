@@ -41,11 +41,10 @@ public:
      * \brief Validate is a method called by the server to validate a frame.
      */
     void Validate(Frame newValidateFrame);
-    //void CopyAllComponents(const GameManager& gameManager);
-    static constexpr float PixelPerUnit = 100.0f;
-    static constexpr float FixedPeriod = 0.02f; //50fps
     [[nodiscard]] PlayerNumber CheckWinner() const;
     virtual void WinGame(PlayerNumber winner);
+
+
 protected:
     core::EntityManager entityManager_;
     core::TransformManager transformManager_;

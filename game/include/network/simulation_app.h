@@ -13,26 +13,26 @@ namespace game
  * \brief SimulationApp is an application that owns SimulationClient and SimulationServer.
  */
 class SimulationApp final : public core::App
-    {
-    public:
-        SimulationApp();
+{
+public:
+    SimulationApp();
 
-        void Begin() override;
+    void Begin() override;
 
-        void Update(sf::Time dt) override;
+    void Update(sf::Time dt) override;
 
-        void End() override;
+    void End() override;
 
-        void DrawImGui() override;
+    void DrawImGui() override;
 
-        void Draw(sf::RenderTarget& window) override;
+    void Draw(sf::RenderTarget& window) override;
 
-        void OnEvent(const sf::Event& event) override;
-    private:
-        std::array<std::unique_ptr<SimulationClient>, maxPlayerNmb> clients_;
-        std::array<sf::RenderTexture, maxPlayerNmb> clientsFramebuffers_;
-        SimulationServer server_;
-        sf::Sprite screenQuad_;
-        sf::Vector2u windowSize_;
-    };
+    void OnEvent(const sf::Event& event) override;
+private:
+    std::array<std::unique_ptr<SimulationClient>, maxPlayerNmb> clients_;
+    std::array<sf::RenderTexture, maxPlayerNmb> clientsFramebuffers_;
+    SimulationServer server_;
+    sf::Sprite screenQuad_;
+    sf::Vector2u windowSize_;
+};
 }

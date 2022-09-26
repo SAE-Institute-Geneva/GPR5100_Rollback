@@ -15,10 +15,10 @@ struct Color
     std::uint8_t b = 0u;
     std::uint8_t a = 0u;
     constexpr Color() = default;
-    constexpr Color(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha = 255u):
-        r(red), g(green), b(blue), a(alpha){}
+    constexpr Color(std::uint8_t red, std::uint8_t green, std::uint8_t blue, std::uint8_t alpha = 255u) :
+        r(red), g(green), b(blue), a(alpha) {}
 
-    operator sf::Color() const { return {r, g, b, a}; }
+    operator sf::Color() const { return { r, g, b, a }; }
 
     static constexpr Color red() { return { 255u,0u,0u,255u }; }
     static constexpr Color green() { return { 0u,255u,0u,255u }; }

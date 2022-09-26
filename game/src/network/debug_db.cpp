@@ -31,12 +31,12 @@ static int callback([[maybe_unused]] void* NotUsed, int argc, char** argv, char*
 
 void DebugDatabase::Open(std::string_view path)
 {
-    if(fs::exists(path))
+    if (fs::exists(path))
     {
         fs::remove(path);
     }
     const auto rc = sqlite3_open(path.data(), &db);
-    if (rc != SQLITE_OK) 
+    if (rc != SQLITE_OK)
     {
         core::LogError(fmt::format("Can't open database: {}\n", sqlite3_errmsg(db)));
         sqlite3_close(db);
@@ -57,13 +57,13 @@ void DebugDatabase::StorePacket(const PlayerInputPacket* inputPacket)
     const PlayerInput input = inputPacket->inputs[0];
 
     auto query = fmt::format("INSERT INTO inputs (player_number, frame, up, down, left, right, shoot) VALUES({}, {}, {}, {}, {}, {},  {});",
-                                   playerNumber,
-                                   frame,
-                                   (input & PlayerInputEnum::UP) == PlayerInputEnum::UP,
-                                   (input & PlayerInputEnum::DOWN) == PlayerInputEnum::DOWN,
-                                   (input & PlayerInputEnum::LEFT) == PlayerInputEnum::LEFT,
-                                   (input & PlayerInputEnum::RIGHT) == PlayerInputEnum::RIGHT,
-                                   (input & PlayerInputEnum::SHOOT) == PlayerInputEnum::SHOOT);
+        playerNumber,
+        frame,
+        (input & PlayerInputEnum::UP) == PlayerInputEnum::UP,
+        (input & PlayerInputEnum::DOWN) == PlayerInputEnum::DOWN,
+        (input & PlayerInputEnum::LEFT) == PlayerInputEnum::LEFT,
+        (input & PlayerInputEnum::RIGHT) == PlayerInputEnum::RIGHT,
+        (input & PlayerInputEnum::SHOOT) == PlayerInputEnum::SHOOT);
 
     {
         std::lock_guard lock(m_);
@@ -82,12 +82,12 @@ void DebugDatabase::StorePhysicsState(const DbPhysicsState& physicsState)
     std::string query = "INSERT INTO physics_state (local_frame, validate_frame ";
     std::string arguments;
     std::string values = fmt::format(" VALUES ({}, {}", physicsState.lastLocalValidateFrame, physicsState.validateFrame);
-    for(PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+    for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
     {
-        arguments += fmt::format(",state_p{}_local, state_p{}_server ", playerNumber+1, playerNumber+1);
+        arguments += fmt::format(",state_p{}_local, state_p{}_server ", playerNumber + 1, playerNumber + 1);
         values += fmt::format(",{},{}", physicsState.localStates[playerNumber], physicsState.serverStates[playerNumber]);
     }
-    query += arguments+") " + values+" );";
+    query += arguments + ") " + values + " );";
     {
         std::lock_guard lock(m_);
         commands_.push_back(query);
@@ -102,7 +102,7 @@ void DebugDatabase::Close()
     cv_.notify_one();
 
     //t_.join();
-    if(db != nullptr)
+    if (db != nullptr)
     {
         sqlite3_close(db);
         db = nullptr;
@@ -112,11 +112,11 @@ void DebugDatabase::Close()
 void DebugDatabase::Loop()
 {
     std::unique_lock lock(m_);
-    while(!isOver_.load(std::memory_order_acquire))
+    while (!isOver_.load(std::memory_order_acquire))
     {
-        while(!commands_.empty())
+        while (!commands_.empty())
         {
-            if(isOver_.load(std::memory_order_acquire))
+            if (isOver_.load(std::memory_order_acquire))
             {
                 break;
             }
@@ -137,7 +137,7 @@ void DebugDatabase::Loop()
             }
             lock.lock();
         }
-        if(isOver_.load(std::memory_order_acquire))
+        if (isOver_.load(std::memory_order_acquire))
             break;
         cv_.wait(lock);
     }
@@ -146,8 +146,8 @@ void DebugDatabase::Loop()
 
 void DebugDatabase::CreateTables() const
 {
-        //playerNumber, frame, up, down, left, right, shoot
-    
+    //playerNumber, frame, up, down, left, right, shoot
+
     const auto createInputTable = "CREATE TABLE inputs ("\
         "input_id INTEGER PRIMARY KEY,"\
         "player_number INTEGER NOT NULL,"\
@@ -157,7 +157,7 @@ void DebugDatabase::CreateTables() const
         "left INTEGER NOT NULL,"\
         "right INTEGER NOT NULL,"\
         "shoot INTEGER NOT NULL);";
-    
+
     /* Execute SQL statement */
 
     char* zErrMsg = nullptr;
@@ -169,13 +169,13 @@ void DebugDatabase::CreateTables() const
     }
 
     std::string createPhysicsStateTable = "CREATE TABLE physics_state ("\
-    "phys_id INTEGER PRIMARY KEY,"\
-    "local_frame INTEGER NOT NULL,"\
-    "validate_frame INTEGER NOT NULL"\
-    ;
-    for(PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+        "phys_id INTEGER PRIMARY KEY,"\
+        "local_frame INTEGER NOT NULL,"\
+        "validate_frame INTEGER NOT NULL"\
+        ;
+    for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
     {
-        createPhysicsStateTable += fmt::format(",state_p{}_local INTEGER NOT NULL, state_p{}_server INTEGER NOT NULL", playerNumber+1, playerNumber+1);
+        createPhysicsStateTable += fmt::format(",state_p{}_local INTEGER NOT NULL, state_p{}_server INTEGER NOT NULL", playerNumber + 1, playerNumber + 1);
     }
     createPhysicsStateTable += ");";
     zErrMsg = nullptr;

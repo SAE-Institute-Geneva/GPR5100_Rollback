@@ -29,7 +29,7 @@ public:
 	void Update(sf::Time dt) override;
 	void End() override;
 	void DrawImGui() override;
-	void PutPacketInReceiveQueue(std::unique_ptr<Packet> packet);
+	void PutPacketInReceiveQueue(std::unique_ptr<Packet> packet, bool unreliable);
 	void SendReliablePacket(std::unique_ptr<Packet> packet) override;
 	void SendUnreliablePacket(std::unique_ptr<Packet> packet) override;
 private:
@@ -43,5 +43,6 @@ private:
 	std::array<std::unique_ptr<SimulationClient>, maxPlayerNmb>& clients_;
 	float avgDelay_ = 0.25f;
 	float marginDelay_ = 0.1f;
+	float packetLoss_ = 0.0f;
 };
 }

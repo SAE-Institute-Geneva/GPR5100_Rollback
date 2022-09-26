@@ -58,6 +58,10 @@ constexpr long long startDelay = 3000;
  * \brief maxInputNmb is the number of inputs stored into an PlayerInputPacket
  */
 constexpr std::size_t maxInputNmb = 50;
+/**
+ * \brief fixedPeriod is the period used in seconds to start a new FixedUpdate method in the game::GameManager
+ */
+constexpr float fixedPeriod = 0.02f; //50fps
 
 
 constexpr std::array<core::Color, std::max(4u, maxPlayerNmb)> playerColors
@@ -100,14 +104,14 @@ using PlayerInput = std::uint8_t;
 
 namespace PlayerInputEnum
 {
-    enum PlayerInput : std::uint8_t
-    {
-        NONE = 0u,
-        UP = 1u << 0u,
-        DOWN = 1u << 1u,
-        LEFT = 1u << 2u,
-        RIGHT = 1u << 3u,
-        SHOOT = 1u << 4u,
-    };
+enum PlayerInput : std::uint8_t
+{
+    NONE = 0u,
+    UP = 1u << 0u,
+    DOWN = 1u << 1u,
+    LEFT = 1u << 2u,
+    RIGHT = 1u << 3u,
+    SHOOT = 1u << 4u,
+};
 }
 }
