@@ -1,4 +1,7 @@
-#include <game/physics_manager.h>
+#include "game/physics_manager.h"
+#include "engine/transform.h"
+
+#include <SFML/Graphics/RectangleShape.hpp>
 
 #ifdef TRACY_ENABLE
 #include <Tracy.hpp>
@@ -111,5 +114,30 @@ void PhysicsManager::CopyAllComponents(const PhysicsManager& physicsManager)
 {
     bodyManager_.CopyAllComponents(physicsManager.bodyManager_.GetAllComponents());
     boxManager_.CopyAllComponents(physicsManager.boxManager_.GetAllComponents());
+}
+
+void PhysicsManager::Draw(sf::RenderTarget& renderTarget)
+{
+    for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
+    {
+        if (!entityManager_.HasComponent(entity,
+            static_cast<core::EntityMask>(core::ComponentType::BODY2D) |
+            static_cast<core::EntityMask>(core::ComponentType::BOX_COLLIDER2D)) ||
+            entityManager_.HasComponent(entity, static_cast<core::EntityMask>(ComponentType::DESTROYED)))
+            continue;
+        const auto& [extends, isTrigger] = boxManager_.GetComponent(entity);
+        const auto& body = bodyManager_.GetComponent(entity);
+        sf::RectangleShape rectShape;
+        rectShape.setFillColor(core::Color::transparent());
+        rectShape.setOutlineColor(core::Color::green());
+        rectShape.setOutlineThickness(2.0f);
+        const auto position = body.position;
+        rectShape.setOrigin({ extends.x * core::pixelPerMeter, extends.y * core::pixelPerMeter });
+        rectShape.setPosition(
+            position.x * core::pixelPerMeter + center_.x,
+            windowSize_.y - (position.y * core::pixelPerMeter + center_.y));
+        rectShape.setSize({ extends.x * 2.0f * core::pixelPerMeter, extends.y * 2.0f * core::pixelPerMeter });
+        renderTarget.draw(rectShape);
+    }
 }
 }

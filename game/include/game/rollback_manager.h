@@ -79,6 +79,8 @@ public:
     {
         return inputs_[playerNumber];
     }
+
+    PhysicsManager& GetCurrentPhysicsManager() { return currentPhysicsManager_; }
 private:
 
     [[nodiscard]] PlayerInput GetInputAtFrame(PlayerNumber playerNumber, Frame frame) const;

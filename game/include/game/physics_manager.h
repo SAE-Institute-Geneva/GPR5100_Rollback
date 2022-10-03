@@ -7,7 +7,13 @@
 
 #include <SFML/System/Time.hpp>
 
+#include "graphics/graphics.h"
 #include "utils/action_utility.h"
+
+namespace core
+{
+class TransformManager;
+}
 
 namespace game
 {
@@ -71,7 +77,7 @@ public:
  * \brief PhysicsManager is a class that holds both BodyManager and BoxManager and manages the physics fixed update.
  * It allows to register OnTriggerInterface to be called when a trigger occcurs.
  */
-class PhysicsManager
+class PhysicsManager : public core::DrawInterface
 {
 public:
     explicit PhysicsManager(core::EntityManager& entityManager);
@@ -89,11 +95,17 @@ public:
      */
     void RegisterTriggerListener(OnTriggerInterface& onTriggerInterface);
     void CopyAllComponents(const PhysicsManager& physicsManager);
+    void Draw(sf::RenderTarget& renderTarget) override;
+    void SetCenter(sf::Vector2f center) { center_ = center; }
+    void SetWindowSize(sf::Vector2f newWindowSize) { windowSize_ = newWindowSize; }
 private:
     core::EntityManager& entityManager_;
     BodyManager bodyManager_;
     BoxManager boxManager_;
     core::Action<core::Entity, core::Entity> onTriggerAction_;
+    //Used for debug
+    sf::Vector2f center_{};
+    sf::Vector2f windowSize_{};
 };
 
 }

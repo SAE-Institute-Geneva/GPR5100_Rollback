@@ -207,6 +207,9 @@ void ClientGameManager::SetWindowSize(sf::Vector2u windowsSize)
     originalView_ = sf::View(visibleArea);
     spriteManager_.SetWindowSize(sf::Vector2f(windowsSize));
     spriteManager_.SetCenter(sf::Vector2f(windowsSize) / 2.0f);
+    auto& currentPhysicsManager = rollbackManager_.GetCurrentPhysicsManager();
+    currentPhysicsManager.SetCenter(sf::Vector2f(windowsSize) / 2.0f);
+    currentPhysicsManager.SetWindowSize(sf::Vector2f(windowsSize));
 }
 
 void ClientGameManager::Draw(sf::RenderTarget& target)
@@ -220,6 +223,12 @@ void ClientGameManager::Draw(sf::RenderTarget& target)
 
     starBackground_.Draw(target);
     spriteManager_.Draw(target);
+
+    if(drawPhysics_)
+    {
+        auto& currentPhysicsManager = rollbackManager_.GetCurrentPhysicsManager();
+        currentPhysicsManager.Draw(target);
+    }
 
     // Draw texts on screen
     target.setView(originalView_);
@@ -421,6 +430,7 @@ void ClientGameManager::DrawImGui()
             ).count();
         ImGui::Text("Current Time: %llu", ms);
     }
+    ImGui::Checkbox("Draw Physics", &drawPhysics_);
 }
 
 void ClientGameManager::ConfirmValidateFrame(Frame newValidateFrame,

@@ -275,7 +275,7 @@ void RollbackManager::SpawnPlayer(PlayerNumber playerNumber, core::Entity entity
     playerBody.position = position;
     playerBody.rotation = rotation;
     Box playerBox;
-    playerBox.extends = core::Vec2f::one() * 0.5f;
+    playerBox.extends = core::Vec2f::one() * 0.25f;
 
     PlayerCharacter playerCharacter;
     playerCharacter.playerNumber = playerNumber;
