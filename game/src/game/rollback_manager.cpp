@@ -145,6 +145,15 @@ void RollbackManager::ValidateFrame(Frame newValidateFrame)
     ZoneScoped;
 #endif
     const auto lastValidateFrame = gameManager_.GetLastValidateFrame();
+    //We check that we got all the inputs
+    for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+    {
+        if (GetLastReceivedFrame(playerNumber) < newValidateFrame)
+        {
+            gpr_assert(false, "We should not validate a frame if we did not receive all inputs!!!");
+            return;
+        }
+    }
     //Destroying all created Entities after the last validated frame
     for (const auto& createdEntity : createdEntities_)
     {
@@ -164,15 +173,7 @@ void RollbackManager::ValidateFrame(Frame newValidateFrame)
 
     }
     createdEntities_.clear();
-    //We check that we got all the inputs
-    for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
-    {
-        if (GetLastReceivedFrame(playerNumber) < newValidateFrame)
-        {
-            gpr_assert(false, "We should not validate a frame if we did not receive all inputs!!!");
-            return;
-        }
-    }
+
     //We use the current game state as the temporary new validate game state
     currentBulletManager_.CopyAllComponents(lastValidateBulletManager_.GetAllComponents());
     currentPhysicsManager_.CopyAllComponents(lastValidatePhysicsManager_);
@@ -223,7 +224,12 @@ void RollbackManager::ConfirmFrame(Frame newValidateFrame, const std::array<Phys
         const PhysicsState lastPhysicsState = GetValidatePhysicsState(playerNumber);
         if (serverPhysicsState[playerNumber] != lastPhysicsState)
         {
-            gpr_assert(false, "Physics State are not equal");
+            gpr_assert(false, fmt::format("Physics State are not equal for player {} (server frame: {}, client frame: {}, server: {}, client: {})", 
+                playerNumber+1, 
+                newValidateFrame, 
+                lastValidateFrame_, 
+                serverPhysicsState[playerNumber], 
+                lastPhysicsState));
         }
     }
 }

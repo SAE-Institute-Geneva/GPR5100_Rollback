@@ -14,7 +14,6 @@ option(ENABLE_PROFILING "Enable Tracy Profiling" OFF)
 option(ENABLE_SQLITE_STORE "Enable info storing in sqlite" OFF)
 
 include(cmake/data.cmake)
-set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 
 if (MSVC)
     # warning level 4 
