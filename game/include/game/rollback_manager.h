@@ -20,7 +20,7 @@ class GameManager;
 struct CreatedEntity
 {
     core::Entity entity = core::INVALID_ENTITY;
-    Frame createdFrame = 0;
+    Frame createdFrame{};
 };
 
 /**
@@ -101,17 +101,17 @@ private:
     /**
      * \brief lastValidateFrame_ is the last validated frame from the server side.
      */
-    Frame lastValidateFrame_ = 0;
+    Frame lastValidateFrame_ {};
     /**
      * \brief currentFrame_ is the current frame on the client side.
      */
-    Frame currentFrame_ = 0;
+    Frame currentFrame_{};
     /**
      * \brief testedFrame_ is the current simulated frame used mainly for entity creation and collision.
      */
-    Frame testedFrame_ = 0; 
+    Frame testedFrame_{}; 
 
-    std::array<std::uint32_t, maxPlayerNmb> lastReceivedFrame_{};
+    std::array<Frame, maxPlayerNmb> lastReceivedFrame_{};
     std::array<std::array<PlayerInput, windowBufferSize>, maxPlayerNmb> inputs_{};
     /**
      * \brief Array containing all the created entities in the window between the confirm frame and the current frame

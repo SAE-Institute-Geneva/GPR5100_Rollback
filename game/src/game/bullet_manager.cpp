@@ -17,7 +17,7 @@ void BulletManager::FixedUpdate(sf::Time dt)
 #ifdef TRACY_ENABLE
     ZoneScoped;
 #endif
-    for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
+    for (core::Entity entity{ 0 }; entity < entityManager_.GetEntitiesSize(); ++entity)
     {
         if(entityManager_.HasComponent(entity, static_cast<core::EntityMask>(ComponentType::DESTROYED)))
         {

@@ -45,7 +45,7 @@ core::Entity GameManager::GetEntityFromPlayerNumber(PlayerNumber playerNumber) c
 }
 
 
-void GameManager::SetPlayerInput(PlayerNumber playerNumber, PlayerInput playerInput, std::uint32_t inputFrame)
+void GameManager::SetPlayerInput(PlayerNumber playerNumber, PlayerInput playerInput, Frame inputFrame)
 {
     if (playerNumber == INVALID_PLAYER)
         return;
@@ -88,7 +88,7 @@ PlayerNumber GameManager::CheckWinner() const
     int alivePlayer = 0;
     PlayerNumber winner = INVALID_PLAYER;
     const auto& playerManager = rollbackManager_.GetPlayerCharacterManager();
-    for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
+    for (core::Entity entity { 0 }; entity < entityManager_.GetEntitiesSize(); ++entity)
     {
         if (!entityManager_.HasComponent(entity, static_cast<core::EntityMask>(ComponentType::PLAYER_CHARACTER)))
             continue;
@@ -148,7 +148,7 @@ void ClientGameManager::Update(sf::Time dt)
     {
         rollbackManager_.SimulateToCurrentFrame();
         //Copy rollback transform position to our own
-        for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
+        for (core::Entity entity{ 0 }; entity < entityManager_.GetEntitiesSize(); ++entity)
         {
             if (entityManager_.HasComponent(entity,
                 static_cast<core::EntityMask>(ComponentType::PLAYER_CHARACTER) |
@@ -284,7 +284,7 @@ void ClientGameManager::Draw(sf::RenderTarget& target)
     {
         std::string health;
         const auto& playerManager = rollbackManager_.GetPlayerCharacterManager();
-        for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+        for (PlayerNumber playerNumber{ 0u }; playerNumber < maxPlayerNmb; playerNumber++)
         {
             const auto playerEntity = GetEntityFromPlayerNumber(playerNumber);
             if (playerEntity == core::INVALID_ENTITY)
@@ -396,7 +396,7 @@ void ClientGameManager::FixedUpdate()
 }
 
 
-void ClientGameManager::SetPlayerInput(PlayerNumber playerNumber, PlayerInput playerInput, std::uint32_t inputFrame)
+void ClientGameManager::SetPlayerInput(PlayerNumber playerNumber, PlayerInput playerInput, Frame inputFrame)
 {
     if (playerNumber == INVALID_PLAYER)
         return;
@@ -431,7 +431,7 @@ void ClientGameManager::ConfirmValidateFrame(Frame newValidateFrame,
         //core::LogDebug(fmt::format("[Warning] New validate frame is too old"));
         return;
     }
-    for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+    for (PlayerNumber playerNumber{ 0 }; playerNumber < maxPlayerNmb; playerNumber++)
     {
         if (rollbackManager_.GetLastReceivedFrame(playerNumber) < newValidateFrame)
         {
@@ -467,7 +467,7 @@ void ClientGameManager::UpdateCameraView()
     const sf::Vector2f extends{ cameraView_.getSize() / 2.0f / core::pixelPerMeter };
     float currentZoom = 1.0f;
     constexpr float margin = 1.0f;
-    for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+    for (PlayerNumber playerNumber{ 0 }; playerNumber < maxPlayerNmb; playerNumber++)
     {
         const auto playerEntity = GetEntityFromPlayerNumber(playerNumber);
         if (playerEntity == core::INVALID_ENTITY)

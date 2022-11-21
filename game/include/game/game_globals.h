@@ -19,7 +19,16 @@ namespace game
  * \brief PlayerNumber is a type used to define the number of the player.
  * Starting from 0 to maxPlayerNmb
  */
-using PlayerNumber = std::uint8_t;
+class PlayerNumber
+{
+public:
+    constexpr PlayerNumber() = default;
+    constexpr explicit PlayerNumber(std::uint8_t value) : value_(value){}
+    constexpr operator std::uint8_t() const { return value_; }
+    constexpr operator std::uint8_t&() { return value_; }
+private:
+    std::uint8_t value_ = 0;
+};
 /**
  * \brief INVALID_PLAYER is an integer constant that defines an invalid player number.
  */
@@ -30,7 +39,16 @@ constexpr auto INVALID_PLAYER = std::numeric_limits<PlayerNumber>::max();
  */
 enum class ClientId : std::uint16_t {};
 constexpr auto INVALID_CLIENT_ID = ClientId{ 0 };
-using Frame = std::uint32_t;
+class Frame
+{
+public:
+    constexpr Frame() = default;
+    constexpr explicit Frame(std::uint32_t v) : value_(v){}
+    constexpr operator std::uint32_t() const { return value_; }
+    constexpr operator std::uint32_t&() { return value_; }
+private:
+    std::uint32_t value_ = 0;
+};
 /**
  * \brief mmaxPlayerNmb is a integer constant that defines the maximum number of player per game
  */

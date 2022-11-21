@@ -14,16 +14,28 @@ namespace core
  * \brief Entity is the type used to define an game world entity.
  * An Entity is just an index, it means that if you have access to a ComponentManager, you can get the Component by giving the index of the Entity.
  */
-using Entity = std::uint32_t;
+//using Entity = std::uint32_t;
+class Entity 
+{
+public:
+    constexpr Entity() = default;
+    constexpr explicit Entity(std::uint32_t value): value_(value){}
+    constexpr operator std::uint32_t() const { return value_; }
+    constexpr operator std::uint32_t&() { return value_; }
+private:
+    std::uint32_t value_ = std::numeric_limits<std::uint32_t>::max();
+};
+
+/**
+ * \brief INVALID_ENTITY is a constant that define an invalid Entity.
+ */
+constexpr auto INVALID_ENTITY = Entity{ };
 /**
  * \brief EntityMask is the type used to define the bitwise mask of an Entity.
  * It is used to know what Component an Entity has.
  */
 using EntityMask = std::uint32_t;
-/**
- * \brief INVALID_ENTITY is a constant that define an invalid Entity.
- */
-constexpr Entity INVALID_ENTITY = std::numeric_limits<Entity>::max();
+
 /**
  * \brief INVALID_ENTITY_MASK is a constant that define an invalid or empty entity mask.
  */

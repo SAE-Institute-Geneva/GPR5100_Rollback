@@ -44,7 +44,7 @@ void RollbackManager::SimulateToCurrentFrame()
     }
     createdEntities_.clear();
     //Remove DESTROY flags
-    for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
+    for (core::Entity entity{ 0 }; entity < entityManager_.GetEntitiesSize(); ++entity)
     {
         if (entityManager_.HasComponent(entity, static_cast<core::EntityMask>(ComponentType::DESTROYED)))
         {
@@ -57,11 +57,11 @@ void RollbackManager::SimulateToCurrentFrame()
     currentPhysicsManager_.CopyAllComponents(lastValidatePhysicsManager_);
     currentPlayerManager_.CopyAllComponents(lastValidatePlayerManager_.GetAllComponents());
 
-    for (Frame frame = lastValidateFrame + 1; frame <= currentFrame; frame++)
+    for (auto frame = Frame{ lastValidateFrame + 1 }; frame <= currentFrame; frame++)
     {
         testedFrame_ = frame;
         //Copy player inputs to player manager
-        for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+        for (PlayerNumber playerNumber{ 0 }; playerNumber < maxPlayerNmb; playerNumber++)
         {
             const auto playerInput = GetInputAtFrame(playerNumber, frame);
             const auto playerEntity = gameManager_.GetEntityFromPlayerNumber(playerNumber);
@@ -80,7 +80,7 @@ void RollbackManager::SimulateToCurrentFrame()
         currentPhysicsManager_.FixedUpdate(sf::seconds(fixedPeriod));
     }
     //Copy the physics states to the transforms
-    for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
+    for (core::Entity entity{ 0 }; entity < entityManager_.GetEntitiesSize(); ++entity)
     {
         if (!entityManager_.HasComponent(entity,
             static_cast<core::EntityMask>(core::ComponentType::BODY2D) |
@@ -130,7 +130,7 @@ void RollbackManager::StartNewFrame(Frame newFrame)
             inputs[i] = inputs[i - delta];
         }
 
-        for (Frame i = 0; i < delta; i++)
+        for (Frame i{ 0 }; i < delta; i++)
         {
             inputs[i] = inputs[delta];
         }
@@ -155,7 +155,7 @@ void RollbackManager::ValidateFrame(Frame newValidateFrame)
     }
     createdEntities_.clear();
     //Remove DESTROYED flag
-    for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
+    for (core::Entity entity {0}; entity < entityManager_.GetEntitiesSize(); ++entity)
     {
         if (entityManager_.HasComponent(entity, static_cast<core::EntityMask>(ComponentType::DESTROYED)))
         {
@@ -165,7 +165,7 @@ void RollbackManager::ValidateFrame(Frame newValidateFrame)
     }
     createdEntities_.clear();
     //We check that we got all the inputs
-    for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+    for (PlayerNumber playerNumber{ 0 }; playerNumber < maxPlayerNmb; playerNumber++)
     {
         if (GetLastReceivedFrame(playerNumber) < newValidateFrame)
         {
@@ -179,11 +179,11 @@ void RollbackManager::ValidateFrame(Frame newValidateFrame)
     currentPlayerManager_.CopyAllComponents(lastValidatePlayerManager_.GetAllComponents());
 
     //We simulate the frames until the new validated frame
-    for (Frame frame = lastValidateFrame_ + 1; frame <= newValidateFrame; frame++)
+    for (auto frame = Frame{ lastValidateFrame_ + 1 }; frame <= newValidateFrame; frame++)
     {
         testedFrame_ = frame;
         //Copy the players inputs into the player manager
-        for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+        for (PlayerNumber playerNumber{ 0 }; playerNumber < maxPlayerNmb; playerNumber++)
         {
             const auto playerInput = GetInputAtFrame(playerNumber, frame);
             const auto playerEntity = gameManager_.GetEntityFromPlayerNumber(playerNumber);
@@ -197,7 +197,7 @@ void RollbackManager::ValidateFrame(Frame newValidateFrame)
         currentPhysicsManager_.FixedUpdate(sf::seconds(fixedPeriod));
     }
     //Definitely remove DESTROY entities
-    for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
+    for (core::Entity entity {0}; entity < entityManager_.GetEntitiesSize(); ++entity)
     {
         if (entityManager_.HasComponent(entity, static_cast<core::EntityMask>(ComponentType::DESTROYED)))
         {
@@ -218,7 +218,7 @@ void RollbackManager::ConfirmFrame(Frame newValidateFrame, const std::array<Phys
     ZoneScoped;
 #endif
     ValidateFrame(newValidateFrame);
-    for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+    for (PlayerNumber playerNumber{ 0 }; playerNumber < maxPlayerNmb; playerNumber++)
     {
         const PhysicsState lastPhysicsState = GetValidatePhysicsState(playerNumber);
         if (serverPhysicsState[playerNumber] != lastPhysicsState)
