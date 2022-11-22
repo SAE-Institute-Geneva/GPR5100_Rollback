@@ -31,10 +31,10 @@ void PlayerCharacterManager::FixedUpdate(sf::Time dt)
         auto playerCharacter = GetComponent(playerEntity);
         const auto input = playerCharacter.input;
 
-        const bool right = input & PlayerInputEnum::PlayerInput::RIGHT;
-        const bool left = input & PlayerInputEnum::PlayerInput::LEFT;
-        const bool up = input & PlayerInputEnum::PlayerInput::UP;
-        const bool down = input & PlayerInputEnum::PlayerInput::DOWN;
+        const bool right = input & PlayerInput::RIGHT;
+        const bool left = input & PlayerInput::LEFT;
+        const bool up = input & PlayerInput::UP;
+        const bool down = input & PlayerInput::DOWN;
 
         const auto angularVelocity = ((left ? -1.0f : 0.0f) + (right ? 1.0f : 0.0f)) * playerAngularSpeed;
 
@@ -64,7 +64,7 @@ void PlayerCharacterManager::FixedUpdate(sf::Time dt)
         //Shooting mechanism
         if (playerCharacter.shootingTime >= playerShootingPeriod)
         {
-            if (input & PlayerInputEnum::PlayerInput::SHOOT)
+            if (input & PlayerInput::SHOOT)
             {
                 const auto currentPlayerSpeed = playerBody.velocity.GetMagnitude();
                 const auto bulletVelocity = dir *

@@ -26,19 +26,19 @@ Entity EntityManager::CreateEntity()
 
     if (entityMaskIt == entityMasks_.end())
     {
-        const auto newEntity = entityMasks_.size();
+        const Entity newEntity{ static_cast<std::uint32_t>(entityMasks_.size()) };
         entityMasks_.resize(newEntity + newEntity / 2, INVALID_ENTITY_MASK);
         AddComponent(
-            static_cast<Entity>(newEntity),
+            newEntity,
             static_cast<EntityMask>(ComponentType::EMPTY));
-        return static_cast<Entity>(newEntity);
+        return newEntity;
     }
     
-    const auto newEntity = std::distance(entityMasks_.begin(), entityMaskIt);
+    const Entity newEntity{ static_cast<std::uint32_t>(std::distance(entityMasks_.begin(), entityMaskIt)) };
     AddComponent(
-        static_cast<Entity>(newEntity), 
+        newEntity, 
         static_cast<EntityMask>(ComponentType::EMPTY));
-    return static_cast<Entity>(newEntity);
+    return newEntity;
 }
 
 void EntityManager::DestroyEntity(Entity entity)

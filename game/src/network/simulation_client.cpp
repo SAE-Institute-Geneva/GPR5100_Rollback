@@ -22,7 +22,7 @@ void SimulationClient::Begin()
 #ifdef TRACY_ENABLE
     ZoneScoped;
 #endif
-    clientId_ = ClientId{ core::RandomRange(std::numeric_limits<std::underlying_type_t<ClientId>>::lowest(),
+    clientId_ = ClientId{ core::RandomRange(std::underlying_type_t<ClientId>{std::numeric_limits<std::underlying_type_t<ClientId>>::lowest() + 1u },
                                   std::numeric_limits<std::underlying_type_t<ClientId>>::max()) };
 #ifdef ENABLE_SQLITE
     debugDb_.Open(fmt::format("Client_{}.db", static_cast<unsigned>(clientId_)));

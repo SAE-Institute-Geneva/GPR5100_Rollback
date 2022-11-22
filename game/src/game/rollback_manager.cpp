@@ -21,7 +21,7 @@ RollbackManager::RollbackManager(GameManager& gameManager, core::EntityManager& 
 {
     for (auto& input : inputs_)
     {
-        std::fill(input.begin(), input.end(), '\0');
+        std::ranges::fill(input, PlayerInput{});
     }
     currentPhysicsManager_.RegisterTriggerListener(*this);
 }

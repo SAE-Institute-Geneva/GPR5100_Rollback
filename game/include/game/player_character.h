@@ -13,7 +13,7 @@ class PhysicsManager;
 struct PlayerCharacter
 {
     float shootingTime = 0.0f;
-    PlayerInput input = 0u;
+    PlayerInput input{};
     PlayerNumber playerNumber = INVALID_PLAYER;
     short health = playerHealth;
     float invincibilityTime = 0.0f;

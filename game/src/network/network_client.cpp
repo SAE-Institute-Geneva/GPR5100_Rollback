@@ -20,7 +20,7 @@ void NetworkClient::Begin()
 #ifdef TRACY_ENABLE
     ZoneScoped;
 #endif
-    clientId_ = ClientId{ core::RandomRange(std::numeric_limits<std::underlying_type_t<ClientId>>::lowest(),
+    clientId_ = ClientId{ core::RandomRange(std::underlying_type_t<ClientId>{std::numeric_limits<std::underlying_type_t<ClientId>>::lowest() + 1u },
                                   std::numeric_limits<std::underlying_type_t<ClientId>>::max()) };
     //JOIN packet
     gameManager_.Begin();
