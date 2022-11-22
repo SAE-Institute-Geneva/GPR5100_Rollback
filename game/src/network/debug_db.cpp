@@ -112,14 +112,10 @@ void DebugDatabase::Close()
 void DebugDatabase::Loop()
 {
     std::unique_lock lock(m_);
-    while (!isOver_.load(std::memory_order_acquire))
+    while (!isOver_.load(std::memory_order_acquire) && !commands_.empty())
     {
         while (!commands_.empty())
         {
-            if (isOver_.load(std::memory_order_acquire))
-            {
-                break;
-            }
 #ifdef TRACY_ENABLE
             ZoneNamedN(sqlExecuteCommand, "SQL Execute Command", true);
 #endif

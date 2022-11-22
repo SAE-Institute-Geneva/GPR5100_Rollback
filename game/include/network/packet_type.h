@@ -155,7 +155,7 @@ struct PlayerInputPacket : TypedPacket<PacketType::INPUT>
 {
     PlayerNumber playerNumber = INVALID_PLAYER;
     std::array<std::uint8_t, sizeof(Frame)> currentFrame{};
-    std::array<std::uint8_t, maxInputNmb> inputs{};
+    std::array<PlayerInput, maxInputNmb> inputs{};
 };
 
 inline sf::Packet& operator<<(sf::Packet& packet, const PlayerInputPacket& playerInputPacket)

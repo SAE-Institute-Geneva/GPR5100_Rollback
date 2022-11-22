@@ -32,12 +32,12 @@ private:
 /**
  * \brief INVALID_PLAYER is an integer constant that defines an invalid player number.
  */
-constexpr auto INVALID_PLAYER = std::numeric_limits<PlayerNumber>::max();
+constexpr auto INVALID_PLAYER = PlayerNumber{ std::numeric_limits<std::uint8_t>::max() };
 /**
  * \brief ClientId is a type used to define the client identification.
  * It is given by the server to clients.
  */
-enum class ClientId : std::uint16_t {};
+enum class ClientId : std::uint16_t{};
 constexpr auto INVALID_CLIENT_ID = ClientId{ 0 };
 class Frame
 {
@@ -118,18 +118,27 @@ enum class ComponentType : core::EntityMask
 /**
  * \brief PlayerInput is a type defining the input data from a player.
  */
-using PlayerInput = std::uint8_t;
+class PlayerInput
+{
+public:
+    enum PlayerInputEnum : std::uint8_t
+    {
+        NONE = 0u,
+        UP = 1u << 0u,
+        DOWN = 1u << 1u,
+        LEFT = 1u << 2u,
+        RIGHT = 1u << 3u,
+        SHOOT = 1u << 4u,
+    };
 
-namespace PlayerInputEnum
-{
-enum PlayerInput : std::uint8_t
-{
-    NONE = 0u,
-    UP = 1u << 0u,
-    DOWN = 1u << 1u,
-    LEFT = 1u << 2u,
-    RIGHT = 1u << 3u,
-    SHOOT = 1u << 4u,
+    constexpr PlayerInput() = default;
+    constexpr explicit PlayerInput(std::uint8_t v): value_(v){}
+    constexpr explicit PlayerInput(int v): value_(static_cast<std::uint8_t>(v)){}
+
+    constexpr operator std::uint8_t() const { return value_; }
+    constexpr operator std::uint8_t&()  { return value_; }
+private:
+    std::uint8_t value_ = NONE;
 };
-}
+
 }
