@@ -52,6 +52,7 @@ protected:
     std::array<core::Entity, maxPlayerNmb> playerEntityMap_{};
     Frame currentFrame_{};
     PlayerNumber winner_ = INVALID_PLAYER;
+    bool isClient_ = false;
 };
 
 /**

@@ -49,7 +49,11 @@ void GameManager::SetPlayerInput(PlayerNumber playerNumber, PlayerInput playerIn
 {
     if (playerNumber == INVALID_PLAYER)
         return;
-
+    if(isClient_ && rollbackManager_.GetCurrentFrame()< inputFrame )
+    {
+        //Weird case where the client receives a frame too much in advance
+        return;
+    }
     rollbackManager_.SetPlayerInput(playerNumber, playerInput, inputFrame);
 
 }
@@ -113,6 +117,7 @@ ClientGameManager::ClientGameManager(PacketSenderInterface& packetSenderInterfac
     packetSenderInterface_(packetSenderInterface),
     spriteManager_(entityManager_, transformManager_)
 {
+    isClient_ = true;
 }
 
 void ClientGameManager::Begin()
@@ -381,7 +386,7 @@ void ClientGameManager::FixedUpdate()
     if (playerNumber == INVALID_PLAYER)
     {
         //We still did not receive the spawn player packet, but receive the start game packet
-        core::LogWarning(fmt::format("Invalid Player Entity in {}:line {}", __FILE__, __LINE__));
+        core::LogWarning(fmt::format("Invalid Player Entity in {}: line {}", __FILE__, __LINE__));
         return;
     }
     const auto& inputs = rollbackManager_.GetInputs(playerNumber);
