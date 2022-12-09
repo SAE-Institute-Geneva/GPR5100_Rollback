@@ -30,39 +30,31 @@ enum class PacketType : std::uint8_t
  */
 using PhysicsState = std::uint16_t;
 
-/**
- * \brief Packet is a interface that defines what a packet with a PacketType.
- */
-struct Packet
+template<class T>
+concept Loadable = requires(const T& t, sf::Packet& p)
 {
-    virtual ~Packet() = default;
-    PacketType packetType = PacketType::NONE;
+    { t.Load(p) } -> std::same_as<sf::Packet&>;
 };
 
-inline sf::Packet& operator<<(sf::Packet& packetReceived, Packet& packet)
+template<class T>
+concept Savable = requires(T& t, sf::Packet & p)
 {
-    const auto packetType = static_cast<std::uint8_t>(packet.packetType);
-    packetReceived << packetType;
-    return packetReceived;
-}
-
-inline sf::Packet& operator>>(sf::Packet& packetReceived, Packet& packet)
-{
-    std::uint8_t packetType;
-    packetReceived >> packetType;
-    packet.packetType = static_cast<PacketType>(packetType);
-    return packetReceived;
-}
-
-/**
- * \brief TypedPacket is a template class that sets the packetType of Packet automatically at construction with the given type.
- * \tparam type is the PacketType of the packet
- */
-template<PacketType type>
-struct TypedPacket : Packet
-{
-    TypedPacket() { packetType = type; }
+    { t.Save(p) } -> std::same_as<sf::Packet&>;
 };
+
+
+template<Loadable T>
+sf::Packet& operator<<(sf::Packet& packetReceived, const T& packet)
+{
+    return packet.Load(packetReceived);
+}
+
+template<Savable T>
+sf::Packet& operator>>(sf::Packet& packetReceived, T& packet)
+{
+    return packet.Save(packetReceived);
+}
+
 
 template<typename T, size_t N>
 sf::Packet& operator<<(sf::Packet& packet, const std::array<T, N>& t)
@@ -85,23 +77,59 @@ sf::Packet& operator>>(sf::Packet& packet, std::array<T, N>& t)
 }
 
 /**
+ * \brief Packet is a interface that defines what a packet with a PacketType.
+ */
+struct Packet
+{
+    virtual ~Packet() = default;
+    PacketType packetType = PacketType::NONE;
+    virtual sf::Packet& Load(sf::Packet& p) const
+    {
+        const auto type = static_cast<std::uint8_t>(packetType);
+        p << type;
+        return p;
+    }
+
+    virtual sf::Packet& Save(sf::Packet& p)
+    {
+        std::uint8_t type;
+        p >> type;
+        packetType = static_cast<PacketType>(type);
+        return p;
+    }
+};
+
+
+/**
+ * \brief TypedPacket is a template class that sets the packetType of Packet automatically at construction with the given type.
+ * \tparam type is the PacketType of the packet
+ */
+template<PacketType type>
+struct TypedPacket : Packet
+{
+    TypedPacket() { packetType = type; }
+};
+
+
+/**
  * \brief JoinPacket is a TCP Packet that is sent by a client to the server to join a game.
  */
 struct JoinPacket : TypedPacket<PacketType::JOIN>
 {
     std::array<std::uint8_t, sizeof(ClientId)> clientId{};
     std::array<std::uint8_t, sizeof(unsigned long)> startTime{};
+    sf::Packet& Load(sf::Packet& p) const override
+    {
+
+        return p << clientId << startTime;
+    }
+
+    sf::Packet& Save(sf::Packet& p) override
+    {
+        return p >> clientId >> startTime;
+    }
 };
 
-inline sf::Packet& operator<<(sf::Packet& packet, const JoinPacket& joinPacket)
-{
-    return packet << joinPacket.clientId << joinPacket.startTime;
-}
-
-inline sf::Packet& operator>>(sf::Packet& packet, JoinPacket& joinPacket)
-{
-    return packet >> joinPacket.clientId >> joinPacket.startTime;
-}
 
 /**
  * \brief JoinAckPacket is a TCP Packet that is sent by the server to the client to answer a join packet
@@ -110,18 +138,17 @@ struct JoinAckPacket : TypedPacket<PacketType::JOIN_ACK>
 {
     std::array<std::uint8_t, sizeof(ClientId)> clientId{};
     std::array<std::uint8_t, sizeof(unsigned short)> udpPort{};
+
+    sf::Packet& Load(sf::Packet& p) const override
+    {
+        return p << clientId << udpPort;
+    }
+
+    sf::Packet& Save(sf::Packet& p) override
+    {
+        return p >> clientId >> udpPort;
+    }
 };
-
-
-inline sf::Packet& operator<<(sf::Packet& packet, const JoinAckPacket& spawnPlayerPacket)
-{
-    return packet << spawnPlayerPacket.clientId << spawnPlayerPacket.udpPort;
-}
-
-inline sf::Packet& operator>>(sf::Packet& packet, JoinAckPacket& joinPacket)
-{
-    return packet >> joinPacket.clientId >> joinPacket.udpPort;
-}
 
 /**
  * \brief SpawnPlayerPacket is a TCP Packet sent by the server to all clients to notify of the spawn of a new player
@@ -132,19 +159,19 @@ struct SpawnPlayerPacket : TypedPacket<PacketType::SPAWN_PLAYER>
     PlayerNumber playerNumber = INVALID_PLAYER;
     std::array<std::uint8_t, sizeof(core::Vec2f)> pos{};
     std::array<std::uint8_t, sizeof(core::Degree)> angle{};
+
+    sf::Packet& Load(sf::Packet& p) const override
+    {
+        return p << clientId << playerNumber <<
+            pos << angle;
+    }
+
+    sf::Packet& Save(sf::Packet& p) override
+    {
+        return p >> clientId >> playerNumber >>
+            pos >> angle;
+    }
 };
-
-inline sf::Packet& operator<<(sf::Packet& packet, const SpawnPlayerPacket& spawnPlayerPacket)
-{
-    return packet << spawnPlayerPacket.clientId << spawnPlayerPacket.playerNumber <<
-        spawnPlayerPacket.pos << spawnPlayerPacket.angle;
-}
-
-inline sf::Packet& operator>>(sf::Packet& packet, SpawnPlayerPacket& spawnPlayerPacket)
-{
-    return packet >> spawnPlayerPacket.clientId >> spawnPlayerPacket.playerNumber >>
-        spawnPlayerPacket.pos >> spawnPlayerPacket.angle;
-}
 
     
 /**
@@ -156,19 +183,19 @@ struct PlayerInputPacket : TypedPacket<PacketType::INPUT>
     PlayerNumber playerNumber = INVALID_PLAYER;
     std::array<std::uint8_t, sizeof(Frame)> currentFrame{};
     std::array<PlayerInput, maxInputNmb> inputs{};
+
+    sf::Packet& Load(sf::Packet& p) const override
+    {
+        return p << playerNumber <<
+            currentFrame << inputs;
+    }
+
+    sf::Packet& Save(sf::Packet& p) override
+    {
+        return p >> playerNumber >>
+            currentFrame >> inputs;
+    }
 };
-
-inline sf::Packet& operator<<(sf::Packet& packet, const PlayerInputPacket& playerInputPacket)
-{
-    return packet << playerInputPacket.playerNumber <<
-        playerInputPacket.currentFrame << playerInputPacket.inputs;
-}
-
-inline sf::Packet& operator>>(sf::Packet& packet, PlayerInputPacket& playerInputPacket)
-{
-    return packet >> playerInputPacket.playerNumber >>
-        playerInputPacket.currentFrame >> playerInputPacket.inputs;
-}
 
 /**
  * \brief StartGamePacket is a TCP Packet send by the server to start a game at a given time.
@@ -184,17 +211,17 @@ struct ValidateFramePacket : TypedPacket<PacketType::VALIDATE_STATE>
 {
     std::array<std::uint8_t, sizeof(Frame)> newValidateFrame{};
     std::array<std::uint8_t, sizeof(PhysicsState) * maxPlayerNmb> physicsState{};
+
+    sf::Packet& Load(sf::Packet& p) const override
+    {
+        return p << newValidateFrame << physicsState;
+    }
+
+    sf::Packet& Save(sf::Packet& p) override
+    {
+        return p >> newValidateFrame >> physicsState;
+    }
 };
-
-inline sf::Packet& operator<<(sf::Packet& packet, const ValidateFramePacket& validateFramePacket)
-{
-    return packet << validateFramePacket.newValidateFrame << validateFramePacket.physicsState;
-}
-
-inline sf::Packet& operator>>(sf::Packet& packet, ValidateFramePacket& ValidateFramePacket)
-{
-    return packet >> ValidateFramePacket.newValidateFrame >> ValidateFramePacket.physicsState;
-}
 
 /**
  * \brief WinGamePacket is a TCP Packet sent by the server to notify the clients that a certain player has won.
@@ -202,17 +229,15 @@ inline sf::Packet& operator>>(sf::Packet& packet, ValidateFramePacket& ValidateF
 struct WinGamePacket : TypedPacket<PacketType::WIN_GAME>
 {
     PlayerNumber winner = INVALID_PLAYER;
+    sf::Packet& Load(sf::Packet& p) const override
+    {
+        return p << winner;
+    }
+    sf::Packet& Save(sf::Packet& p) override
+    {
+        return p >> winner;
+    }
 };
-
-inline sf::Packet& operator<<(sf::Packet& packet, const WinGamePacket& winGamePacket)
-{
-    return packet << winGamePacket.winner;
-}
-
-inline sf::Packet& operator>>(sf::Packet& packet, WinGamePacket& winGamePacket)
-{
-    return packet >> winGamePacket.winner;
-}
 
 /**
  * \brief PingPacket is an UDP Packet sent by the client to the server and resend by the server to measure the RTT between the client and the server.
@@ -221,17 +246,15 @@ struct PingPacket : TypedPacket<PacketType::PING>
 {
     std::array<std::uint8_t, sizeof(unsigned long long)> time{};
     std::array<std::uint8_t, sizeof(ClientId)> clientId{};
+    sf::Packet& Load(sf::Packet& p) const override
+    {
+        return p << time << clientId;
+    }
+    sf::Packet& Save(sf::Packet& p) override
+    {
+        return p >> time >> clientId;
+    }
 };
-
-inline sf::Packet& operator<<(sf::Packet& packet, const PingPacket& pingPacket)
-{
-    return packet << pingPacket.time << pingPacket.clientId;
-}
-
-inline sf::Packet& operator>>(sf::Packet& packet, PingPacket& pingPacket)
-{
-    return packet >> pingPacket.time >> pingPacket.clientId;
-}
 
 inline void GeneratePacket(sf::Packet& packet, Packet& sendingPacket)
 {

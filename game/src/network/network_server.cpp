@@ -238,7 +238,7 @@ void NetworkServer::ProcessReceivePacket(
         PlayerNumber playerNumber;
         if (it != clientMap_.end())
         {
-            playerNumber = PlayerNumber(std::distance(clientMap_.begin(), it));
+            playerNumber = PlayerNumber(static_cast<std::uint8_t>(std::distance(clientMap_.begin(), it)));
             clientInfoMap_[playerNumber].clientId = clientId;
         }
         else
