@@ -185,7 +185,7 @@ void NetworkClient::SendReliablePacket(std::unique_ptr<Packet> packet)
 
     //core::LogDebug("[Client] Sending reliable packet to server");
     sf::Packet tcpPacket;
-    GeneratePacket(tcpPacket, *packet);
+    GenerateSendingPacket(tcpPacket, *packet);
     auto status = sf::Socket::Partial;
     while (status == sf::Socket::Partial)
     {
@@ -201,7 +201,7 @@ void NetworkClient::SendUnreliablePacket(std::unique_ptr<Packet> packet)
         return;
     }
     sf::Packet udpPacket;
-    GeneratePacket(udpPacket, *packet);
+    GenerateSendingPacket(udpPacket, *packet);
     const auto status = udpSocket_.send(udpPacket, serverAddress_, serverUdpPort_);
     switch (status)
     {

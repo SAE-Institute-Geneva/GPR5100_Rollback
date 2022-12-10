@@ -21,7 +21,7 @@ void NetworkServer::SendReliablePacket(
         playerNumber++)
     {
         sf::Packet sendingPacket;
-        GeneratePacket(sendingPacket, *packet);
+        GenerateSendingPacket(sendingPacket, *packet);
 
         auto status = sf::Socket::Partial;
         while (status == sf::Socket::Partial)
@@ -56,7 +56,7 @@ void NetworkServer::SendUnreliablePacket(
         }
 
         sf::Packet sendingPacket;
-        GeneratePacket(sendingPacket, *packet);
+        GenerateSendingPacket(sendingPacket, *packet);
         const auto status = udpSocket_.send(sendingPacket, clientInfoMap_[playerNumber].udpRemoteAddress,
             clientInfoMap_[playerNumber].udpRemotePort);
         switch (status)

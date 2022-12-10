@@ -148,8 +148,8 @@ void Client::ReceivePacket(const Packet* packet)
         }
 
     }
-    case PacketType::SPAWN_BULLET: break;
-    default:;
+    default:
+        break;
     }
 
 }
