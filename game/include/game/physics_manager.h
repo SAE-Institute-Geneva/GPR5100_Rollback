@@ -81,7 +81,7 @@ class PhysicsManager : public core::DrawInterface
 {
 public:
     explicit PhysicsManager(core::EntityManager& entityManager);
-    void FixedUpdate(sf::Time dt);
+    void FixedUpdate();
     [[nodiscard]] const Body& GetBody(core::Entity entity) const;
     void SetBody(core::Entity entity, const Body& body);
     void AddBody(core::Entity entity);

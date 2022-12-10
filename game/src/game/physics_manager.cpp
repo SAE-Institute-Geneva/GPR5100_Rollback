@@ -24,7 +24,7 @@ constexpr bool Box2Box(float r1x, float r1y, float r1w, float r1h, float r2x, fl
         r1y <= r2y + r2h;
 }
 
-void PhysicsManager::FixedUpdate(sf::Time dt)
+void PhysicsManager::FixedUpdate()
 {
 #ifdef TRACY_ENABLE
     ZoneScoped;
@@ -34,8 +34,8 @@ void PhysicsManager::FixedUpdate(sf::Time dt)
         if (!entityManager_.HasComponent(entity, static_cast<core::EntityMask>(core::ComponentType::BODY2D)))
             continue;
         auto body = bodyManager_.GetComponent(entity);
-        body.position += body.velocity * dt.asSeconds();
-        body.rotation += body.angularVelocity * dt.asSeconds();
+        body.position += body.velocity * fixedPeriod;
+        body.rotation += body.angularVelocity * fixedPeriod;
         bodyManager_.SetComponent(entity, body);
     }
     for (core::Entity entity{ 0 }; entity < entityManager_.GetEntitiesSize(); ++entity)
@@ -112,8 +112,8 @@ void PhysicsManager::RegisterTriggerListener(OnTriggerInterface& onTriggerInterf
 
 void PhysicsManager::CopyAllComponents(const PhysicsManager& physicsManager)
 {
-    bodyManager_.CopyAllComponents(physicsManager.bodyManager_.GetAllComponents());
-    boxManager_.CopyAllComponents(physicsManager.boxManager_.GetAllComponents());
+    bodyManager_.CopyAllComponents(physicsManager.bodyManager_);
+    boxManager_.CopyAllComponents(physicsManager.boxManager_);
 }
 
 void PhysicsManager::Draw(sf::RenderTarget& renderTarget)

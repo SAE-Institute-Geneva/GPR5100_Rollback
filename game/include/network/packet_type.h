@@ -259,6 +259,7 @@ struct PingPacket : TypedPacket<PacketType::PING>
 inline void GeneratePacket(sf::Packet& packet, Packet& sendingPacket)
 {
     packet << sendingPacket;
+    
     switch (sendingPacket.packetType)
     {
     case PacketType::JOIN:

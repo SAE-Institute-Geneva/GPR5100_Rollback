@@ -24,7 +24,7 @@ class BulletManager : public core::ComponentManager<Bullet, static_cast<core::En
 {
 public:
     explicit BulletManager(core::EntityManager& entityManager, GameManager& gameManager);
-    void FixedUpdate(sf::Time dt);
+    void FixedUpdate();
 private:
     GameManager& gameManager_;
 };

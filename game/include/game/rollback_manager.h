@@ -23,6 +23,55 @@ struct CreatedEntity
     Frame createdFrame{};
 };
 
+class RollbackSystemInterface
+{
+public:
+    virtual ~RollbackSystemInterface() = default;
+    virtual void FixedUpdate() = 0;
+    virtual void Rollback() = 0;
+    virtual void UpdateValidated() = 0;
+
+};
+template<class T>
+concept Rollbackable = requires(T & t)
+{
+    {t.FixedUpdate() };
+    {t.CopyAllComponents(t) };
+};
+
+template<Rollbackable T>
+class RollbackSystem : public RollbackSystemInterface
+{
+public:
+    template<typename ...Args>
+    RollbackSystem(Args& ... args) : lastValidateSystem_(args...), currentSystem_(args...)
+    {
+        
+    }
+    void FixedUpdate() override
+    {
+        currentSystem_.FixedUpdate();
+    }
+
+    void Rollback() override
+    {
+        currentSystem_.CopyAllComponents(lastValidateSystem_);
+    }
+
+    void UpdateValidated() override
+    {
+        lastValidateSystem_.CopyAllComponents(currentSystem_);
+    }
+
+    [[nodiscard]] const T& GetLastValidatedSystem() const { return lastValidateSystem_; }
+    [[nodiscard]] T& GetLastValidatedSystem() { return lastValidateSystem_; }
+    [[nodiscard]] const T& GetCurrentSystem() const { return currentSystem_; }
+    [[nodiscard]] T& GetCurrentSystem() { return currentSystem_; }
+private:
+    T lastValidateSystem_;
+    T currentSystem_;
+};
+
 /**
  * \brief RollbackManager is a class that manages all the rollback mechanisms of the game.
  * It contains two copies of the world (PhysicsManager, TransformManager, etc...), the current one and the validated one.
@@ -64,7 +113,7 @@ public:
     [[nodiscard]] Frame GetLastReceivedFrame(PlayerNumber playerNumber) const { return lastReceivedFrame_[playerNumber]; }
     [[nodiscard]] Frame GetCurrentFrame() const { return currentFrame_; }
     [[nodiscard]] const core::TransformManager& GetTransformManager() const { return currentTransformManager_; }
-    [[nodiscard]] const PlayerCharacterManager& GetPlayerCharacterManager() const { return currentPlayerManager_; }
+    [[nodiscard]] const PlayerCharacterManager& GetPlayerCharacterManager() const { return playerManager_.GetCurrentSystem(); }
     void SpawnPlayer(PlayerNumber playerNumber, core::Entity entity, core::Vec2f position, core::Degree rotation);
     void SpawnBullet(PlayerNumber playerNumber, core::Entity entity, core::Vec2f position, core::Vec2f velocity);
     /**
@@ -90,15 +139,11 @@ private:
      * \brief Used for rendering
      */
     core::TransformManager currentTransformManager_;
-    PhysicsManager currentPhysicsManager_;
-    PlayerCharacterManager currentPlayerManager_;
-    BulletManager currentBulletManager_;
-    /**
-     * Last Validate (confirm frame) Component Managers used for rollback
-     */
-    PhysicsManager lastValidatePhysicsManager_;
-    PlayerCharacterManager lastValidatePlayerManager_;
-    BulletManager lastValidateBulletManager_;
+
+    std::vector<RollbackSystemInterface*> rollbackSystems_;
+    RollbackSystem<PhysicsManager> physicsManager_;
+    RollbackSystem<PlayerCharacterManager> playerManager_;
+    RollbackSystem<BulletManager> bulletManager_;
 
     /**
      * \brief lastValidateFrame_ is the last validated frame from the server side.

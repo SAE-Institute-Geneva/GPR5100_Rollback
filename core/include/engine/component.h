@@ -79,9 +79,9 @@ public:
     /**
      * \brief CopyAllComponents is a method that changes the internal components array by copying a newly provided one.
      * It is used by the RollbackManager when reverting the current game world data with the last validated game world data.
-     * \param components is the new component array to be copy instead of the old components array
+     * \param componentManager is the new component manager 
      */
-    void CopyAllComponents(const std::vector<T>& components);
+    void CopyAllComponents(const ComponentManager& componentManager);
 protected:
     EntityManager& entityManager_;
     std::vector<T> components_;
@@ -148,8 +148,8 @@ const std::vector<T>& ComponentManager<T, C>::GetAllComponents() const
 }
 
 template <typename T, Component C>
-void ComponentManager<T, C>::CopyAllComponents(const std::vector<T>& components)
+void ComponentManager<T, C>::CopyAllComponents(const ComponentManager<T, C>& componentManager)
 {
-    components_ = components;
+    components_ = componentManager.components_;
 }
 } // namespace core

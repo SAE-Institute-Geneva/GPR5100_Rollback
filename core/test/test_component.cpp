@@ -59,7 +59,7 @@ TEST(Component, CopyAllComponents)
     newComponentManager.AddComponent(entity2);
     newComponentManager.SetComponent(entity2, newValue2);
 
-    oldComponentManager.CopyAllComponents(newComponentManager.GetAllComponents());
+    oldComponentManager.CopyAllComponents(newComponentManager);
     EXPECT_EQ(oldComponentManager.GetComponent(entity1), newValue1);
     EXPECT_EQ(oldComponentManager.GetComponent(entity2), newValue2);
 
