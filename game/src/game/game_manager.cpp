@@ -446,7 +446,10 @@ void ClientGameManager::ConfirmValidateFrame(Frame newValidateFrame,
     {
         return;
     }
+<<<<<<< HEAD
     //Check if we have all player inputs
+=======
+>>>>>>> 895e67ad9c4e65db90d8e9babe7cc5c5cea7fb1e
     for (PlayerNumber playerNumber{ 0 }; playerNumber < maxPlayerNmb; playerNumber++)
     {
         if (rollbackManager_.GetLastReceivedFrame(playerNumber) < newValidateFrame)
