@@ -231,12 +231,7 @@ void RollbackManager::ConfirmFrame(Frame newValidateFrame, const std::array<Phys
         const PhysicsState lastPhysicsState = GetValidatePhysicsState(playerNumber);
         if (serverPhysicsState[playerNumber] != lastPhysicsState)
         {
-            gpr_assert(false, fmt::format("Physics State are not equal for player {} (server frame: {}, client frame: {}, server: {}, client: {})", 
-                playerNumber+1, 
-                newValidateFrame, 
-                lastValidateFrame_, 
-                serverPhysicsState[playerNumber], 
-                lastPhysicsState));
+            gpr_assert(false, "Physics State are not equal");
         }
     }
 }

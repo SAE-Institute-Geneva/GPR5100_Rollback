@@ -129,7 +129,7 @@ public:
         return inputs_[playerNumber];
     }
 
-    PhysicsManager& GetCurrentPhysicsManager() { return currentPhysicsManager_; }
+    PhysicsManager& GetCurrentPhysicsManager() { return physicsManager_.GetCurrentSystem(); }
 private:
 
     [[nodiscard]] PlayerInput GetInputAtFrame(PlayerNumber playerNumber, Frame frame) const;

@@ -118,7 +118,7 @@ void PhysicsManager::CopyAllComponents(const PhysicsManager& physicsManager)
 
 void PhysicsManager::Draw(sf::RenderTarget& renderTarget)
 {
-    for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
+    for (core::Entity entity{ 0 }; entity < entityManager_.GetEntitiesSize(); entity++)
     {
         if (!entityManager_.HasComponent(entity,
             static_cast<core::EntityMask>(core::ComponentType::BODY2D) |
