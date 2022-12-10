@@ -9,7 +9,11 @@ namespace core
 
 class AssertException final : public std::exception
 {
-    using std::exception::exception;
+public:
+    explicit AssertException(std::string_view msg) : msg_(msg) {}
+    [[nodiscard]] const char* what() const noexcept override { return msg_.c_str(); }
+private:
+    std::string msg_;
 };
 
 }

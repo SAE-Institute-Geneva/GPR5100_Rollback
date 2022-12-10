@@ -114,7 +114,6 @@ void PhysicsManager::CopyAllComponents(const PhysicsManager& physicsManager)
 {
     bodyManager_.CopyAllComponents(physicsManager.bodyManager_);
     boxManager_.CopyAllComponents(physicsManager.boxManager_);
-<<<<<<< HEAD
 }
 
 void PhysicsManager::Draw(sf::RenderTarget& renderTarget)
@@ -140,7 +139,5 @@ void PhysicsManager::Draw(sf::RenderTarget& renderTarget)
         rectShape.setSize({ extends.x * 2.0f * core::pixelPerMeter, extends.y * 2.0f * core::pixelPerMeter });
         renderTarget.draw(rectShape);
     }
-=======
->>>>>>> 895e67ad9c4e65db90d8e9babe7cc5c5cea7fb1e
 }
 }
