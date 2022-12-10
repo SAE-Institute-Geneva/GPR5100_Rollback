@@ -27,7 +27,7 @@ class PlayerCharacterManager : public core::ComponentManager<PlayerCharacter, st
 {
 public:
     explicit PlayerCharacterManager(core::EntityManager& entityManager, PhysicsManager& physicsManager, GameManager& gameManager);
-    void FixedUpdate(sf::Time dt);
+    void FixedUpdate();
 
 private:
     PhysicsManager& physicsManager_;

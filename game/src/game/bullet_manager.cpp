@@ -11,7 +11,7 @@ BulletManager::BulletManager(core::EntityManager& entityManager, GameManager& ga
 {
 }
 
-void BulletManager::FixedUpdate(sf::Time dt)
+void BulletManager::FixedUpdate()
 {
 
 #ifdef TRACY_ENABLE
@@ -26,7 +26,7 @@ void BulletManager::FixedUpdate(sf::Time dt)
         if (entityManager_.HasComponent(entity, static_cast<core::EntityMask>(ComponentType::BULLET)))
         {
             auto& bullet = components_[entity];
-            bullet.remainingTime -= dt.asSeconds();
+            bullet.remainingTime -= fixedPeriod;
             if (bullet.remainingTime < 0.0f)
             {
                 gameManager_.DestroyBullet(entity);

@@ -15,7 +15,7 @@ PlayerCharacterManager::PlayerCharacterManager(core::EntityManager& entityManage
 
 }
 
-void PlayerCharacterManager::FixedUpdate(sf::Time dt)
+void PlayerCharacterManager::FixedUpdate()
 {
 
 #ifdef TRACY_ENABLE
@@ -41,24 +41,24 @@ void PlayerCharacterManager::FixedUpdate(sf::Time dt)
         playerBody.angularVelocity = angularVelocity;
 
         auto dir = core::Vec2f::up();
-        dir = dir.Rotate(-(playerBody.rotation + playerBody.angularVelocity * dt.asSeconds()));
+        dir = dir.Rotate(-(playerBody.rotation + playerBody.angularVelocity * fixedPeriod));
 
         const auto acceleration = ((down ? -1.0f : 0.0f) + (up ? 1.0f : 0.0f)) * dir;
 
 
-        playerBody.velocity += acceleration * dt.asSeconds();
+        playerBody.velocity += acceleration * fixedPeriod;
 
         physicsManager_.SetBody(playerEntity, playerBody);
 
         if (playerCharacter.invincibilityTime > 0.0f)
         {
-            playerCharacter.invincibilityTime -= dt.asSeconds();
+            playerCharacter.invincibilityTime -= fixedPeriod;
             SetComponent(playerEntity, playerCharacter);
         }
         //Check if playerCharacter cannot shoot, and increase shootingTime
         if (playerCharacter.shootingTime < playerShootingPeriod)
         {
-            playerCharacter.shootingTime += dt.asSeconds();
+            playerCharacter.shootingTime += fixedPeriod;
             SetComponent(playerEntity, playerCharacter);
         }
         //Shooting mechanism
@@ -70,7 +70,7 @@ void PlayerCharacterManager::FixedUpdate(sf::Time dt)
                 const auto bulletVelocity = dir *
                     ((core::Vec2f::Dot(playerBody.velocity, dir) > 0.0f ? currentPlayerSpeed : 0.0f)
                         + bulletSpeed);
-                const auto bulletPosition = playerBody.position + dir * 0.5f + playerBody.velocity * dt.asSeconds();
+                const auto bulletPosition = playerBody.position + dir * 0.5f + playerBody.velocity * fixedPeriod;
                 gameManager_.SpawnBullet(playerCharacter.playerNumber,
                     bulletPosition,
                     bulletVelocity);
