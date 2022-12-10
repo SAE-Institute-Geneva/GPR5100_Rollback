@@ -111,7 +111,10 @@ struct Packet
 };
 
 template<PacketType type>
-std::unique_ptr <Packet> GenerateReceivedPacket(sf::Packet& p);
+std::unique_ptr <Packet> GenerateReceivedPacket([[maybe_unused]] sf::Packet& p)
+{
+    return nullptr;
+}
 
 /**
  * \brief TypedPacket is a template class that sets the packetType of Packet automatically at construction with the given type.
