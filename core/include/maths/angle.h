@@ -20,7 +20,7 @@ class Radian
 {
 public:
     constexpr Radian() = default;
-    constexpr Radian(float value) : value_(value){}
+    constexpr explicit Radian(float value) : value_(value){}
     /**
      * \brief Conversion constructor that implicitly converts Degree to Radian
      * \param angle is the degree angle to be converted to Radian
@@ -28,21 +28,21 @@ public:
     constexpr Radian(const Degree& angle);
     [[nodiscard]] constexpr float value() const { return value_; }
 
-    constexpr Radian operator+(Radian angle) const { return { value_ + angle.value() }; }
+    constexpr Radian operator+(Radian angle) const { return Radian{ value_ + angle.value() }; }
     constexpr Radian& operator+=(Radian angle)
     {
         value_ += angle.value();
         return *this;
     }
-    constexpr Radian operator-(Radian angle) const { return { value_ - angle.value() }; }
+    constexpr Radian operator-(Radian angle) const { return Radian{ value_ - angle.value() }; }
     constexpr Radian& operator-=(Radian angle)
     {
         value_ -= angle.value();
         return *this;
     }
-    constexpr Radian operator*(float value) const { return { value_ * value }; }
-    constexpr Radian operator/(float value) const { return { value_ / value }; }
-    constexpr Radian operator-() const { return { -value_ }; }
+    constexpr Radian operator*(float value) const { return Radian{ value_ * value }; }
+    constexpr Radian operator/(float value) const { return Radian{ value_ / value }; }
+    constexpr Radian operator-() const { return Radian{ -value_ }; }
 private:
     float value_ = 0.0f;
 };
@@ -56,33 +56,33 @@ class Degree
 {
 public:
     constexpr Degree() = default;
-    constexpr Degree(float value) : value_(value){}
+    constexpr explicit Degree(float value) : value_(value){}
     /**
      * \brief Conversion constructor that implicitly converts Radian to Degree
      * \param angle is the radian angle to be converted to Degree 
      */
     constexpr Degree(const Radian& angle) : value_(angle.value()/PI*180.0f){}
     [[nodiscard]] constexpr float value() const { return value_; }
-    constexpr Degree operator+(Degree angle) const { return { value_ + angle.value() }; }
+    constexpr Degree operator+(Degree angle) const { return Degree{ value_ + angle.value() }; }
     constexpr Degree& operator+=(Degree angle)
     {
         value_ += angle.value();
         return *this;
     }
-    constexpr Degree operator-(Degree angle) const { return { value_ - angle.value() }; }
+    constexpr Degree operator-(Degree angle) const { return Degree{ value_ - angle.value() }; }
     constexpr Degree& operator-=(Degree angle)
     {
         value_ -= angle.value();
         return *this;
     }
-    constexpr Degree operator*(float value) const { return { value_ * value }; }
-    constexpr Degree operator/(float value) const { return { value_ / value }; }
-    constexpr Degree operator-() const { return { -value_ }; }
+    constexpr Degree operator*(float value) const { return Degree{ value_ * value }; }
+    constexpr Degree operator/(float value) const { return Degree{ value_ / value }; }
+    constexpr Degree operator-() const { return Degree{ -value_ }; }
 private:
     float value_ = 0.0f;
 };
 
-constexpr Degree operator*(float value, Degree angle) { return angle.value() * value; }
+constexpr Degree operator*(float value, Degree angle) { return Degree{ angle.value() * value }; }
 
 
 constexpr Radian::Radian(const Degree& angle)
@@ -127,7 +127,7 @@ inline float Tan(Radian angle)
  */
 inline Radian Asin(float ratio)
 {
-    return {std::asin(ratio)};
+    return Radian{std::asin(ratio)};
 }
 
 /**
@@ -137,7 +137,7 @@ inline Radian Asin(float ratio)
  */
 inline Radian Acos(float ratio)
 {
-    return {std::acos(ratio)};
+    return Radian{std::acos(ratio)};
 }
 
 /**
@@ -147,7 +147,7 @@ inline Radian Acos(float ratio)
  */
 inline Radian Atan(float ratio)
 {
-    return {std::atan(ratio)};
+    return Radian{std::atan(ratio)};
 }
 
 /**
@@ -158,6 +158,6 @@ inline Radian Atan(float ratio)
  */
 inline Radian Atan2(float y, float x)
 {
-    return {std::atan2(y,x)};
+    return Radian{std::atan2(y,x)};
 }
 }

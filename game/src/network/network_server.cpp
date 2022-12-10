@@ -17,7 +17,7 @@ void NetworkServer::SendReliablePacket(
 {
     core::LogDebug(fmt::format("[Server] Sending TCP packet: {}",
         std::to_string(static_cast<int>(packet->packetType))));
-    for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb;
+    for (PlayerNumber playerNumber{ 0 }; playerNumber < maxPlayerNmb;
         playerNumber++)
     {
         sf::Packet sendingPacket;
@@ -46,7 +46,7 @@ void NetworkServer::SendReliablePacket(
 void NetworkServer::SendUnreliablePacket(
     std::unique_ptr<Packet> packet)
 {
-    for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb;
+    for (PlayerNumber playerNumber{ 0 }; playerNumber < maxPlayerNmb;
         playerNumber++)
     {
         if (clientInfoMap_[playerNumber].udpRemotePort == 0)
@@ -146,7 +146,7 @@ void NetworkServer::Update([[maybe_unused]] sf::Time dt)
         }
     }
 
-    for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb;
+    for (PlayerNumber playerNumber{ 0 }; playerNumber < maxPlayerNmb;
         playerNumber++)
     {
         sf::Packet tcpPacket;
@@ -199,7 +199,7 @@ bool NetworkServer::IsOpen() const
 void NetworkServer::SpawnNewPlayer([[maybe_unused]] ClientId clientId, [[maybe_unused]] PlayerNumber newPlayerNumber)
 {
     //Spawning the new player in the arena
-    for (PlayerNumber p = 0; p <= lastPlayerNumber_; p++)
+    for (PlayerNumber p{ 0 }; p <= lastPlayerNumber_; ++p)
     {
         auto spawnPlayer = std::make_unique<SpawnPlayerPacket>();
         spawnPlayer->clientId = core::ConvertToBinary(clientMap_[p]);
@@ -238,7 +238,7 @@ void NetworkServer::ProcessReceivePacket(
         PlayerNumber playerNumber;
         if (it != clientMap_.end())
         {
-            playerNumber = static_cast<PlayerNumber>(std::distance(clientMap_.begin(), it));
+            playerNumber = PlayerNumber(std::distance(clientMap_.begin(), it));
             clientInfoMap_[playerNumber].clientId = clientId;
         }
         else

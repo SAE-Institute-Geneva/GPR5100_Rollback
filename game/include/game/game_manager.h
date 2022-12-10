@@ -36,7 +36,7 @@ public:
     [[nodiscard]] Frame GetLastValidateFrame() const { return rollbackManager_.GetLastValidateFrame(); }
     [[nodiscard]] const core::TransformManager& GetTransformManager() const { return transformManager_; }
     [[nodiscard]] const RollbackManager& GetRollbackManager() const { return rollbackManager_; }
-    virtual void SetPlayerInput(PlayerNumber playerNumber, PlayerInput playerInput, std::uint32_t inputFrame);
+    virtual void SetPlayerInput(PlayerNumber playerNumber, PlayerInput playerInput, Frame inputFrame);
     /**
      * \brief Validate is a method called by the server to validate a frame.
      */
@@ -50,7 +50,7 @@ protected:
     core::TransformManager transformManager_;
     RollbackManager rollbackManager_;
     std::array<core::Entity, maxPlayerNmb> playerEntityMap_{};
-    Frame currentFrame_ = 0;
+    Frame currentFrame_{};
     PlayerNumber winner_ = INVALID_PLAYER;
 };
 
@@ -84,7 +84,7 @@ public:
     void SpawnPlayer(PlayerNumber playerNumber, core::Vec2f position, core::Degree rotation) override;
     core::Entity SpawnBullet(PlayerNumber playerNumber, core::Vec2f position, core::Vec2f velocity) override;
     void FixedUpdate();
-    void SetPlayerInput(PlayerNumber playerNumber, PlayerInput playerInput, std::uint32_t inputFrame) override;
+    void SetPlayerInput(PlayerNumber playerNumber, PlayerInput playerInput, Frame inputFrame) override;
     void DrawImGui() override;
     void ConfirmValidateFrame(Frame newValidateFrame, const std::array<PhysicsState, maxPlayerNmb>& physicsStates);
     [[nodiscard]] PlayerNumber GetPlayerNumber() const { return clientPlayer_; }

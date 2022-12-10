@@ -29,7 +29,7 @@ void PhysicsManager::FixedUpdate(sf::Time dt)
 #ifdef TRACY_ENABLE
     ZoneScoped;
 #endif
-    for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
+    for (core::Entity entity{ 0 }; entity < entityManager_.GetEntitiesSize(); ++entity)
     {
         if (!entityManager_.HasComponent(entity, static_cast<core::EntityMask>(core::ComponentType::BODY2D)))
             continue;
@@ -38,14 +38,14 @@ void PhysicsManager::FixedUpdate(sf::Time dt)
         body.rotation += body.angularVelocity * dt.asSeconds();
         bodyManager_.SetComponent(entity, body);
     }
-    for (core::Entity entity = 0; entity < entityManager_.GetEntitiesSize(); entity++)
+    for (core::Entity entity{ 0 }; entity < entityManager_.GetEntitiesSize(); ++entity)
     {
         if (!entityManager_.HasComponent(entity,
             static_cast<core::EntityMask>(core::ComponentType::BODY2D) |
             static_cast<core::EntityMask>(core::ComponentType::BOX_COLLIDER2D)) ||
             entityManager_.HasComponent(entity, static_cast<core::EntityMask>(ComponentType::DESTROYED)))
             continue;
-        for (core::Entity otherEntity = entity + 1; otherEntity < entityManager_.GetEntitiesSize(); otherEntity++)
+        for (auto otherEntity = core::Entity{ entity + 1u }; otherEntity < entityManager_.GetEntitiesSize(); ++otherEntity)
         {
             if (!entityManager_.HasComponent(otherEntity,
                 static_cast<core::EntityMask>(core::ComponentType::BODY2D) | static_cast<core::EntityMask>(core::ComponentType::BOX_COLLIDER2D)) ||

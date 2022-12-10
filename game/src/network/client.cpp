@@ -84,11 +84,11 @@ void Client::ReceivePacket(const Packet* packet)
         {
             break;
         }
-        for (Frame i = 0; i < playerInputPacket->inputs.size(); i++)
+        for (Frame i{ 0 }; i < playerInputPacket->inputs.size(); i++)
         {
             gameManager_.SetPlayerInput(playerNumber,
                 playerInputPacket->inputs[i],
-                inputFrame - i);
+                Frame{ inputFrame - i });
 
             if (inputFrame - i == 0)
             {

@@ -21,7 +21,7 @@ void PlayerCharacterManager::FixedUpdate(sf::Time dt)
 #ifdef TRACY_ENABLE
     ZoneScoped;
 #endif
-    for (PlayerNumber playerNumber = 0; playerNumber < maxPlayerNmb; playerNumber++)
+    for (PlayerNumber playerNumber{ 0 }; playerNumber < maxPlayerNmb; playerNumber++)
     {
         const auto playerEntity = gameManager_.GetEntityFromPlayerNumber(playerNumber);
         if (!entityManager_.HasComponent(playerEntity,

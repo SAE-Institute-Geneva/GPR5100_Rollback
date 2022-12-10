@@ -15,7 +15,7 @@ void SpriteManager::SetTexture(Entity entity, const sf::Texture& texture)
 
 void SpriteManager::Draw(sf::RenderTarget& window)
 {
-    for (Entity entity = 0; entity < components_.size(); entity++)
+    for (Entity entity{0}; entity < components_.size(); ++entity)
     {
         if (entityManager_.HasComponent(entity, static_cast<Component>(ComponentType::SPRITE)))
         {

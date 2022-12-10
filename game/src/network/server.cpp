@@ -35,7 +35,7 @@ void Server::ReceivePacket(std::unique_ptr<Packet> packet)
             clientMap_[lastPlayerNumber_] = clientId;
             SpawnNewPlayer(clientId, lastPlayerNumber_);
 
-            lastPlayerNumber_++;
+            ++lastPlayerNumber_;
 
             if (lastPlayerNumber_ == maxPlayerNmb)
             {
@@ -58,7 +58,7 @@ void Server::ReceivePacket(std::unique_ptr<Packet> packet)
         {
             gameManager_.SetPlayerInput(playerNumber,
                 playerInputPacket->inputs[i],
-                inputFrame - i);
+                Frame{ inputFrame - i });
             if (inputFrame - i == 0)
             {
                 break;
@@ -68,8 +68,8 @@ void Server::ReceivePacket(std::unique_ptr<Packet> packet)
         SendUnreliablePacket(std::move(packet));
 
         //Validate new frame if needed
-        std::uint32_t lastReceiveFrame = gameManager_.GetRollbackManager().GetLastReceivedFrame(0);
-        for (PlayerNumber i = 1; i < maxPlayerNmb; i++)
+        Frame lastReceiveFrame = gameManager_.GetRollbackManager().GetLastReceivedFrame(PlayerNumber{ 0 });
+        for (PlayerNumber i{ 1 }; i < maxPlayerNmb; i++)
         {
             const auto playerLastFrame = gameManager_.GetRollbackManager().GetLastReceivedFrame(i);
             if (playerLastFrame < lastReceiveFrame)
@@ -86,7 +86,7 @@ void Server::ReceivePacket(std::unique_ptr<Packet> packet)
             validatePacket->newValidateFrame = core::ConvertToBinary(lastReceiveFrame);
 
             //copy physics state
-            for (PlayerNumber i = 0; i < maxPlayerNmb; i++)
+            for (PlayerNumber i{ 0 }; i < maxPlayerNmb; i++)
             {
                 auto physicsState = gameManager_.GetRollbackManager().GetValidatePhysicsState(i);
                 const auto* statePtr = reinterpret_cast<const std::uint8_t*>(&physicsState);
