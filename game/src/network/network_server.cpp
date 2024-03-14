@@ -32,7 +32,7 @@ void NetworkServer::SendReliablePacket(
             case sf::Socket::NotReady:
                 core::LogDebug(fmt::format(
                     "[Server] Error trying to send packet to Player: {} socket is not ready",
-                    playerNumber));
+                    (int)playerNumber));
                 break;
             case sf::Socket::Disconnected:
                 break;

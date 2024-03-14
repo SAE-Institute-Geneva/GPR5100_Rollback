@@ -332,7 +332,7 @@ void RollbackManager::OnTrigger(core::Entity entity1, core::Entity entity2)
             auto& playerCharacter = playerManager_.GetCurrentSystem().GetComponent(playerEntity);
             if (playerCharacter.invincibilityTime <= 0.0f)
             {
-                core::LogDebug(fmt::format("Player {} is hit by bullet", playerCharacter.playerNumber));
+                core::LogDebug(fmt::format("Player {} is hit by bullet", (int)playerCharacter.playerNumber));
                 --playerCharacter.health;
                 playerCharacter.invincibilityTime = playerInvincibilityPeriod;
             }

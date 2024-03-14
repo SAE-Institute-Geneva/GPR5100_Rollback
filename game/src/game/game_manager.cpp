@@ -323,7 +323,7 @@ void ClientGameManager::SetClientPlayer(PlayerNumber clientPlayer)
 
 void ClientGameManager::SpawnPlayer(PlayerNumber playerNumber, core::Vec2f position, core::Degree rotation)
 {
-    core::LogDebug(fmt::format("Spawn player: {}", playerNumber));
+    core::LogDebug(fmt::format("Spawn player: {}", (int)playerNumber));
 
     GameManager::SpawnPlayer(playerNumber, position, rotation);
     const auto entity = GetEntityFromPlayerNumber(playerNumber);
